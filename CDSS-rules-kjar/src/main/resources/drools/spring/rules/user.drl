@@ -1,0 +1,10 @@
+package drools.spring.rules
+
+import sbnz.ftn.uns.ac.rs.cdss.model.AppUser;
+
+rule "user exists"
+	when
+		AppUser()
+	then
+		System.out.println("user exists");
+end

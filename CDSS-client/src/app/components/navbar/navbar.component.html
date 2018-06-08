@@ -1,0 +1,26 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-muted rounded" style="background-color: #000508;">
+  
+    <ul class="navbar nav ml-auto" style="margin-right: 2%">
+      <!--<li class="nav-item" *ngxPermissionsOnly="['[ADMIN]', '[OPERATOR]']">
+        <a id="my-flats-nav" class="nav-link" routerLink="/logs/all" translate><Strong style="color: #9ec1ee">Logs</Strong></a>
+      </li>-->
+  
+      
+      <li class="nav-item dropdown navbar-right pull-right"  *ngxPermissionsOnly="['[ADMIN]', '[DOCTOR]']">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+           aria-haspopup="true" aria-expanded="false"style="color: #9ec1ee">
+          <strong >Profile</strong>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="color: #9ec1ee">
+          <a id="changePass" class="dropdown-item" routerLink="/change-password">Change password</a>
+          <div class="dropdown-divider"></div>
+          <a id="logout" class="dropdown-item" (click)="logoutf()" routerLink="/login">Logout</a>
+        </div>
+      </li>
+      <li class="nav-item" *ngxPermissionsExcept="['[ADMIN]', '[DOCTOR]']">
+        <a id="sing-in-link" class="nav-link" routerLink="/login" translate>Sign in</a>
+      </li>
+  
+    </ul>
+  </nav>
+  

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.kie.api.runtime.KieSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +37,16 @@ public class UserServiceDetailsImpl implements UserExtendedService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private KieSession kieSession;
+    
     private static final Logger logger = LoggerFactory.getLogger(CdssApplication.class);
 
     @Override
     public UserDetails loadUserByUsername(String username) {
         AppUser user = this.userRepository.findByUsername(username);
+        kieSession.insert(user);
+        kieSession.fireAllRules();
         if (user == null) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
         } else {
