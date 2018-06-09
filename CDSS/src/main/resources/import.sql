@@ -1,8 +1,8 @@
 
 -- admin
--- MDJ421054-bsep => password
+-- CDSS421054-sbnz => password
 insert into app_user(id, username, password,email, firstname, lastname, verified, role) values
-  (1, 'admin', '$2a$10$h1VM/QaYFHRKfv9yG77S2uyLT63XUWTCdfusgicsfa560spVNZEsi', 'admin@mailinator.com', 'admin', 'admin', 1, 'ADMIN');
+  (1, 'admin', '$2a$10$H0bjPW8lFs9VSaBrySMp4e/ht1MhrtfLWenraISxFBp2.Iofd6yuC', 'admin@mailinator.com', 'admin', 'admin', 1, 'ADMIN');
 -- Operator-1-bsep => password
 insert into app_user(id, username, password,email, firstname, lastname, verified, role) values
   (2, 'doctor1', '$2a$10$KbAWqhzc8.MlWoQxS.lkXOHT4tQ1j87CYbvpNG49FSmnw7lZt/zFe', 'doctor1@mailinator.com', 'Milana', 'Becejac', 1, 'DOCTOR');
