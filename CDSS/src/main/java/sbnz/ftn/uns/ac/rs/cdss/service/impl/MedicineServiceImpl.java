@@ -88,7 +88,7 @@ public class MedicineServiceImpl implements MedicineService{
 		try {
 			AppUser user = this.appUserRepository.findByUsername(username);
 			if (user == null || !user.getRole().equals(UserRole.ADMIN)) {
-				throw new NotValidParamsException("You must be logged in as admin to update symptom");
+				throw new NotValidParamsException("You must be logged in as admin to update medicine");
 			}
 
 			Medicine pat = medicineRepository.findById(id).get();

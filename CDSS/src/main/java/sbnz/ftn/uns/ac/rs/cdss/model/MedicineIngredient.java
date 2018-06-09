@@ -1,5 +1,6 @@
 package sbnz.ftn.uns.ac.rs.cdss.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.Column;
@@ -9,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.IngredientDTO;
 
 @Entity
 @Table(name = "medicineIngredient")
@@ -35,6 +38,10 @@ public class MedicineIngredient {
 		this.medicines = medicines;
 	}
 
+	public MedicineIngredient(IngredientDTO mi) {
+		this.name = mi.getName();
+		this.medicines = new ArrayList<Medicine>();
+	}
 
 
 	public Long getId() {
