@@ -26,6 +26,13 @@ import { OnlyLoggedInGuard } from './guard/only-logged-in.guard';
 import { AlreadyLoggedInGuard } from './guard/already-logged-in.guard';
 import { TokenInterceptorService } from './services/token-interceptor/token-interceptor.service';
 import { AppRoutingModule } from './app-routing.module';
+import { DiagnosticProcessCardComponent } from './components/diagnostic-process-card/diagnostic-process-card.component';
+import { DiagnosticProcessComponent } from './components/diagnostic-process/diagnostic-process.component';
+import { SortableColumnComponent } from './components/sortable-column/sortable-column.component';
+import { SortableColumnDirective } from './directives/sortable-column.directive';
+import { PaginationComponent } from './components/pagination/pagination.component';
+import { PatientService } from './services/patient/patient.service';
+import { SortService } from './services/sort/sort.service';
 
 
 @NgModule({
@@ -35,7 +42,12 @@ import { AppRoutingModule } from './app-routing.module';
     NavbarComponent,
     HomepageComponent,
     NotFoundPageComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    DiagnosticProcessCardComponent,
+    DiagnosticProcessComponent,
+    SortableColumnComponent,
+    SortableColumnDirective,
+    PaginationComponent
   ],
   imports: [
     BrowserModule,
@@ -55,6 +67,8 @@ import { AppRoutingModule } from './app-routing.module';
 
   ],
   providers: [AuthenticationService,
+    PatientService,
+    SortService,
     OnlyLoggedInGuard,
     AlreadyLoggedInGuard,
     {

@@ -1,9 +1,9 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-muted rounded" style="background-color: #000508;">
   
     <ul class="navbar nav ml-auto" style="margin-right: 2%">
-      <!--<li class="nav-item" *ngxPermissionsOnly="['[ADMIN]', '[OPERATOR]']">
-        <a id="my-flats-nav" class="nav-link" routerLink="/logs/all" translate><Strong style="color: #9ec1ee">Logs</Strong></a>
-      </li>-->
+      <li class="nav-item" *ngxPermissionsOnly="['[ADMIN]', '[DOCTOR]']">
+        <a class="nav-link" routerLink="/dpcard/diagnostic-process" translate><Strong style="color: #9ec1ee">Diagnostic process</Strong></a>
+      </li>
   
       
       <li class="nav-item dropdown navbar-right pull-right"  *ngxPermissionsOnly="['[ADMIN]', '[DOCTOR]']">

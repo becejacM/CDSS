@@ -5,6 +5,8 @@ import {OnlyLoggedInGuard} from './guard/only-logged-in.guard';
 import {AuthenticationComponent} from './components/authentication/authentication.component';
 import {AlreadyLoggedInGuard} from './guard/already-logged-in.guard';
 import {ChangePasswordComponent} from './components/change-password/change-password.component';
+import { DiagnosticProcessCardComponent } from './components/diagnostic-process-card/diagnostic-process-card.component';
+import { DiagnosticProcessComponent } from './components/diagnostic-process/diagnostic-process.component';
 
 
 const appRoutes: Routes = [
@@ -16,7 +18,10 @@ const appRoutes: Routes = [
   {path: 'login', component: AuthenticationComponent, canActivate: [AlreadyLoggedInGuard]},
   {path: 'home', component: HomepageComponent, canActivate: [OnlyLoggedInGuard]},
   {path: 'change-password', component: ChangePasswordComponent},
-  
+  {
+    path: 'dpcard', component: DiagnosticProcessCardComponent, canActivate: [OnlyLoggedInGuard], children: [
+    {path: 'diagnostic-process', component: DiagnosticProcessComponent},
+  ]}
 ];
 
 @NgModule({
