@@ -1,0 +1,14 @@
+<div class="container" style="margin-top: 20px">
+    <div *ngIf="patient" class="card">
+      <div class="card-header">
+        <b>Patient:</b> {{patient.firstname}} {{patient.lastname}}
+      </div>
+      <div class="card-block">
+        <p><b>Address:</b>
+        {{patient.address}}, &nbsp;<b>Email:
+        </b>{{patient.email}}, &nbsp;<b>Medical card number:</b>
+        {{patient.medicalCardNumber}}</p>
+      </div>
+    </div>
+  </div>
+<br/>

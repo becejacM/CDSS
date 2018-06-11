@@ -7,6 +7,7 @@ import {AlreadyLoggedInGuard} from './guard/already-logged-in.guard';
 import {ChangePasswordComponent} from './components/change-password/change-password.component';
 import { DiagnosticProcessCardComponent } from './components/diagnostic-process-card/diagnostic-process-card.component';
 import { DiagnosticProcessComponent } from './components/diagnostic-process/diagnostic-process.component';
+import { DiagnosticProcessFormComponent } from './components/diagnostic-process-form/diagnostic-process-form.component';
 
 
 const appRoutes: Routes = [
@@ -20,7 +21,10 @@ const appRoutes: Routes = [
   {path: 'change-password', component: ChangePasswordComponent},
   {
     path: 'dpcard', component: DiagnosticProcessCardComponent, canActivate: [OnlyLoggedInGuard], children: [
-    {path: 'diagnostic-process', component: DiagnosticProcessComponent},
+    {path: 'diagnostic-process', component: DiagnosticProcessComponent
+  },
+  {path: 'patient/:id', component: DiagnosticProcessFormComponent,canActivate: [OnlyLoggedInGuard]}
+  
   ]}
 ];
 

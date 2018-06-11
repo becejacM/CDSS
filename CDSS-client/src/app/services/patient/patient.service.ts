@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {IPageable} from '../../model/IPageable';
+import { IPatient } from '../../model/IPatient';
 
 @Injectable()
 export class PatientService {
@@ -12,6 +13,11 @@ export class PatientService {
     page = page - 1;
     const urlPath = '/api/patients?&page=' + page + '&size=' + limit;
     return this.http.get<IPageable>(urlPath);
+  }
+
+  getById(id:any): Observable<IPatient> {
+    const urlPath = '/api/patients/'+id;
+    return this.http.get<IPatient>(urlPath);
   }
 
   getByFN(fn:String, page: number, limit: number): Observable<IPageable> {

@@ -33,6 +33,7 @@ import { SortableColumnDirective } from './directives/sortable-column.directive'
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { PatientService } from './services/patient/patient.service';
 import { SortService } from './services/sort/sort.service';
+import { DiagnosticProcessFormComponent } from './components/diagnostic-process-form/diagnostic-process-form.component';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { SortService } from './services/sort/sort.service';
     DiagnosticProcessComponent,
     SortableColumnComponent,
     SortableColumnDirective,
-    PaginationComponent
+    PaginationComponent,
+    DiagnosticProcessFormComponent
   ],
   imports: [
     BrowserModule,
