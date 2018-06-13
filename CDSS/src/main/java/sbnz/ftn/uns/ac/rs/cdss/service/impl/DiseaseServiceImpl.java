@@ -69,7 +69,7 @@ public class DiseaseServiceImpl implements DiseaseService {
 		try {
 			AppUser user = this.appUserRepository.findByUsername(username);
 			if (user == null || !user.getRole().equals(UserRole.ADMIN)) {
-				throw new NotValidParamsException("You must be logged in as admin or doctor to add disease");
+				throw new NotValidParamsException("You must be logged in as admin to add disease");
 			}
 
 			Disease p = diseaseRepository.save(new Disease(disease));

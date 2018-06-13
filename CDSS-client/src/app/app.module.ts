@@ -34,6 +34,18 @@ import { PaginationComponent } from './components/pagination/pagination.componen
 import { PatientService } from './services/patient/patient.service';
 import { SortService } from './services/sort/sort.service';
 import { DiagnosticProcessFormComponent } from './components/diagnostic-process-form/diagnostic-process-form.component';
+import { MonitoringComponent } from './components/monitoring/monitoring.component';
+import { McardComponent } from './components/mcard/mcard.component';
+import { RcardComponent } from './components/rcard/rcard.component';
+import { ReportingComponent } from './components/reporting/reporting.component';
+import { OrganizeCardComponent } from './components/organize-card/organize-card.component';
+import { OrganizeDoctorsComponent } from './components/organize-doctors/organize-doctors.component';
+import { OrganizePatientsComponent } from './components/organize-patients/organize-patients.component';
+import { OrganizeMedicinesComponent } from './components/organize-medicines/organize-medicines.component';
+import { OrganizeSymptomsComponent } from './components/organize-symptoms/organize-symptoms.component';
+import { OrganizeDiseasesComponent } from './components/organize-diseases/organize-diseases.component';
+import { DoctorService } from './services/doctor/doctor.service';
+import { PatientDetailsComponent } from './components/patient-details/patient-details.component';
 
 
 @NgModule({
@@ -49,7 +61,18 @@ import { DiagnosticProcessFormComponent } from './components/diagnostic-process-
     SortableColumnComponent,
     SortableColumnDirective,
     PaginationComponent,
-    DiagnosticProcessFormComponent
+    DiagnosticProcessFormComponent,
+    MonitoringComponent,
+    McardComponent,
+    RcardComponent,
+    ReportingComponent,
+    OrganizeCardComponent,
+    OrganizeDoctorsComponent,
+    OrganizePatientsComponent,
+    OrganizeMedicinesComponent,
+    OrganizeSymptomsComponent,
+    OrganizeDiseasesComponent,
+    PatientDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -71,6 +94,7 @@ import { DiagnosticProcessFormComponent } from './components/diagnostic-process-
   providers: [AuthenticationService,
     PatientService,
     SortService,
+    DoctorService,
     OnlyLoggedInGuard,
     AlreadyLoggedInGuard,
     {

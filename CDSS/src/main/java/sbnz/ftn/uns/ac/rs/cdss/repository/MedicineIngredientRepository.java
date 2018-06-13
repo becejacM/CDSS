@@ -6,4 +6,5 @@ import sbnz.ftn.uns.ac.rs.cdss.model.MedicineIngredient;
 
 public interface MedicineIngredientRepository extends JpaRepository<MedicineIngredient, Long> {
 
+	MedicineIngredient findByName(String name);
 }

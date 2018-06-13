@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import sbnz.ftn.uns.ac.rs.cdss.model.AppUser;
+import sbnz.ftn.uns.ac.rs.cdss.model.UserRole;
 
 import javax.transaction.Transactional;
 
@@ -24,4 +25,6 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     @Modifying(clearAutomatically = true)
     @Query("UPDATE AppUser user set user.password = ?1 where user.username = ?2")
     void changePassword(String password, String username);
+    
+    Page<AppUser> findByRole(UserRole role, Pageable pageable);
 }

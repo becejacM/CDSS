@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IPatient } from '../../model/IPatient';
 import { SearchCriteria } from '../../model/SearchCriteria';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import { PatientService } from '../../services/patient/patient.service';
@@ -16,6 +16,8 @@ export class DiagnosticProcessComponent implements OnInit {
 
   patients: IPatient[];
   addForm: FormGroup;
+  addPatientForm: FormGroup;
+  
   timeNow = new Date();
 
   // Pagable
@@ -25,22 +27,29 @@ export class DiagnosticProcessComponent implements OnInit {
   limit = 20;
   criteria = new SearchCriteria();
   toggleFilter: boolean;
+  toggleAdd: boolean;
   constructor(private router: Router, private toastr: ToastrService,
     private patientService: PatientService, private route: ActivatedRoute, private fb: FormBuilder) {
 }
 
   ngOnInit() {
     this.createForm();
+    this.createPatientForm();
     this.criteria.sortColumn = 'firstname';
     this.criteria.sortDirection = 'desc';
     
     this.getAllPatients();
     
     this.toggleFilter = false;
+    this.toggleAdd = false;
   }
 
   filter() {
     this.toggleFilter = !this.toggleFilter;
+  }
+
+  add() {
+    this.toggleAdd = !this.toggleAdd;
   }
 
   onSorted($event) {
@@ -69,6 +78,16 @@ export class DiagnosticProcessComponent implements OnInit {
       lastname: [''],
       address: [''],
       medicalCardNumber: ['']
+    });
+  }
+
+  createPatientForm() {
+    this.addPatientForm = this.fb.group({
+      firstname: ['', Validators.compose([Validators.required])],
+      lastname: ['', Validators.compose([Validators.required])],
+      address: ['', Validators.compose([Validators.required])],
+      medicalCardNumber: ['', Validators.compose([Validators.required])],
+      email: ['',  Validators.compose([Validators.required, Validators.email])]
     });
   }
 
@@ -403,9 +422,30 @@ export class DiagnosticProcessComponent implements OnInit {
         });
   }
 
+  addPatient(){
+    this.patientService.add(this.addPatientForm.value)
+    .subscribe(data => {
+        console.log(data);
+        this.getPatients();
+        this.toggleAdd = false;
+      },
+      (err: HttpErrorResponse) => {
+        if (err.error instanceof Error) {
+          this.toastr.error(err.error.message + '\nError Status ' + err.status);
+        } else {
+          this.toastr.error(err.error.message + '\nError Status ' + err.status);
+        }
+      });
+  }
+
   submit() {
     this.getPatients();
     this.toggleFilter = false;
+  }
+
+  submitPatient() {
+    console.log(this.addPatientForm.value);    
+   this.addPatient();
   }
 
   goToPage(n: number): void {

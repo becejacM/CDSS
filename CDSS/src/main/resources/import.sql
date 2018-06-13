@@ -3,9 +3,9 @@
 -- CDSS421054-sbnz => password
 insert into app_user(id, username, password,email, firstname, lastname, verified, role) values
   (1, 'admin', '$2a$10$H0bjPW8lFs9VSaBrySMp4e/ht1MhrtfLWenraISxFBp2.Iofd6yuC', 'admin@mailinator.com', 'admin', 'admin', 1, 'ADMIN');
--- Operator-1-bsep => password
+-- CDSS421054-sbnz => password
 insert into app_user(id, username, password,email, firstname, lastname, verified, role) values
-  (2, 'doctor1', '$2a$10$KbAWqhzc8.MlWoQxS.lkXOHT4tQ1j87CYbvpNG49FSmnw7lZt/zFe', 'doctor1@mailinator.com', 'Milana', 'Becejac', 1, 'DOCTOR');
+  (2, 'doctor1', '$2a$10$H0bjPW8lFs9VSaBrySMp4e/ht1MhrtfLWenraISxFBp2.Iofd6yuC', 'doctor1@mailinator.com', 'Milana', 'Becejac', 1, 'DOCTOR');
 -- Operator-2-bsep => password
 insert into app_user(id, username, password,email, firstname, lastname, verified, role) values
   (3, 'doctor2', '$2a$10$rRpzJm1LFO73jGfdqE4cJeW5wcpUzN1XItUvoHJlx6WyR9D0zjMuW', 'doctor2@mailinator.com', 'Nada', 'Macura', 1, 'DOCTOR');
@@ -16,7 +16,7 @@ insert into privilege(id, name) value (2, 'WRITE_PRIVILEGE');
 insert into privilege(id, name) value (3, 'CHANGE_PASSWORD_PRIVILEGE');
 
 insert into role(id, name) value(1, 'ADMIN');
-insert into role(id, name) value(2, 'OPERATOR');
+insert into role(id, name) value(2, 'DOCTOR');
 
 insert into roles_privileges(role_id, privilege_id) value (1,1);
 insert into roles_privileges(role_id, privilege_id) value (1,2);
@@ -29,10 +29,65 @@ insert into users_roles(user_id, role_id) value (2, 2);
 insert into users_roles(user_id, role_id) value (3, 2);
 
 
-
+--- dodavanje pacijenata
 insert into patient(id, email, firstname, lastname, address, medical_card_number) values (1, 'pacijent1@mailinator.com', 'pacijent1', 'pacijentic1', 'adresa 1', '111111');
 insert into patient(id, email, firstname, lastname, address, medical_card_number) values (2, 'pacijent2@mailinator.com', 'pacijent2', 'pacijentic2', 'adresa 2', '222222');
 insert into patient(id, email, firstname, lastname, address, medical_card_number) values (3, 'pacijent3@mailinator.com', 'pacijent3', 'pacijentic3', 'adresa 3', '333333');
+
+--- dodavanje medicinskog dokumenta pacijentu
+insert into medical_record(id, patient_id) values (1,1);
+insert into medical_record(id, patient_id) values (2,2);
+insert into medical_record(id, patient_id) values (3,3);
+--- dodavanje lekova
+insert into medicine(id, name, type_of_medicine) values (1, 'antibiotik1', 'ANTIBIOTIC');
+insert into medicine(id, name, type_of_medicine) values (2, 'antibiotik2', 'ANTIBIOTIC');
+insert into medicine(id, name, type_of_medicine) values (3, 'antibiotik3', 'ANTIBIOTIC');
+insert into medicine(id, name, type_of_medicine) values (4, 'painkiller1', 'PAINKILLER');
+insert into medicine(id, name, type_of_medicine) values (5, 'painkiller2', 'PAINKILLER');
+insert into medicine(id, name, type_of_medicine) values (6, 'painkiller3', 'PAINKILLER');
+insert into medicine(id, name, type_of_medicine) values (7, 'other1', 'OTHER');
+insert into medicine(id, name, type_of_medicine) values (8, 'other2', 'OTHER');
+insert into medicine(id, name, type_of_medicine) values (9, 'other3', 'OTHER');
+
+--- dodavanje sastojaka lekova
+insert into medicine_ingredient(id, name) values (1, 'sastojak 1');
+insert into medicine_ingredient(id, name) values (2, 'sastojak 2');
+insert into medicine_ingredient(id, name) values (3, 'sastojak 3');
+insert into medicine_ingredient(id, name) values (4, 'sastojak 4');
+insert into medicine_ingredient(id, name) values (5, 'sastojak 5');
+
+--- povezivanje lekova sa sastojcima
+insert into medicine_ingredient_table(medicine_id, medicine_ingredient_id) values (1, 1);
+insert into medicine_ingredient_table(medicine_id, medicine_ingredient_id) values (1, 4);
+insert into medicine_ingredient_table(medicine_id, medicine_ingredient_id) values (1, 5);
+insert into medicine_ingredient_table(medicine_id, medicine_ingredient_id) values (4, 1);
+insert into medicine_ingredient_table(medicine_id, medicine_ingredient_id) values (4, 4);
+insert into medicine_ingredient_table(medicine_id, medicine_ingredient_id) values (4, 5);
+insert into medicine_ingredient_table(medicine_id, medicine_ingredient_id) values (7, 1);
+insert into medicine_ingredient_table(medicine_id, medicine_ingredient_id) values (7, 4);
+insert into medicine_ingredient_table(medicine_id, medicine_ingredient_id) values (7, 5);
+insert into medicine_ingredient_table(medicine_id, medicine_ingredient_id) values (2, 2);
+insert into medicine_ingredient_table(medicine_id, medicine_ingredient_id) values (3, 3);
+insert into medicine_ingredient_table(medicine_id, medicine_ingredient_id) values (5, 2);
+insert into medicine_ingredient_table(medicine_id, medicine_ingredient_id) values (6, 3);
+insert into medicine_ingredient_table(medicine_id, medicine_ingredient_id) values (8, 2);
+insert into medicine_ingredient_table(medicine_id, medicine_ingredient_id) values (9, 3);
+
+--- dodavanje alergija na lekove 
+insert into medicine_alergies_table(medical_record_id, medicine_id) values (1,1);
+insert into medicine_alergies_table(medical_record_id, medicine_id) values (1,4);
+insert into medicine_alergies_table(medical_record_id, medicine_id) values (1,7);
+insert into medicine_alergies_table(medical_record_id, medicine_id) values (2,2);
+insert into medicine_alergies_table(medical_record_id, medicine_id) values (2,5);
+insert into medicine_alergies_table(medical_record_id, medicine_id) values (2,8);
+insert into medicine_alergies_table(medical_record_id, medicine_id) values (3,3);
+insert into medicine_alergies_table(medical_record_id, medicine_id) values (3,6);
+insert into medicine_alergies_table(medical_record_id, medicine_id) values (3,9);
+
+--- dodavanje alergija na sastojke 
+insert into ingredient_alergies_table(medical_record_id, ingredient_id) values (1,1);
+insert into ingredient_alergies_table(medical_record_id, ingredient_id) values (2,2);
+insert into ingredient_alergies_table(medical_record_id, ingredient_id) values (3,3);
 
 --- dodavanje simptoma
 insert into symptom(id, name) values (1, 'Curenje iz nosa');
@@ -123,3 +178,12 @@ insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) val
 insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) values (38, 'GENERAL', 8, 19);	---gusenje
 insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) values (39, 'GENERAL', 8, 18);	---otoci nogu i zglobova
 insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) values (40, 'GENERAL', 8, 21);	---dijareja
+
+insert into diagnostic_therapy(id, disease_id, medical_record_id) values (1, 1, 1); --- dodata pacijentu 1 prehlada(on je alergican na 1 4 7 lekove i sastojak 1)
+insert into therapy_symptoms(therapy_id, symptom_id) values (1, 1);					--- moraju biti 4 simptoma zadovoljena za 1.grupu bolesti
+insert into therapy_symptoms(therapy_id, symptom_id) values (1, 2);
+insert into therapy_symptoms(therapy_id, symptom_id) values (1, 3);
+insert into therapy_symptoms(therapy_id, symptom_id) values (1, 4);
+insert into therapy_medicines(therapy_id, medicine_id) values (1, 2);
+insert into therapy_medicines(therapy_id, medicine_id) values (1, 5);
+insert into therapy_medicines(therapy_id, medicine_id) values (1, 8);

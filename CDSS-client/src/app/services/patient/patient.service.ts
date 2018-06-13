@@ -3,11 +3,28 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {IPageable} from '../../model/IPageable';
 import { IPatient } from '../../model/IPatient';
+import { IMedicine } from '../../model/IMedicine';
+import { IAlergie } from '../../model/IAlergie';
 
 @Injectable()
 export class PatientService {
 
   constructor(private http: HttpClient) { }
+
+  add(patient: IPatient): Observable<IPatient> {
+    const urlPath = '/api/patients';
+    return this.http.post<IPatient>(urlPath, patient);
+  }
+
+  addAlergie(id: any, name:String): Observable<IPatient> {
+    const urlPath = '/api/patients/alergies/'+id+"/"+name;
+    return this.http.put<IPatient>(urlPath,null);
+  }
+
+  update(patient: IPatient, id:any): Observable<IPatient> {
+    const urlPath = '/api/patients/'+id;
+    return this.http.put<IPatient>(urlPath, patient);
+  }
 
   getAll(page: number, limit: number): Observable<IPageable> {
     page = page - 1;
@@ -18,6 +35,11 @@ export class PatientService {
   getById(id:any): Observable<IPatient> {
     const urlPath = '/api/patients/'+id;
     return this.http.get<IPatient>(urlPath);
+  }
+
+  getAlergies(id:any): Observable<IAlergie> {
+    const urlPath = '/api/patients/alergies/'+id;
+    return this.http.get<IAlergie>(urlPath);
   }
 
   getByFN(fn:String, page: number, limit: number): Observable<IPageable> {

@@ -1,9 +1,14 @@
 package sbnz.ftn.uns.ac.rs.cdss.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,12 +21,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import sbnz.ftn.uns.ac.rs.cdss.CdssApplication;
+import sbnz.ftn.uns.ac.rs.cdss.model.UserRole;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.AppUserDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.AppUserDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.AuthenticationRequestDto;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.AuthenticationResponseDto;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.ChangePasswordDto;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.security.SecurityUser;
 import sbnz.ftn.uns.ac.rs.cdss.security.TokenUtils;
 import sbnz.ftn.uns.ac.rs.cdss.service.impl.UserExtendedService;
+import sbnz.ftn.uns.ac.rs.cdss.services.AppUserService;
 
 @RestController
 @RequestMapping("/users")
@@ -36,10 +47,16 @@ public class AppUserController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private TokenUtils tokenUtils;
+	HttpServletRequest httpServletRequest;
+
+	@Autowired
+	TokenUtils tokenUtils;
 
     @Autowired
     private UserExtendedService userDetailsService;
+
+    @Autowired
+    private AppUserService userService;
 
     @PostMapping(value = "/login")
     public ResponseEntity<?> authenticationRequest(@RequestBody AuthenticationRequestDto authenticationRequest) {
@@ -81,10 +98,48 @@ public class AppUserController {
         }
         return new ResponseEntity<>("Current password is not valid",HttpStatus.BAD_REQUEST);
     }
+    
+    @GetMapping()
+	public ResponseEntity<Page<AppUserDetailsDTO>> getAllDiseases(Pageable pageable) {
+		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
+		int limit = pageable.getPageSize() <= 25 ? pageable.getPageSize() : 25;
+		Pageable newPageable = new PageRequest(pageable.getPageNumber(), limit);
+		return new ResponseEntity<>(this.userService.getAllByRole(username, UserRole.DOCTOR, newPageable), HttpStatus.OK);
+	}
 
-//    public static String hashPassword(String password_plaintext) {
-//        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-//        String s = bCryptPasswordEncoder.encode(password_plaintext);
-//        return (s);
-//    }
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<AppUserDetailsDTO> getUser(@PathVariable Long id) {
+		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
+		return new ResponseEntity<>(this.userService.getById(username, id), HttpStatus.OK);
+	}
+
+	@PostMapping
+	public ResponseEntity<AppUserDetailsDTO> createUser(
+			@RequestBody AppUserDTO u) {
+		u.setPassword(this.hashPassword(u.getPassword()));
+		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
+		return new ResponseEntity<>(this.userService.save(username, u),
+				HttpStatus.CREATED);
+	}
+
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<AppUserDetailsDTO> updateUser(@RequestBody AppUserDTO u,
+			@PathVariable Long id) {
+		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
+		return new ResponseEntity<>(this.userService.update(username, u, id),
+				HttpStatus.OK);
+	}
+
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<?> deleteDoctor(@PathVariable Long id) {
+		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
+		this.userService.delete(username, id);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+    public static String hashPassword(String password_plaintext) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String s = bCryptPasswordEncoder.encode(password_plaintext);
+        return (s);
+    }
 }

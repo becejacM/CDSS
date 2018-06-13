@@ -37,6 +37,9 @@ public class Medicine {
     @JoinTable(name = "medicine_ingredient_table", joinColumns = @JoinColumn(name = "medicine_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "medicineIngredient_id", referencedColumnName = "id"))
     private Collection<MedicineIngredient> ingredients;
 	
+	@ManyToMany(mappedBy = "medicines")
+    private Collection<MedicalRecord> medicalRecords;
+	
 	public Medicine() {
 		
 	}
@@ -85,6 +88,16 @@ public class Medicine {
 
 	public void setIngredients(Collection<MedicineIngredient> ingredients) {
 		this.ingredients = ingredients;
+	}
+	
+	
+
+	public Collection<MedicalRecord> getMedicalRecords() {
+		return medicalRecords;
+	}
+
+	public void setMedicalRecords(Collection<MedicalRecord> medicalRecords) {
+		this.medicalRecords = medicalRecords;
 	}
 
 	@Override

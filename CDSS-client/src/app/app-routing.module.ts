@@ -8,6 +8,17 @@ import {ChangePasswordComponent} from './components/change-password/change-passw
 import { DiagnosticProcessCardComponent } from './components/diagnostic-process-card/diagnostic-process-card.component';
 import { DiagnosticProcessComponent } from './components/diagnostic-process/diagnostic-process.component';
 import { DiagnosticProcessFormComponent } from './components/diagnostic-process-form/diagnostic-process-form.component';
+import { McardComponent } from './components/mcard/mcard.component';
+import { MonitoringComponent } from './components/monitoring/monitoring.component';
+import { RcardComponent } from './components/rcard/rcard.component';
+import { ReportingComponent } from './components/reporting/reporting.component';
+import { OrganizeCardComponent } from './components/organize-card/organize-card.component';
+import { OrganizeDoctorsComponent } from './components/organize-doctors/organize-doctors.component';
+import { OrganizePatientsComponent } from './components/organize-patients/organize-patients.component';
+import { OrganizeSymptomsComponent } from './components/organize-symptoms/organize-symptoms.component';
+import { OrganizeDiseasesComponent } from './components/organize-diseases/organize-diseases.component';
+import { OrganizeMedicinesComponent } from './components/organize-medicines/organize-medicines.component';
+import { PatientDetailsComponent } from './components/patient-details/patient-details.component';
 
 
 const appRoutes: Routes = [
@@ -21,11 +32,30 @@ const appRoutes: Routes = [
   {path: 'change-password', component: ChangePasswordComponent},
   {
     path: 'dpcard', component: DiagnosticProcessCardComponent, canActivate: [OnlyLoggedInGuard], children: [
-    {path: 'diagnostic-process', component: DiagnosticProcessComponent
-  },
+    {path: 'diagnostic-process', component: DiagnosticProcessComponent,canActivate: [OnlyLoggedInGuard]},
   {path: 'patient/:id', component: DiagnosticProcessFormComponent,canActivate: [OnlyLoggedInGuard]}
   
-  ]}
+  ]},
+  {
+    path: 'mcard', component: McardComponent, canActivate: [OnlyLoggedInGuard], children: [
+    {path: 'monitoring', component: MonitoringComponent,canActivate: [OnlyLoggedInGuard]},
+  
+  ]},
+  {
+    path: 'rcard', component: RcardComponent, canActivate: [OnlyLoggedInGuard], children: [
+    {path: 'reporting', component: ReportingComponent,canActivate: [OnlyLoggedInGuard]},
+  
+  ]},
+  {
+    path: 'organizecard', component: OrganizeCardComponent, canActivate: [OnlyLoggedInGuard], children: [
+    {path: 'doctors', component: OrganizeDoctorsComponent,canActivate: [OnlyLoggedInGuard]},
+    {path: 'patients', component: OrganizePatientsComponent,canActivate: [OnlyLoggedInGuard]},
+    {path: 'diseases', component: OrganizeDiseasesComponent,canActivate: [OnlyLoggedInGuard]},
+    {path: 'symptoms', component: OrganizeSymptomsComponent,canActivate: [OnlyLoggedInGuard]},
+    {path: 'medicines', component: OrganizeMedicinesComponent,canActivate: [OnlyLoggedInGuard]},
+    {path: 'patientDetails/:id', component: PatientDetailsComponent, canActivate: [OnlyLoggedInGuard]},    
+  ]},
+  
 ];
 
 @NgModule({

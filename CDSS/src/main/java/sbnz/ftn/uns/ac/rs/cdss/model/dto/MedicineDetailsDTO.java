@@ -1,5 +1,6 @@
 package sbnz.ftn.uns.ac.rs.cdss.model.dto;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class MedicineDetailsDTO {
 	private Long id;
 	private String name;
 	private TypeOfMedicine typeOfMedicine;
-	private Collection<IngredientDetailsDTO> mi;
+	private Collection<IngredientDetailsDTO> mi=new ArrayList<>();
 	public MedicineDetailsDTO() {
 		
 	}

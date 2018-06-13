@@ -1,5 +1,6 @@
 package sbnz.ftn.uns.ac.rs.cdss.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.Column;
@@ -21,6 +22,8 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.AppUserDTO;
 
 @Entity
 @Table(name = "app_user")
@@ -64,6 +67,18 @@ public class AppUser {
 	
 	public AppUser() {
 		
+	}
+	
+	public AppUser(AppUserDTO user) {
+		super();
+		this.firstname = user.getFirstname();
+		this.lastname = user.getLastname();
+		this.email = user.getEmail();
+		this.role = user.getRole();
+		this.verified = true;
+		this.username = user.getUsername();
+		this.password = user.getPassword();
+		this.roles = new ArrayList<Role>();
 	}
 	
 	public AppUser(Long id, @Size(min = 3) String username, @Size(min = 3) String password, @Email String email,

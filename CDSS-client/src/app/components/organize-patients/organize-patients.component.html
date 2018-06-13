@@ -1,0 +1,88 @@
+<div class="card text-center col-md-12">
+    <div class="card-header">
+      <ul class="nav nav-tabs card-header-tabs">
+        
+        <li class="nav-item active">
+          <button id="link-tab-filter" class="nav-link" (click)="add()">Add new
+            <i class="fa fa-plus" aria-hidden="true"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+    <br>
+    <div class="card-block">
+      <div *ngIf="toggleAdd===true">
+        <div class="card-block justify-content-around d-flex align-items-center">
+  
+          <form [formGroup]="addForm" (ngSubmit)="submit()" novalidate style="width:100%">
+              <div class="form-group row" style="margin-left:15%; width:70%">
+                  <label class="col-2 col-form-label">First name:</label>
+                  <div class="col-4">
+                    <input formControlName="firstname" class="form-control">
+                  </div>
+                  <label class="col-2 col-form-label">Last name:</label>
+                  <div class="col-4">
+                    <input formControlName="lastname" class="form-control">
+                  </div>
+                </div>
+                <div class="form-group row" style="margin-left:15%; width:70%">
+                  <label class="col-2 col-form-label">Address:</label>
+                  <div class="col-4">
+                    <input formControlName="address" class="form-control">
+                  </div>
+                  <label class="col-2 col-form-label">Medical card number:</label>
+                  <div class="col-4">
+                    <input formControlName="medicalCardNumber" class="form-control">
+                  </div>
+                </div>
+                <div class="form-group row" style="margin-left:15%; width:70%">
+                    <label class="col-2 col-form-label">Email:</label>
+                    <div class="col-10">
+                      <input formControlName="email" class="form-control">
+                    </div>
+                </div>
+            <button id="submit-btn-tm-form" type="submit" class="btn btn-info btn-md ml-auto" [disabled]="!addForm.valid">
+              Add
+              <i class="fa fa-plus" aria-hidden="true"></i>
+            </button>
+          </form>
+        </div>
+        <br>
+      </div>
+    </div>
+    
+  </div>
+  <table style="background: rgba(207, 219, 237, 0.95);" class="table" appSortableColumn (sorted)="onSorted($event)">
+    <thead class="thead-light">
+      <tr>
+          <th sortable-column="firstname">First name</th>
+          <th sortable-column="lastname">Last name</th>
+          <th sortable-column="address">Address</th>
+          <th sortable-column="email">Email</th>
+          <th sortable-column="medicalCardNumber">Medical card number</th>
+        <th></th>
+      </tr>
+  
+  
+    </thead>
+  
+    <tbody>
+      <tr *ngFor="let patient of patients">
+  
+          <td  class="clickable" [routerLink]="['/organizecard/patientDetails/', patient.id]">{{patient.firstname}}</td>
+          <td  class="clickable" [routerLink]="['/organizecard/patientDetails/', patient.id]">{{patient.lastname}}</td>
+          <td  class="clickable" [routerLink]="['/organizecard/patientDetails/', patient.id]">{{patient.address}}</td>
+          <td  class="clickable" [routerLink]="['/organizecard/patientDetails/', patient.id]">{{patient.email}}</td>
+          <td  class="clickable" [routerLink]="['/organizecard/patientDetails/', patient.id]">{{patient.medicalCardNumber}}</td>
+        <td><button class="btn btn-info btn-md ml-auto" (click)="update(patient.id)">
+            <i class="fa fa-pencil" aria-hidden="true"></i>                  
+        </button>        
+            </td>  
+        
+      </tr>
+    </tbody>
+  </table>
+  
+  <hr/>
+  <app-my-pagination (goPage)="goToPage($event)" (goNext)="onNext()" (goPrev)="onPrev()" (onChangePerPage)="onChangePerPage($event)"
+    [pagesToShow]="5" [page]="page" [perPage]="limit" [count]="total"></app-my-pagination>

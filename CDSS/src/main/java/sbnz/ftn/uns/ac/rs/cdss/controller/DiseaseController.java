@@ -41,7 +41,7 @@ public class DiseaseController {
 	@GetMapping()
 	public ResponseEntity<Page<DiseaseDetailsDTO>> getAllDiseases(Pageable pageable) {
 		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
-		int limit = pageable.getPageSize() <= 25 ? pageable.getPageSize() : 5;
+		int limit = pageable.getPageSize() <= 25 ? pageable.getPageSize() : 25;
 		Pageable newPageable = new PageRequest(pageable.getPageNumber(), limit);
 		return new ResponseEntity<>(this.diseaseService.getAllDiseases(username, newPageable), HttpStatus.OK);
 	}

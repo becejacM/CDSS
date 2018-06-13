@@ -1,5 +1,7 @@
 package sbnz.ftn.uns.ac.rs.cdss.controller;
 
+import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.AlergiesDetailsDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.MedicineDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.MedicineDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.PatientDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.PatientDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.security.TokenUtils;
@@ -38,7 +43,7 @@ public class PatientController {
 	@GetMapping()
 	public ResponseEntity<Page<PatientDetailsDTO>> getAllPatients(Pageable pageable) {
 		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
-		int limit = pageable.getPageSize() <= 25 ? pageable.getPageSize() : 5;
+		int limit = pageable.getPageSize() <= 25 ? pageable.getPageSize() : 25;
 		Pageable newPageable = new PageRequest(pageable.getPageNumber(), limit);
 		return new ResponseEntity<>(this.patientService.getAllPatients(username, newPageable), HttpStatus.OK);
 	}
@@ -71,4 +76,20 @@ public class PatientController {
 		this.patientService.deletePatient(username, id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
+	
+	
+	@GetMapping(value = "alergies/{id}")
+	public ResponseEntity<AlergiesDetailsDTO> getPatientAlergies(@PathVariable Long id) {
+		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
+		return new ResponseEntity<>(this.patientService.getAlergies(username, id), HttpStatus.OK);
+	}
+	
+	@PutMapping(value="/alergies/{id}/{nameAlergie}")
+	public ResponseEntity<MedicineDetailsDTO> addAlergie(@PathVariable Long id,@PathVariable String nameAlergie) {
+		System.out.println(nameAlergie);
+		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
+		return new ResponseEntity<MedicineDetailsDTO>(this.patientService.addAlergie(username, id, nameAlergie),
+				HttpStatus.CREATED);
+	}
+	//Dijagnostikovanje procesa
 }

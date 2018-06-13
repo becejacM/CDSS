@@ -1,10 +1,13 @@
 package sbnz.ftn.uns.ac.rs.cdss.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.Email;
@@ -36,6 +39,11 @@ public class Patient {
 	@Column(name = "medicalCardNumber", nullable = true)
 	protected String medicalCardNumber;
 	
+	@OneToOne(fetch = FetchType.LAZY,
+            cascade =  CascadeType.ALL,
+            mappedBy = "patient")
+	private MedicalRecord medicalRecord;
+	
 	public Patient() {
 		
 	}
@@ -46,6 +54,7 @@ public class Patient {
 		this.email = p.getEmail();
 		this.address = p.getAddress();
 		this.medicalCardNumber = p.getMedicalCardNumber();
+		
 	}
 	public Patient(Long id, @Email String email, String firstname, String lastname, String address,
 			String medicalCardNumber) {
@@ -106,6 +115,15 @@ public class Patient {
 
 	public void setMedicalCardNumber(String medicalCardNumber) {
 		this.medicalCardNumber = medicalCardNumber;
+	}
+
+	
+	public MedicalRecord getMedicalRecord() {
+		return medicalRecord;
+	}
+
+	public void setMedicalRecord(MedicalRecord medicalRecord) {
+		this.medicalRecord = medicalRecord;
 	}
 
 	@Override

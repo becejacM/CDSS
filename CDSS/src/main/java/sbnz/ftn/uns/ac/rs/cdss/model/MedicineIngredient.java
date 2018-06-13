@@ -27,6 +27,9 @@ public class MedicineIngredient {
 	@ManyToMany(mappedBy = "ingredients")
     private Collection<Medicine> medicines;
 	
+	@ManyToMany(mappedBy = "ingredients")
+    private Collection<MedicalRecord> medicalRecords;
+	
 	public MedicineIngredient() {
 		
 	}
@@ -66,6 +69,15 @@ public class MedicineIngredient {
 
 	public void setMedicines(Collection<Medicine> medicines) {
 		this.medicines = medicines;
+	}
+
+	
+	public Collection<MedicalRecord> getMedicalRecords() {
+		return medicalRecords;
+	}
+
+	public void setMedicalRecords(Collection<MedicalRecord> medicalRecords) {
+		this.medicalRecords = medicalRecords;
 	}
 
 	@Override

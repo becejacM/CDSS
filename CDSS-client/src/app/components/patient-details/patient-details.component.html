@@ -1,0 +1,60 @@
+<div class="container" style="margin-top: 20px">
+    <div *ngIf="patient" class="card">
+      <div class="card-header">
+        <b>Patient:</b> {{patient.firstname}} {{patient.lastname}}
+      </div>
+      <div class="card-block">
+        <p><b>Address:</b>
+        {{patient.address}}, &nbsp;<b>Email:
+        </b>{{patient.email}}, &nbsp;<b>Medical card number:</b>
+        {{patient.medicalCardNumber}}</p> &nbsp; 
+        <button class="btn btn-info btn-md ml-auto" (click)="alergies()">Alergies</button>
+
+        <div *ngIf="showAlergies===true">
+          <br/>
+          <button id="link-tab-filter" class="btn btn-info btn-md ml-auto" (click)="addAlergie()">Add new
+              <i class="fa fa-plus" aria-hidden="true"></i>
+            </button>
+            
+            <div *ngIf="toggleAlergie===true">
+              <br/>
+                <form [formGroup]="addForm" (ngSubmit)="submitAlergie()" novalidate style="width:100%">
+                    
+                      <div class="form-group row" style="margin-left:15%; width:70%">
+                          <label class="col-2 col-form-label">Name of medicine:</label>
+                          <div class="col-10">
+                            <input formControlName="name" class="form-control">
+                          </div>
+                      </div>
+                  <button id="submit-btn-tm-form" type="submit" class="btn btn-info btn-md ml-auto" [disabled]="!addForm.valid">
+                    Add
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                  </button>
+                </form>
+            </div>
+            <table style="background: rgba(207, 219, 237, 0.95); margin: 5%; width:90%" class="table">
+                <thead class="thead-light">
+                  <tr>
+                      <th>name</th>
+                      <th>Type of medicine</th>
+                  </tr>
+              
+              
+                </thead>
+              
+                <tbody>
+                  <tr *ngFor="let alergi of medicineAlergies">
+              
+                      <td>{{alergi.name}}</td>
+                      <td>{{alergi.typeOfMedicine}}</td>
+                    
+                    
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+<br/>
