@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {IPageable} from '../../model/IPageable';
 import { IDisease } from '../../model/IDisease';
+import { ListOfSymptoms } from '../../model/ListOfSymptoms';
 
 @Injectable()
 export class DiseaseService {
@@ -40,5 +41,10 @@ export class DiseaseService {
     delete(id:any) {
       const urlPath = '/api/diseases/'+id;
       return this.http.delete<IDisease>(urlPath);
+    }
+
+    getDiagnose(doc: ListOfSymptoms) : Observable<IDisease>{
+      const urlPath = '/api/diseases/diagnose';
+      return this.http.post<IDisease>(urlPath, doc);
     }
 }

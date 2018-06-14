@@ -22,6 +22,7 @@ import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.IngredientDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.IngredientDetailsDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.ListOfSymbolsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.SymptomDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.SymptomDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.repository.AppUserRepository;
@@ -164,7 +165,7 @@ public class DiseaseServiceImpl implements DiseaseService {
 	public SymptomDetailsDTO checkSymptom(String username, String name) {
 		try {
 			AppUser user = this.appUserRepository.findByUsername(username);
-			if (user == null || !user.getRole().equals(UserRole.ADMIN)) {
+			if (user == null) {
 				throw new NotValidParamsException("You must be logged in as admin to check symptom");
 			}
 			System.out.println(name);
@@ -177,6 +178,26 @@ public class DiseaseServiceImpl implements DiseaseService {
 			throw ex;
 		} catch (Exception ex) {
 			throw new NotValidParamsException("Invalid parameters while trying to check symptom");
+		}
+	}
+
+	@Override
+	public Disease getDiagnose(String username, ListOfSymbolsDTO listOfSymbols) {
+		try {
+			AppUser user = this.appUserRepository.findByUsername(username);
+			if (user == null || !user.getRole().equals(UserRole.DOCTOR)) {
+				throw new NotValidParamsException("You must be logged in as doctor to get disease");
+			}
+
+			for(SymptomDTO s : listOfSymbols.getSymptoms()) {
+				Symptom symptom = symptomRepository.findByName(s.getName());
+				System.out.println("tu saaam: "+symptom.toString());
+			}
+			return new Disease();
+		} catch (NotValidParamsException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			throw new NotValidParamsException("Invalid parameters while trying to update disease");
 		}
 	}
 

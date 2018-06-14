@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.IngredientDetailsDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.ListOfSymbolsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.PatientDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.PatientDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.SymptomDetailsDTO;
@@ -81,5 +82,11 @@ public class DiseaseController {
 	public ResponseEntity<SymptomDetailsDTO> chackIngredient(@PathVariable String name) {
 		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
 		return new ResponseEntity<>(this.diseaseService.checkSymptom(username, name), HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/diagnose")
+	public ResponseEntity<?> diagnose(@RequestBody ListOfSymbolsDTO listOfSymptoms) {
+		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
+		return new ResponseEntity<>(this.diseaseService.getDiagnose(username, listOfSymptoms), HttpStatus.OK);
 	}
 }

@@ -5,7 +5,7 @@ insert into app_user(id, username, password,email, firstname, lastname, verified
   (1, 'admin', '$2a$10$H0bjPW8lFs9VSaBrySMp4e/ht1MhrtfLWenraISxFBp2.Iofd6yuC', 'admin@mailinator.com', 'admin', 'admin', 1, 'ADMIN');
 -- CDSS421054-sbnz => password
 insert into app_user(id, username, password,email, firstname, lastname, verified, role) values
-  (2, 'doctor1', '$2a$10$H0bjPW8lFs9VSaBrySMp4e/ht1MhrtfLWenraISxFBp2.Iofd6yuC', 'doctor1@mailinator.com', 'Milana', 'Becejac', 1, 'DOCTOR');
+  (2, 'doctor1', '$10$DVUTT9ydmrPAgXMR1iHZ9.wDepp4PDwR6N6hXf6eTGozpWbU7xFTK', 'doctor1@mailinator.com', 'Milana', 'Becejac', 1, 'DOCTOR');
 -- Operator-2-bsep => password
 insert into app_user(id, username, password,email, firstname, lastname, verified, role) values
   (3, 'doctor2', '$2a$10$rRpzJm1LFO73jGfdqE4cJeW5wcpUzN1XItUvoHJlx6WyR9D0zjMuW', 'doctor2@mailinator.com', 'Nada', 'Macura', 1, 'DOCTOR');

@@ -72,7 +72,7 @@ public class Symptom {
 
 	@Override
 	public String toString() {
-		return "Symptom [id=" + id + ", name=" + name + ", symptomsForDisease=" + symptomsForDisease + "]";
+		return "Symptom [id=" + id + ", name=" + name +"]";
 	}
 
 }

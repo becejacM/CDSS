@@ -13,3 +13,39 @@
   </div>
 <br/>-->
 <app-patient-details></app-patient-details>
+
+<br/>
+
+<div class="card-block justify-content-around d-flex align-items-center">
+    
+            <form [formGroup]="addForm" (ngSubmit)="submit()" novalidate style="width:100%">
+              <div class="form-group row" class="justify-content-around d-flex align-items-center">
+    
+              </div>    
+              
+              <div class="form-group row" style="margin-left:15%; width:70%">
+                <label class="col-2 col-form-label">Symptom:</label>
+                <div class="col-4">
+                  <input formControlName="sym" class="form-control">
+                </div>
+                <div class="col-6">
+                  <button (click)="checkSymptom()" class="btn btn-info btn-md ml-auto">
+                    Check Symptom >>
+                  </button>
+                </div>
+              </div>
+    
+              <div class="form-group row" style="margin-left:15%; width:70%">
+                <label class="col-2 col-form-label">Symptoms:</label>
+                <div class="col-10">
+                  <input formControlName="symptoms" class="form-control">
+                </div>
+              </div>
+    
+    
+              <button id="submit-btn-tm-form" type="submit" class="btn btn-info btn-md ml-auto" [disabled]="!addForm.valid">
+                Diagnose
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </button>
+            </form>
+          </div>
