@@ -12,7 +12,7 @@
 
         <div *ngIf="showAlergies===true">
           <br/>
-          <button id="link-tab-filter" class="btn btn-info btn-md ml-auto" (click)="addAlergie()">Add new
+          &nbsp;&nbsp;<button id="link-tab-filter" class="btn btn-info btn-md ml-auto" (click)="addAlergie()">Add new &nbsp;
               <i class="fa fa-plus" aria-hidden="true"></i>
             </button>
             
@@ -21,8 +21,8 @@
                 <form [formGroup]="addForm" (ngSubmit)="submitAlergie()" novalidate style="width:100%">
                     
                       <div class="form-group row" style="margin-left:15%; width:70%">
-                          <label class="col-2 col-form-label">Medicine/Medicine ingredient:</label>
-                          <div class="col-10">
+                          <label class="col-4 col-form-label">Medicine/Medicine ingredient:</label>
+                          <div class="col-8">
                             <input formControlName="name" class="form-control">
                           </div>
                       </div>
@@ -32,7 +32,15 @@
                   </button>
                 </form>
             </div>
-            <table style="background: rgba(207, 219, 237, 0.95); margin: 5%; width:90%" class="table">
+            <br/>
+
+            <table style="margin-left: 5%; width:100%">
+              <tr><th><label>Medicines:</label></th>
+              <th><label>Medicine ingredients:</label>              
+              </th>
+              </tr>
+                     <tr><td>
+            <table style="background: rgba(207, 219, 237, 0.95); margin-left: 5%; width:90%" class="table">
                 <thead class="thead-light">
                   <tr>
                       <th>name</th>
@@ -51,6 +59,28 @@
                     
                   </tr>
                 </tbody>
+              </table>
+              </td><td>
+              <table style="background: rgba(207, 219, 237, 0.95); margin-left: 20%; margin-right: 20%; width:60%;" class="table">
+                  <thead class="thead-light">
+                    <tr>
+                        <th>name</th>
+                    </tr>
+                
+                
+                  </thead>
+                
+                  <tbody>
+                    <tr *ngFor="let alergia of ingredientsAlergies">
+                
+                        <td>{{alergia.name}}</td>
+                      
+                      
+                    </tr>
+                  </tbody>
+                </table>
+                </td>
+              </tr>
               </table>
         </div>
       </div>

@@ -49,9 +49,8 @@ import { PatientDetailsComponent } from './components/patient-details/patient-de
 import { SymptomService } from './services/symptoms/symptom.service';
 import { DiseaseService } from './services/diseases/disease.service';
 import { MedicineService } from './services/medicines/medicine.service';
-import { IngredientComponent } from './components/ingredient/ingredient.component';
-import { OrganizeIngredientComponent } from './components/organize-ingredient/organize-ingredient.component';
 import { OrganizeIngredientsComponent } from './components/organize-ingredients/organize-ingredients.component';
+import { IngredientService } from './services/ingredients/ingredient.service';
 
 
 @NgModule({
@@ -79,8 +78,6 @@ import { OrganizeIngredientsComponent } from './components/organize-ingredients/
     OrganizeSymptomsComponent,
     OrganizeDiseasesComponent,
     PatientDetailsComponent,
-    IngredientComponent,
-    OrganizeIngredientComponent,
     OrganizeIngredientsComponent
   ],
   imports: [
@@ -105,6 +102,7 @@ import { OrganizeIngredientsComponent } from './components/organize-ingredients/
     SortService,
     DoctorService,
     MedicineService,
+    IngredientService,
     OnlyLoggedInGuard,
     AlreadyLoggedInGuard,
     SymptomService,

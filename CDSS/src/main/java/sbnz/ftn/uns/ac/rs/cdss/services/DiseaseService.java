@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDetailsDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.SymptomDetailsDTO;
 
 public interface DiseaseService {
 
@@ -13,4 +14,6 @@ public interface DiseaseService {
 	DiseaseDetailsDTO save(String username, DiseaseDTO disease);
 	DiseaseDetailsDTO update(String username, DiseaseDTO disease, Long id);
 	void delete(String username, Long id);
+	
+	SymptomDetailsDTO checkSymptom(String username, String name);
 }

@@ -19,6 +19,7 @@ import sbnz.ftn.uns.ac.rs.cdss.model.MedicineIngredient;
 import sbnz.ftn.uns.ac.rs.cdss.model.Patient;
 import sbnz.ftn.uns.ac.rs.cdss.model.UserRole;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.AlergiesDetailsDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.IngredientDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.MedicineDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.PatientDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.PatientDetailsDTO;
@@ -164,6 +165,12 @@ public class PatientServiceImpl implements PatientService {
 				meds.add(new MedicineDetailsDTO(med));
 			}
 			a.setMedicines(meds);
+			Collection<IngredientDetailsDTO> medings = new ArrayList<>();
+			for (MedicineIngredient meding : m.getIngredients()) {
+				medings.add(new IngredientDetailsDTO(meding));
+			}
+			a.setIngredients(medings);
+			a.setMedicines(meds);
 			return a;
 		} catch (NotValidParamsException ex) {
 			throw ex;
@@ -200,20 +207,27 @@ public class PatientServiceImpl implements PatientService {
 				return new MedicineDetailsDTO(m);
 			}
 			else {
+				if(newm.getIngredients().contains(mi)) {
+					throw new NotValidParamsException("Pacient is already alergic to that medicine ingredient");
+				}
 				for(Medicine mm : medicineRepository.findAll()) {//prodjem kroz sve lekove, ako neki od njih ima prosledjeni sastojak
 					if(mm.getIngredients().contains(mi)) {			
 						if(!newm.getMedicines().contains(mm)) {  // ako pacijent vec nije alergican na taj lek, a lek ima sastojak na koji je alergican
-							newm.getMedicines().add(mm);		 // dodaje ga u listu alergija
+							Medicine alergicMedicine = medicineRepository.findByName(mm.getName());
+							newm.getMedicines().add(alergicMedicine);		 // dodaje ga u listu alergija
 						}
 						
 					}
 				}
+				
+				newm.getIngredients().add(mi);
 				MedicalRecord mr = recordRepository.save(newm);
 				return null;
 			}
 		} catch (NotValidParamsException ex) {
 			throw ex;
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throw new NotValidParamsException("Invalid parameters while trying to add patient");
 		}
 	}

@@ -6,6 +6,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http/src/response';
 import { IPatient } from '../../model/IPatient';
 import { IMedicine } from '../../model/IMedicine';
+import { IIngredient } from '../../model/IIngredient';
 
 @Component({
   selector: 'app-patient-details',
@@ -15,6 +16,7 @@ import { IMedicine } from '../../model/IMedicine';
 export class PatientDetailsComponent implements OnInit {
 
   medicineAlergies:IMedicine[];
+  ingredientsAlergies:IIngredient[];
   patient:IPatient;
   id:any;
   showAlergies:Boolean;
@@ -56,6 +58,7 @@ export class PatientDetailsComponent implements OnInit {
     .subscribe(data => {
       console.log(data);
         this.medicineAlergies = data.medicines;
+        this.ingredientsAlergies = data.ingredients;
       },
       (err: HttpErrorResponse) => {
         if (err.error instanceof Error) {

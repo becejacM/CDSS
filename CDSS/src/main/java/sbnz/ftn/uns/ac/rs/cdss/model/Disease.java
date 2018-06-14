@@ -24,7 +24,8 @@ import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDTO;
 public class Disease {
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
     private Long id;
 	
 	@Column(name = "name", nullable = true)
@@ -35,8 +36,8 @@ public class Disease {
 	protected TypeOfDisease typeOfDisease;
 	
 	
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH, mappedBy = "disease")
-	private List<SymptomForDisease> symptomsForDisease;
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "disease")
+	private List<SymptomForDisease> symptomsForDisease = new ArrayList<>();
 	
 	public Disease() {
 		
@@ -45,7 +46,7 @@ public class Disease {
 	public Disease(DiseaseDTO d) {
 		this.name = d.getName();
 		this.typeOfDisease = d.getTypeOfDisease();
-		this.symptomsForDisease = new ArrayList<SymptomForDisease>();
+		//this.symptomsForDisease = new ArrayList<SymptomForDisease>();
 	}
 	
 	public Disease(Long id, String name, TypeOfDisease typeOfDisease, List<SymptomForDisease> symptomsForDisease) {

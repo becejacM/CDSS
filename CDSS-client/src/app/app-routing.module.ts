@@ -19,6 +19,7 @@ import { OrganizeSymptomsComponent } from './components/organize-symptoms/organi
 import { OrganizeDiseasesComponent } from './components/organize-diseases/organize-diseases.component';
 import { OrganizeMedicinesComponent } from './components/organize-medicines/organize-medicines.component';
 import { PatientDetailsComponent } from './components/patient-details/patient-details.component';
+import { OrganizeIngredientsComponent } from './components/organize-ingredients/organize-ingredients.component';
 
 
 const appRoutes: Routes = [
@@ -53,6 +54,7 @@ const appRoutes: Routes = [
     {path: 'diseases', component: OrganizeDiseasesComponent,canActivate: [OnlyLoggedInGuard]},
     {path: 'symptoms', component: OrganizeSymptomsComponent,canActivate: [OnlyLoggedInGuard]},
     {path: 'medicines', component: OrganizeMedicinesComponent,canActivate: [OnlyLoggedInGuard]},
+    {path: 'ingredients', component: OrganizeIngredientsComponent,canActivate: [OnlyLoggedInGuard]},    
     {path: 'patientDetails/:id', component: PatientDetailsComponent, canActivate: [OnlyLoggedInGuard]},    
   ]},
   

@@ -6,4 +6,5 @@ import sbnz.ftn.uns.ac.rs.cdss.model.Symptom;
 
 public interface SymptomRepository extends JpaRepository<Symptom, Long>{
 
+	Symptom findByName(String name);
 }

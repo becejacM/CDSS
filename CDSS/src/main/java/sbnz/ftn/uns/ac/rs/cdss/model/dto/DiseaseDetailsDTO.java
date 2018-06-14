@@ -13,6 +13,7 @@ public class DiseaseDetailsDTO {
 	private String name;
 	private TypeOfDisease typeOfDisease;
 	private List<SymptomDetailsDTO> symptoms = new ArrayList<SymptomDetailsDTO>();
+	private String syms;
 	
 	public DiseaseDetailsDTO() {
 		
@@ -22,8 +23,14 @@ public class DiseaseDetailsDTO {
 		this.id = d.getId();
 		this.name = d.getName();
 		this.typeOfDisease = d.getTypeOfDisease();
+		this.syms="";
 		for(SymptomForDisease sd : d.getSymptomsForDisease()) {
 			this.symptoms.add(new SymptomDetailsDTO(sd.getSymptom()));
+			this.syms += ",";
+			this.syms += sd.getSymptom().getName();
+		}
+		if(this.syms.startsWith(",")) {
+			this.syms = this.syms.substring(1);
 		}
 	}
 
@@ -57,6 +64,14 @@ public class DiseaseDetailsDTO {
 
 	public void setSymptoms(List<SymptomDetailsDTO> symptoms) {
 		this.symptoms = symptoms;
+	}
+
+	public String getSyms() {
+		return syms;
+	}
+
+	public void setSyms(String syms) {
+		this.syms = syms;
 	}
 	
 	

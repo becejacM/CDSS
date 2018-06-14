@@ -170,7 +170,7 @@ public class MedicineServiceImpl implements MedicineService{
 		} catch (NotValidParamsException ex) {
 			throw ex;
 		} catch (Exception ex) {
-			throw new NotValidParamsException("Invalid parameters while trying to add medicines");
+			throw new NotValidParamsException("Invalid parameters while trying to check symptom");
 		}
 	}
 	
