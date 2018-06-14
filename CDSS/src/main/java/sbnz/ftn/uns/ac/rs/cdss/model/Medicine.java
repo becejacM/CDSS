@@ -1,5 +1,6 @@
 package sbnz.ftn.uns.ac.rs.cdss.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.Column;
@@ -16,6 +17,7 @@ import javax.persistence.Table;
 
 import org.hibernate.id.insert.InsertGeneratedIdentifierDelegate;
 
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.IngredientDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.MedicineDTO;
 
 @Entity
@@ -35,7 +37,7 @@ public class Medicine {
 	
 	@ManyToMany
     @JoinTable(name = "medicine_ingredient_table", joinColumns = @JoinColumn(name = "medicine_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "medicineIngredient_id", referencedColumnName = "id"))
-    private Collection<MedicineIngredient> ingredients;
+    private Collection<MedicineIngredient> ingredients = new ArrayList<>();
 	
 	@ManyToMany(mappedBy = "medicines")
     private Collection<MedicalRecord> medicalRecords;
@@ -47,6 +49,9 @@ public class Medicine {
 	public Medicine(MedicineDTO m) {
 		this.name = m.getName();
 		this.typeOfMedicine = m.getTypeOfMedicine();
+		/*for(IngredientDTO i : m.getMi()) {
+			this.ingredients.add(new MedicineIngredient(i));
+		}*/
 	}
 	public Medicine(Long id, String name, TypeOfMedicine typeOfMedicine,
 			Collection<MedicineIngredient> ingredients) {
@@ -103,8 +108,10 @@ public class Medicine {
 	@Override
 	public String toString() {
 		return "Medicine [id=" + id + ", name=" + name + ", typeOfMedicine=" + typeOfMedicine + ", ingredients="
-				+ ingredients + "]";
+				+ ingredients + ", medicalRecords=" + medicalRecords + "]";
 	}
+
+	
 	
 	
 }

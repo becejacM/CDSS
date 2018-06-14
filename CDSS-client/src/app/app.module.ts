@@ -46,6 +46,12 @@ import { OrganizeSymptomsComponent } from './components/organize-symptoms/organi
 import { OrganizeDiseasesComponent } from './components/organize-diseases/organize-diseases.component';
 import { DoctorService } from './services/doctor/doctor.service';
 import { PatientDetailsComponent } from './components/patient-details/patient-details.component';
+import { SymptomService } from './services/symptoms/symptom.service';
+import { DiseaseService } from './services/diseases/disease.service';
+import { MedicineService } from './services/medicines/medicine.service';
+import { IngredientComponent } from './components/ingredient/ingredient.component';
+import { OrganizeIngredientComponent } from './components/organize-ingredient/organize-ingredient.component';
+import { OrganizeIngredientsComponent } from './components/organize-ingredients/organize-ingredients.component';
 
 
 @NgModule({
@@ -72,7 +78,10 @@ import { PatientDetailsComponent } from './components/patient-details/patient-de
     OrganizeMedicinesComponent,
     OrganizeSymptomsComponent,
     OrganizeDiseasesComponent,
-    PatientDetailsComponent
+    PatientDetailsComponent,
+    IngredientComponent,
+    OrganizeIngredientComponent,
+    OrganizeIngredientsComponent
   ],
   imports: [
     BrowserModule,
@@ -95,8 +104,11 @@ import { PatientDetailsComponent } from './components/patient-details/patient-de
     PatientService,
     SortService,
     DoctorService,
+    MedicineService,
     OnlyLoggedInGuard,
     AlreadyLoggedInGuard,
+    SymptomService,
+    DiseaseService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptorService,

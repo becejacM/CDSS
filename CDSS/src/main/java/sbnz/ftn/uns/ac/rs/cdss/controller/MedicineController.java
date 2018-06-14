@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.IngredientDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.MedicineDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.MedicineDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.security.TokenUtils;
@@ -70,5 +71,11 @@ public class MedicineController {
 		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
 		this.medicineService.delete(username, id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	@GetMapping(value = "/checkIngredient/{name}")
+	public ResponseEntity<IngredientDetailsDTO> chackIngredient(@PathVariable String name) {
+		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
+		return new ResponseEntity<>(this.medicineService.checkIngredient(username, name), HttpStatus.OK);
 	}
 }

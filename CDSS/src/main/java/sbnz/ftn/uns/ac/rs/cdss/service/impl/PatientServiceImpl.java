@@ -187,7 +187,7 @@ public class PatientServiceImpl implements PatientService {
 			Medicine m = medicineRepository.findByName(name);
 			MedicineIngredient mi = ingredientRepository.findByName(name);
 			if (m == null && mi == null) {
-				throw new NotValidParamsException("There are no medicine with that name");
+				throw new NotValidParamsException("There are no medicine or ingredient with that name");
 			}
 			if (m != null) {
 				for (Medicine mm : newm.getMedicines()) {
@@ -200,13 +200,12 @@ public class PatientServiceImpl implements PatientService {
 				return new MedicineDetailsDTO(m);
 			}
 			else {
-				for(Medicine mm : medicineRepository.findAll()) {
-					if(mm.getIngredients().contains(mi)) {
-						for (Medicine mm2 : newm.getMedicines()) {
-							if (!mm2.getId().equals(mm.getId())) {
-								newm.getMedicines().add(mm);
-							}
+				for(Medicine mm : medicineRepository.findAll()) {//prodjem kroz sve lekove, ako neki od njih ima prosledjeni sastojak
+					if(mm.getIngredients().contains(mi)) {			
+						if(!newm.getMedicines().contains(mm)) {  // ako pacijent vec nije alergican na taj lek, a lek ima sastojak na koji je alergican
+							newm.getMedicines().add(mm);		 // dodaje ga u listu alergija
 						}
+						
 					}
 				}
 				MedicalRecord mr = recordRepository.save(newm);

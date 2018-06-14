@@ -1,3 +1,92 @@
-<p>
-  organize-medicines works!
-</p>
+<div class="card text-center col-md-12">
+  <div class="card-header">
+    <ul class="nav nav-tabs card-header-tabs">
+
+      <li class="nav-item active">
+        <button id="link-tab-filter" class="nav-link" (click)="add()">Add new
+          <i class="fa fa-plus" aria-hidden="true"></i>
+        </button>
+      </li>
+    </ul>
+  </div>
+  <br>
+  <div class="card-block">
+    <div *ngIf="toggleAdd===true">
+      <div class="card-block justify-content-around d-flex align-items-center">
+
+        <form [formGroup]="addForm" (ngSubmit)="submit()" novalidate style="width:100%">
+          <div class="form-group row" class="justify-content-around d-flex align-items-center">
+
+          </div>
+          <br>
+
+          <div class="form-group row" style="margin-left:15%; width:70%">
+            <label class="col-2 col-form-label">Name:</label>
+            <div class="col-4">
+              <input formControlName="name" class="form-control">
+            </div>
+            <label class="col-2 col-form-label">Type:</label>
+            <div class="col-4">
+                <select id="registration-damageType" class="form-control" formControlName="typeOfMedicine">
+                    <option *ngFor="let name of options" [value]="name">{{name}}</option>
+                  </select>
+            </div>
+
+          </div>
+          <div class="form-group row" style="margin-left:15%; width:70%">
+            <label class="col-2 col-form-label">Ingredient:</label>
+            <div class="col-4">
+              <input formControlName="ingredient" class="form-control">
+            </div>
+            <div class="col-6">
+              <button (click)="checkIngredient()" class="btn btn-info btn-md ml-auto">
+                Check ingredient >>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group row" style="margin-left:15%; width:70%">
+            <label class="col-2 col-form-label">Ingredients:</label>
+            <div class="col-10">
+              <input formControlName="mi" class="form-control">
+            </div>
+          </div>
+
+
+          <button id="submit-btn-tm-form" type="submit" class="btn btn-info btn-md ml-auto" [disabled]="!addForm.valid">
+            Add
+            <i class="fa fa-plus" aria-hidden="true"></i>
+          </button>
+        </form>
+      </div>
+      <br>
+    </div>
+  </div>
+
+</div>
+<table style="background: rgba(207, 219, 237, 0.95);" class="table" appSortableColumn (sorted)="onSorted($event)">
+  <thead class="thead-light">
+    <tr>
+      <th sortable-column="name">Name</th>
+      <th sortable-column="typeOfMedicine">Type</th>
+      <th sortable-column="ingredients">Ingredients</th>
+    </tr>
+
+
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let medicine of medicines">
+
+      <td>{{medicine.name}}</td>
+      <td>{{medicine.typeOfMedicine}}</td>
+      <td>{{medicine.ingredients}}</td>
+
+
+    </tr>
+  </tbody>
+</table>
+
+<hr/>
+<app-my-pagination (goPage)="goToPage($event)" (goNext)="onNext()" (goPrev)="onPrev()" (onChangePerPage)="onChangePerPage($event)"
+  [pagesToShow]="5" [page]="page" [perPage]="limit" [count]="total"></app-my-pagination>

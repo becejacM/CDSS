@@ -14,6 +14,8 @@ public class MedicineDetailsDTO {
 	private String name;
 	private TypeOfMedicine typeOfMedicine;
 	private Collection<IngredientDetailsDTO> mi=new ArrayList<>();
+	private String ingredients;
+	
 	public MedicineDetailsDTO() {
 		
 	}
@@ -22,8 +24,14 @@ public class MedicineDetailsDTO {
 		this.id = m.getId();
 		this.name = m.getName();
 		this.typeOfMedicine = m.getTypeOfMedicine();
+		this.ingredients="";
 		for(MedicineIngredient i : m.getIngredients()) {
 			this.mi.add(new IngredientDetailsDTO(i));
+			this.ingredients+=",";
+			this.ingredients+=i.getName();
+		}
+		if(this.ingredients.startsWith(",")) {
+			this.ingredients = this.ingredients.substring(1);
 		}
 		
 	}
@@ -68,6 +76,14 @@ public class MedicineDetailsDTO {
 
 	public void setMi(Collection<IngredientDetailsDTO> mi) {
 		this.mi = mi;
+	}
+
+	public String getIngredients() {
+		return ingredients;
+	}
+
+	public void setIngredients(String ingredients) {
+		this.ingredients = ingredients;
 	}
 	
 	
