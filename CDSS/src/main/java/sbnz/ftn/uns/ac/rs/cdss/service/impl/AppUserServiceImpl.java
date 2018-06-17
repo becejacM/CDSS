@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,6 +22,7 @@ import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.repository.AppUserRepository;
 import sbnz.ftn.uns.ac.rs.cdss.repository.RoleRepository;
 import sbnz.ftn.uns.ac.rs.cdss.services.AppUserService;
+import sbnz.ftn.uns.ac.rs.cdss.utils.KieSessionUtil;
 
 @Service
 public class AppUserServiceImpl implements AppUserService{
@@ -30,6 +32,8 @@ public class AppUserServiceImpl implements AppUserService{
 	
 	@Autowired
 	RoleRepository roleRepository;
+
+	
 	@Override
 	public AppUserDetailsDTO save(String username, AppUserDTO addeduser) {
 		try {

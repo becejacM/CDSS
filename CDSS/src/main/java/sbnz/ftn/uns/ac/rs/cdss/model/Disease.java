@@ -1,6 +1,9 @@
 package sbnz.ftn.uns.ac.rs.cdss.model;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -12,11 +15,19 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.drools.core.common.ClassAwareObjectStore.SingleClassStore;
+import org.junit.Ignore;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import net.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDTO;
 
 @Entity
@@ -39,6 +50,20 @@ public class Disease {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "disease")
 	private List<SymptomForDisease> symptomsForDisease = new ArrayList<>();
 	
+	@ManyToMany
+    @JoinTable(name = "general_symptom_table", joinColumns = @JoinColumn(name = "disease_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "symptom_id", referencedColumnName = "id"))
+    private Collection<Symptom> generalSymptoms = new ArrayList<>();
+	
+	public Collection<Symptom> getGeneralSymptoms() {
+		return generalSymptoms;
+	}
+
+	public void setGeneralSymptoms(Collection<Symptom> generalSymptoms) {
+		this.generalSymptoms = generalSymptoms;
+	}
+
+	@Transient
+	private Collection<Symptom> syms = new ArrayList<>();
 	public Disease() {
 		
 	}
@@ -91,9 +116,21 @@ public class Disease {
 
 	@Override
 	public String toString() {
-		return "Disease [id=" + id + ", name=" + name + ", typeOfDisease=" + typeOfDisease + ", symptomsForDisease="
-				+ symptomsForDisease + "]";
+		return "Disease [id=" + id + ", name=" + name + ", typeOfDisease=" + typeOfDisease ;
 	}
 	
+	public Collection<Symptom> getSyms() {
+		Collection<Symptom> syms = new ArrayList<>();
+		for(SymptomForDisease s : this.symptomsForDisease) {
+			syms.add(s.getSymptom());
+		}
+		return syms;
+	}
 	
+	public void setSyms() {
+		Collection<Symptom> syms = new ArrayList<>();
+		for(SymptomForDisease s : this.symptomsForDisease) {
+			syms.add(s.getSymptom());
+		}
+	}
 }

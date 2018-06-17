@@ -51,6 +51,7 @@ import { DiseaseService } from './services/diseases/disease.service';
 import { MedicineService } from './services/medicines/medicine.service';
 import { OrganizeIngredientsComponent } from './components/organize-ingredients/organize-ingredients.component';
 import { IngredientService } from './services/ingredients/ingredient.service';
+import { DiagnosticProccessService } from './services/diagnostic-proccess/diagnostic-proccess.service';
 
 
 @NgModule({
@@ -107,6 +108,7 @@ import { IngredientService } from './services/ingredients/ingredient.service';
     AlreadyLoggedInGuard,
     SymptomService,
     DiseaseService,
+    DiagnosticProccessService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptorService,

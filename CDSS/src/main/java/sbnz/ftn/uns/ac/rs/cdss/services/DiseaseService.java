@@ -3,7 +3,9 @@ package sbnz.ftn.uns.ac.rs.cdss.services;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
 import sbnz.ftn.uns.ac.rs.cdss.model.Disease;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiagnosticTherapyDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.ListOfSymbolsDTO;
@@ -18,5 +20,5 @@ public interface DiseaseService {
 	void delete(String username, Long id);
 	
 	SymptomDetailsDTO checkSymptom(String username, String name);
-	Disease getDiagnose(String username, ListOfSymbolsDTO listOfSymbols);
+	DiagnosticTherapyDetailsDTO getDiagnose(String username, ListOfSymbolsDTO listOfSymbols);
 }

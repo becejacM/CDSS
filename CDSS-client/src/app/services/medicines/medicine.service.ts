@@ -35,7 +35,12 @@ export class MedicineService {
       console.log(name);
       return this.http.get<IMedicine>(urlPath);
     }
-
+    checkMedicine(name:String): Observable<IMedicine> {
+      console.log(name);
+      const urlPath = '/api/medicines/checkMedicine/'+name;
+      console.log(name);
+      return this.http.get<IMedicine>(urlPath);
+    }
     delete(id:any) {
       const urlPath = '/api/medicines/'+id;
       return this.http.delete<IMedicine>(urlPath);

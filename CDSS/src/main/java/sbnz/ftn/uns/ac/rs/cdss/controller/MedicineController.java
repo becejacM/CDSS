@@ -78,4 +78,10 @@ public class MedicineController {
 		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
 		return new ResponseEntity<>(this.medicineService.checkIngredient(username, name), HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/checkMedicine/{name}")
+	public ResponseEntity<MedicineDetailsDTO> chackMedicine(@PathVariable String name) {
+		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
+		return new ResponseEntity<>(this.medicineService.checkMedicine(username, name), HttpStatus.OK);
+	}
 }

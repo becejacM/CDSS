@@ -4,6 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import {IPageable} from '../../model/IPageable';
 import { IDisease } from '../../model/IDisease';
 import { ListOfSymptoms } from '../../model/ListOfSymptoms';
+import { ITherapy } from '../../model/ITherapy';
 
 @Injectable()
 export class DiseaseService {
@@ -43,8 +44,8 @@ export class DiseaseService {
       return this.http.delete<IDisease>(urlPath);
     }
 
-    getDiagnose(doc: ListOfSymptoms) : Observable<IDisease>{
+    getDiagnose(doc: ListOfSymptoms) : Observable<ITherapy>{
       const urlPath = '/api/diseases/diagnose';
-      return this.http.post<IDisease>(urlPath, doc);
+      return this.http.post<ITherapy>(urlPath, doc);
     }
 }

@@ -7,6 +7,8 @@ public class ListOfSymbolsDTO {
 
 	Collection<SymptomDTO> symptoms = new ArrayList<>();
 	
+	Long patientid;
+	
 	public ListOfSymbolsDTO() {
 		
 	}
@@ -23,6 +25,14 @@ public class ListOfSymbolsDTO {
 
 	public void setSymptoms(Collection<SymptomDTO> symptoms) {
 		this.symptoms = symptoms;
+	}
+
+	public Long getPatientid() {
+		return patientid;
+	}
+
+	public void setPatientid(Long patientid) {
+		this.patientid = patientid;
 	}
 	
 	

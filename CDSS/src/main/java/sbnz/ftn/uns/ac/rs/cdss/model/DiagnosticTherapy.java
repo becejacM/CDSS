@@ -46,22 +46,25 @@ public class DiagnosticTherapy {
     @JoinTable(name = "therapy_medicines",
             joinColumns = { @JoinColumn(name = "therapy_id") },
             inverseJoinColumns = { @JoinColumn(name = "medicine_id") })
-	private Collection<Medicine> cures = new ArrayList<>();
+	private Collection<Medicine> medicines = new ArrayList<>();
 	
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "medicalRecord_id", nullable = false)
 	protected MedicalRecord medicalRecord;
 	
+	private String message;
+	
 	public DiagnosticTherapy() {
 		
 	}
 
-	public DiagnosticTherapy(Long id, Disease disease, Collection<Symptom> symptoms, Collection<Medicine> cures) {
+	public DiagnosticTherapy(Long id, Disease disease, Collection<Symptom> symptoms, Collection<Medicine> medicines, String message) {
 		super();
 		this.id = id;
 		this.disease = disease;
 		this.symptoms = symptoms;
-		this.cures = cures;
+		this.medicines = medicines;
+		this.message = message;
 	}
 
 	public Long getId() {
@@ -88,13 +91,36 @@ public class DiagnosticTherapy {
 		this.symptoms = symptoms;
 	}
 
-	public Collection<Medicine> getCures() {
-		return cures;
+	public Collection<Medicine> getMedicines() {
+		return medicines;
 	}
 
-	public void setCures(Collection<Medicine> cures) {
-		this.cures = cures;
+	public void setMedicines(Collection<Medicine> medicines) {
+		this.medicines = medicines;
 	}
+
+	public MedicalRecord getMedicalRecord() {
+		return medicalRecord;
+	}
+
+	public void setMedicalRecord(MedicalRecord medicalRecord) {
+		this.medicalRecord = medicalRecord;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	@Override
+	public String toString() {
+		return "DiagnosticTherapy [id=" + id + ", disease=" + disease + ", message=" + message + "]";
+	}
+
+	
 	
 	
 }

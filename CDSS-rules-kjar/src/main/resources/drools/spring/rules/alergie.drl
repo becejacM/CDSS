@@ -1,0 +1,45 @@
+package drools.spring.rules
+
+import sbnz.ftn.uns.ac.rs.cdss.model.Patient;
+import sbnz.ftn.uns.ac.rs.cdss.model.Symptom;
+import sbnz.ftn.uns.ac.rs.cdss.model.Medicine;
+import sbnz.ftn.uns.ac.rs.cdss.model.MedicineIngredient;
+import sbnz.ftn.uns.ac.rs.cdss.model.MedicalRecord;
+import sbnz.ftn.uns.ac.rs.cdss.services.DiagnosticProccesService;
+
+import java.util.List;
+
+global DiagnosticProccesService diagnosticProccessService
+
+rule "alergie on medicine exists"
+    agenda-group "alergies"
+	when
+		$p : Patient($id:id)
+		$mr : MedicalRecord(id==$id, $lines : medicines)
+		$m : Medicine($n : name)
+		Number(intValue >= 1) from accumulate(
+            $m2 : Medicine(
+                name==$n
+            ) from $lines,
+            count($m2)
+        )
+	then
+		diagnosticProccessService.sendMessage("Patient is alergic to medicine with name: "+$n);
+		System.out.println("duzina liste "+$lines.size());	
+end
+
+rule "alergie on medicine ingredient exists"
+	agenda-group "alergies"
+	when
+		$p : Patient($id:id)
+		$mr : MedicalRecord(id==$id, $lines : ingredients)
+		$mm : Medicine($mi:ingredients, $nameOfMedicine : name)
+		$med : MedicineIngredient($name : name)
+		Number(intValue >= 1) from accumulate(
+            $m2 : MedicineIngredient($mi.contains(this),name==$name) from $lines,
+            count($m2)
+        )
+	then
+		diagnosticProccessService.sendMessage("Patient is alergic to medicine ingredient with name: "+ $name +" witch is in medicine with name: "+$nameOfMedicine);
+		System.out.println("duzina liste "+$lines.size());	
+end

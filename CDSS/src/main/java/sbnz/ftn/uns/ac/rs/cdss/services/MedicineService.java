@@ -16,4 +16,6 @@ public interface MedicineService {
 	void delete(String username, Long id);
 	
 	IngredientDetailsDTO checkIngredient(String username, String name);
+	MedicineDetailsDTO checkMedicine(String username, String name);
+
 }

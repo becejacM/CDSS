@@ -30,6 +30,7 @@
     "jquery": "^1.12.4",
     "ng-pick-datetime": "^5.2.6",
     "ng-recaptcha": "^3.0.5",
+    "ng-stomp": "^0.5.0",
     "ngx-owl-carousel": "^2.0.7",
     "ngx-permission": "^0.2.1",
     "ngx-permissions": "^2.1.1",

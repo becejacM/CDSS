@@ -121,6 +121,12 @@ insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) val
 insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) values (4, 'GENERAL', 1, 4);	---kijanje
 insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) values (5, 'GENERAL', 1, 5);	---kasalj
 
+insert into general_symptom_table(disease_id, symptom_id) values (1,1);
+insert into general_symptom_table(disease_id, symptom_id) values (1,2);
+insert into general_symptom_table(disease_id, symptom_id) values (1,3);
+insert into general_symptom_table(disease_id, symptom_id) values (1,4);
+insert into general_symptom_table(disease_id, symptom_id) values (1,5);
+
 --- dodavanje groznice i njenih simptoma
 insert into disease(id, name, type_of_disease) values (2, 'Groznica', 'FIRST_GROUP');
 insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) values (6, 'GENERAL', 2, 4);	---kijanje

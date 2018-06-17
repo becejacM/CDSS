@@ -174,6 +174,25 @@ public class MedicineServiceImpl implements MedicineService{
 		}
 	}
 	
+	@Override
+	public MedicineDetailsDTO checkMedicine(String username, String name) {
+		try {
+			AppUser user = this.appUserRepository.findByUsername(username);
+			if (user == null ) {
+				throw new NotValidParamsException("You must be logged in as admin or doctor to check medicine");
+			}
+			System.out.println(name);
+			Medicine newmi = medicineRepository.findByName(name);
+			if(newmi==null) {
+				throw new NotValidParamsException("Medicine with that name doesn't exists!");
+			}
+			return new MedicineDetailsDTO(newmi);
+		} catch (NotValidParamsException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			throw new NotValidParamsException("Invalid parameters while trying to check medicine");
+		}
+	}
 	private void addAlergies(Medicine medicine) {
 		Collection<Patient> patients = pRepository.findAll();
 		for(Patient p : patients) {

@@ -1,11 +1,15 @@
 package sbnz.ftn.uns.ac.rs.cdss.controller;
 
+import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.kie.api.runtime.KieSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +25,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import sbnz.ftn.uns.ac.rs.cdss.CdssApplication;
+import sbnz.ftn.uns.ac.rs.cdss.model.AppUser;
+import sbnz.ftn.uns.ac.rs.cdss.model.Disease;
 import sbnz.ftn.uns.ac.rs.cdss.model.UserRole;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.AppUserDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.AppUserDetailsDTO;
@@ -29,10 +35,13 @@ import sbnz.ftn.uns.ac.rs.cdss.model.dto.AuthenticationResponseDto;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.ChangePasswordDto;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDetailsDTO;
+import sbnz.ftn.uns.ac.rs.cdss.repository.AppUserRepository;
+import sbnz.ftn.uns.ac.rs.cdss.repository.DiseaseRepository;
 import sbnz.ftn.uns.ac.rs.cdss.security.SecurityUser;
 import sbnz.ftn.uns.ac.rs.cdss.security.TokenUtils;
 import sbnz.ftn.uns.ac.rs.cdss.service.impl.UserExtendedService;
 import sbnz.ftn.uns.ac.rs.cdss.services.AppUserService;
+import sbnz.ftn.uns.ac.rs.cdss.services.DiagnosticProccesService;
 
 @RestController
 @RequestMapping("/users")
@@ -58,6 +67,19 @@ public class AppUserController {
     @Autowired
     private AppUserService userService;
 
+    @Autowired
+    @Lazy
+    private KieSession kieSession;
+    
+    @Autowired
+    private DiseaseRepository diseaseRepository;
+    
+    @Autowired
+    private AppUserRepository userRepository;
+    
+    @Autowired
+	DiagnosticProccesService diagnosticProccessService;
+    
     @PostMapping(value = "/login")
     public ResponseEntity<?> authenticationRequest(@RequestBody AuthenticationRequestDto authenticationRequest) {
         // Perform the authentication
@@ -77,6 +99,13 @@ public class AppUserController {
         // Reload password post-authentication so we can generate token
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
+        System.out.println("ovde sam");
+        AppUser user = userRepository.findByUsername(userDetails.getUsername());
+        kieSession.insert(user);
+        Collection<Disease> diseases = diseaseRepository.findAll();
+        for(Disease d: diseases) {
+        	kieSession.insert(d);
+        }
 
         SecurityUser su = (SecurityUser) userDetails;
         String token = this.tokenUtils.generateToken(userDetails);

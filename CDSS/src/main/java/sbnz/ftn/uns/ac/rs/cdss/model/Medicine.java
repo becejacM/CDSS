@@ -29,7 +29,7 @@ public class Medicine {
     private Long id;
 	
 	@Column(name = "name", nullable = true)
-	protected String name;
+	private String name;
 	
 	@Column(name = "typeOfMedicine", nullable = false)
 	@Enumerated(EnumType.STRING)
@@ -107,9 +107,10 @@ public class Medicine {
 
 	@Override
 	public String toString() {
-		return "Medicine [id=" + id + ", name=" + name + ", typeOfMedicine=" + typeOfMedicine + ", ingredients="
-				+ ingredients + ", medicalRecords=" + medicalRecords + "]";
+		return "Medicine [id=" + id + ", name=" + name + ", typeOfMedicine=" + typeOfMedicine + ", medicalRecords="
+				+ medicalRecords + "]";
 	}
+
 
 	
 	

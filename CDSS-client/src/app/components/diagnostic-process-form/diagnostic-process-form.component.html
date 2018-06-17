@@ -24,28 +24,95 @@
               </div>    
               
               <div class="form-group row" style="margin-left:15%; width:70%">
-                <label class="col-2 col-form-label">Symptom:</label>
-                <div class="col-4">
+                <label class="col-2 col-form-label" style="margin-top:5%;">Symptom:</label>
+                <div class="col-4" style="margin-top:5%;">
                   <input formControlName="sym" class="form-control">
                 </div>
-                <div class="col-6">
+                <div class="col-2" style="margin-top:5%;">
                   <button (click)="checkSymptom()" class="btn btn-info btn-md ml-auto">
-                    Check Symptom >>
+                     >>
                   </button>
                 </div>
-              </div>
-    
-              <div class="form-group row" style="margin-left:15%; width:70%">
-                <label class="col-2 col-form-label">Symptoms:</label>
-                <div class="col-10">
-                  <input formControlName="symptoms" class="form-control">
+                <div class="col-4">
+                  <textarea rows="4" formControlName="symptoms" class="form-control"></textarea>
                 </div>
               </div>
     
+              
     
-              <button id="submit-btn-tm-form" type="submit" class="btn btn-info btn-md ml-auto" [disabled]="!addForm.valid">
+              <button id="submit-btn-tm-form" (click)=disease() class="btn btn-info btn-md ml-auto" [disabled]="!addForm.valid">
+                Most posible disease
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </button>
+              <button id="submit-btn-tm-form" (click)=listdisease() class="btn btn-info btn-md ml-auto" [disabled]="!addForm.valid">
+                List od probable diseases
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </button>
+              <button id="submit-btn-tm-form" (click)=diagnose() class="btn btn-info btn-md ml-auto" [disabled]="!addForm.valid">
                 Diagnose
                 <i class="fa fa-plus" aria-hidden="true"></i>
               </button>
             </form>
+            <br/>
+
+            
           </div>
+
+
+          <div *ngIf="active==='diagnose'">
+            <div class="card-block justify-content-around d-flex align-items-center">
+      
+              <form [formGroup]="diagnoseForm" (ngSubmit)="submitDiagnose()" novalidate style="width:100%">
+                <div class="form-group row" class="justify-content-around d-flex align-items-center">
+      
+                </div>
+                <br>
+      
+                <div class="form-group row" style="margin-left:15%; width:70%">
+                  <label class="col-2 col-form-label">Disease name:</label>
+                  <div class="col-10">
+                    <input formControlName="diseasename" class="form-control">
+                  </div>
+                  
+                </div>
+                <div class="form-group row" style="margin-left:15%; width:70%">
+                  <label class="col-2 col-form-label" style="margin-top:5%;">Medicine:</label>
+                  <div class="col-4"  style="margin-top:5%;">
+                    <input formControlName="med" class="form-control">
+                  </div>
+                  <div class="col-2" style="margin-top:5%;">
+                    <button (click)="checkMedicine()" class="btn btn-info btn-md ml-auto">
+                      >>
+                    </button>
+                  </div>
+                  <div class="col-4">
+                    <textarea rows="4" formControlName="medicines" class="form-control"></textarea>
+                  </div>
+                </div>
+      
+                <!--<div class="form-group row" style="margin-left:15%; width:70%">
+                  <label class="col-2 col-form-label">Medicines:</label>
+                  <div class="col-10">
+                    <input formControlName="medicines" class="form-control">
+                  </div>
+                </div>-->
+                <div class="form-group row" style="margin-left:15%; width:70%">
+                  <label class="col-2 col-form-label">Messagge:</label>
+                  <div class="col-10">
+                    <textarea rows="10" formControlName="message" class="form-control"></textarea>
+                  </div>
+                </div>
+                <button id="submit-btn-tm-form" (click)=validate() class="btn btn-info btn-md ml-auto" [disabled]="!diagnoseForm.valid">
+                  Validate
+                  <i class="fa fa-plus" aria-hidden="true"></i>
+                </button>
+                <label *ngIf="validateForm">Everything is ok! You can submit therapy</label>
+                <button id="submit-btn-tm-form" type="submit" class="btn btn-info btn-md ml-auto" [disabled]="!validateForm">
+                  Add
+                  <i class="fa fa-plus" aria-hidden="true"></i>
+                </button>
+              </form>
+            </div>
+            <br>
+          
+        </div>

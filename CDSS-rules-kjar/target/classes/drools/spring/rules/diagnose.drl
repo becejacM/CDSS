@@ -1,0 +1,32 @@
+package drools.spring.rules
+
+import sbnz.ftn.uns.ac.rs.cdss.model.Patient;
+import sbnz.ftn.uns.ac.rs.cdss.model.Symptom;
+import sbnz.ftn.uns.ac.rs.cdss.model.Disease;
+import sbnz.ftn.uns.ac.rs.cdss.model.SymptomForDisease;
+import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
+import sbnz.ftn.uns.ac.rs.cdss.services.DiagnosticProccesService;
+
+import java.util.List;
+
+global DiagnosticProccesService diagnosticProccessService
+
+rule "diagnose for 1.group"
+    agenda-group "diagnose"
+    lock-on-active true
+    salience($x)
+	when
+		
+		$d : Disease(name == "Prehlada",$n: name, $sfd : generalSymptoms)
+		$t : DiagnosticTherapy($syms : symptoms)
+		$l : List() from collect (Symptom())
+		$x : Number(intValue >= 4) from accumulate( 
+          $m2: Symptom(name=="Kasalj" || name=="Kijanje"
+          || name=="Curenje iz nosa" || name=="Bol u grlu" || name=="Glavobolja"
+          ) from $syms,
+          count($m2)
+        )
+	then
+		System.out.println("Bolest: "+$syms.size());	
+		modify ($t) { setDisease($d); }
+end

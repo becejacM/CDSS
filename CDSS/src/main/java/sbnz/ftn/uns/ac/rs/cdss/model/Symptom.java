@@ -1,6 +1,7 @@
 package sbnz.ftn.uns.ac.rs.cdss.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -10,6 +11,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -30,6 +34,9 @@ public class Symptom {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "symptom")
 	protected List<SymptomForDisease> symptomsForDisease;
 
+	@ManyToMany(mappedBy = "generalSymptoms")
+    private Collection<Disease> generalDisease = new ArrayList<>();
+	
 	public Symptom() {
 
 	}
@@ -74,5 +81,15 @@ public class Symptom {
 	public String toString() {
 		return "Symptom [id=" + id + ", name=" + name +"]";
 	}
+
+	public Collection<Disease> getGeneralDisease() {
+		return generalDisease;
+	}
+
+	public void setGeneralDisease(Collection<Disease> generalDisease) {
+		this.generalDisease = generalDisease;
+	}
+	
+	
 
 }

@@ -3,6 +3,7 @@ package sbnz.ftn.uns.ac.rs.cdss.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -11,13 +12,16 @@ import org.springframework.stereotype.Service;
 
 import sbnz.ftn.uns.ac.rs.cdss.exceptions.NotValidParamsException;
 import sbnz.ftn.uns.ac.rs.cdss.model.AppUser;
+import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
 import sbnz.ftn.uns.ac.rs.cdss.model.Disease;
 import sbnz.ftn.uns.ac.rs.cdss.model.Medicine;
 import sbnz.ftn.uns.ac.rs.cdss.model.MedicineIngredient;
+import sbnz.ftn.uns.ac.rs.cdss.model.Patient;
 import sbnz.ftn.uns.ac.rs.cdss.model.Symptom;
 import sbnz.ftn.uns.ac.rs.cdss.model.SymptomForDisease;
 import sbnz.ftn.uns.ac.rs.cdss.model.TypeOfSymptoms;
 import sbnz.ftn.uns.ac.rs.cdss.model.UserRole;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiagnosticTherapyDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.IngredientDTO;
@@ -27,8 +31,10 @@ import sbnz.ftn.uns.ac.rs.cdss.model.dto.SymptomDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.SymptomDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.repository.AppUserRepository;
 import sbnz.ftn.uns.ac.rs.cdss.repository.DiseaseRepository;
+import sbnz.ftn.uns.ac.rs.cdss.repository.PatientRepository;
 import sbnz.ftn.uns.ac.rs.cdss.repository.SymptomForDiseaseRepository;
 import sbnz.ftn.uns.ac.rs.cdss.repository.SymptomRepository;
+import sbnz.ftn.uns.ac.rs.cdss.services.DiagnosticProccesService;
 import sbnz.ftn.uns.ac.rs.cdss.services.DiseaseService;
 
 @Service
@@ -46,6 +52,15 @@ public class DiseaseServiceImpl implements DiseaseService {
 	@Autowired
 	AppUserRepository appUserRepository;
 
+	@Autowired
+	private KieSession kieSession;
+	
+	@Autowired
+	DiagnosticProccesService diagnosticProccessService;
+
+	@Autowired
+	PatientRepository patientRepository;
+	
 	@Override
 	public Page<DiseaseDetailsDTO> getAllDiseases(String username, Pageable pageable) {
 		try {
@@ -182,21 +197,39 @@ public class DiseaseServiceImpl implements DiseaseService {
 	}
 
 	@Override
-	public Disease getDiagnose(String username, ListOfSymbolsDTO listOfSymbols) {
+	public DiagnosticTherapyDetailsDTO getDiagnose(String username, ListOfSymbolsDTO listOfSymbols) {
 		try {
 			AppUser user = this.appUserRepository.findByUsername(username);
 			if (user == null || !user.getRole().equals(UserRole.DOCTOR)) {
 				throw new NotValidParamsException("You must be logged in as doctor to get disease");
 			}
-
+			Patient p = patientRepository.findById(listOfSymbols.getPatientid()).get();
+			//kieSession.insert(p);
+			DiagnosticTherapy d = new DiagnosticTherapy();
+			d.setMedicalRecord(p.getMedicalRecord());
 			for(SymptomDTO s : listOfSymbols.getSymptoms()) {
 				Symptom symptom = symptomRepository.findByName(s.getName());
 				System.out.println("tu saaam: "+symptom.toString());
+				d.getSymptoms().add(symptom);
+				//kieSession.insert(symptom);
 			}
-			return new Disease();
+			kieSession.insert(d);
+			kieSession.getAgenda().getAgendaGroup("diagnose").setFocus();
+			kieSession.fireAllRules();
+			/*for(SymptomDTO s : listOfSymbols.getSymptoms()) {
+				Symptom symptom = symptomRepository.findByName(s.getName());
+				if(kieSession.getFactHandle(symptom)!=null) {
+					System.out.println("brisem");
+					kieSession.delete(kieSession.getFactHandle(symptom));
+				}
+			}*/
+			kieSession.delete(kieSession.getFactHandle(d));
+			System.out.println(d.toString());
+			return new DiagnosticTherapyDetailsDTO(d);
 		} catch (NotValidParamsException ex) {
 			throw ex;
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throw new NotValidParamsException("Invalid parameters while trying to update disease");
 		}
 	}
