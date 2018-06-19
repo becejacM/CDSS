@@ -1,6 +1,7 @@
 package sbnz.ftn.uns.ac.rs.cdss.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.kie.api.runtime.KieSession;
@@ -207,6 +208,11 @@ public class DiseaseServiceImpl implements DiseaseService {
 			//kieSession.insert(p);
 			DiagnosticTherapy d = new DiagnosticTherapy();
 			d.setMedicalRecord(p.getMedicalRecord());
+			Date date = new Date();
+			long ltime=date.getTime()-60*24*60*60*1000; //oduzimanje 60 dana
+			Date todayminus60=new Date(ltime);
+			d.setDate(todayminus60);
+
 			for(SymptomDTO s : listOfSymbols.getSymptoms()) {
 				Symptom symptom = symptomRepository.findByName(s.getName());
 				System.out.println("tu saaam: "+symptom.toString());
@@ -223,6 +229,38 @@ public class DiseaseServiceImpl implements DiseaseService {
 					kieSession.delete(kieSession.getFactHandle(symptom));
 				}
 			}*/
+			kieSession.delete(kieSession.getFactHandle(d));
+			System.out.println(d.toString());
+			return new DiagnosticTherapyDetailsDTO(d);
+		} catch (NotValidParamsException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new NotValidParamsException("Invalid parameters while trying to update disease");
+		}
+	}
+
+	@Override
+	public DiagnosticTherapyDetailsDTO getDiagnoseList(String username, ListOfSymbolsDTO listOfSymbols) {
+		try {
+			AppUser user = this.appUserRepository.findByUsername(username);
+			if (user == null || !user.getRole().equals(UserRole.DOCTOR)) {
+				throw new NotValidParamsException("You must be logged in as doctor to get disease");
+			}
+			Patient p = patientRepository.findById(listOfSymbols.getPatientid()).get();
+			//kieSession.insert(p);
+			DiagnosticTherapy d = new DiagnosticTherapy();
+			d.setMedicalRecord(p.getMedicalRecord());
+			d.setDate(new Date());
+			for(SymptomDTO s : listOfSymbols.getSymptoms()) {
+				Symptom symptom = symptomRepository.findByName(s.getName());
+				System.out.println("tu saaam: "+symptom.toString());
+				d.getSymptoms().add(symptom);
+			}
+			kieSession.insert(d);
+			kieSession.getAgenda().getAgendaGroup("diagnoseList").setFocus();
+			kieSession.fireAllRules(1);
+			
 			kieSession.delete(kieSession.getFactHandle(d));
 			System.out.println(d.toString());
 			return new DiagnosticTherapyDetailsDTO(d);

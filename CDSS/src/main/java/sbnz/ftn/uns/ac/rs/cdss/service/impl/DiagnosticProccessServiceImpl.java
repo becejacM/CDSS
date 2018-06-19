@@ -2,6 +2,7 @@ package sbnz.ftn.uns.ac.rs.cdss.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.kie.api.runtime.KieSession;
@@ -118,6 +119,7 @@ public class DiagnosticProccessServiceImpl implements DiagnosticProccesService {
 				throw new NotValidParamsException("You must be logged in as doctor to add disease");
 			}
 			DiagnosticTherapy newd = new DiagnosticTherapy();
+			newd.setDate(new Date());
 			newd.setMedicalRecord(mrRepository
 					.findById((patientRepository.getOne(d.getPatientId()).getMedicalRecord().getId())).get());
 			Disease disease = diseaseRepository.findByName(d.getDiseasename());

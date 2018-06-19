@@ -21,4 +21,6 @@ public interface DiseaseService {
 	
 	SymptomDetailsDTO checkSymptom(String username, String name);
 	DiagnosticTherapyDetailsDTO getDiagnose(String username, ListOfSymbolsDTO listOfSymbols);
+	DiagnosticTherapyDetailsDTO getDiagnoseList(String username, ListOfSymbolsDTO listOfSymbols);
+
 }

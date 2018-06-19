@@ -111,6 +111,7 @@ insert into symptom(id, name) values (18, 'Otoci nogu i zglobova');
 insert into symptom(id, name) values (19, 'Gusenje');
 insert into symptom(id, name) values (20, 'Bol u grudima');
 insert into symptom(id, name) values (21, 'Dijareja');
+insert into symptom(id, name) values (22, 'Visok pritisak');
 
 --- dodavanje bolesti prve grupe
 --- dodavanje prehlade i njenih simptoma
@@ -121,11 +122,6 @@ insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) val
 insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) values (4, 'GENERAL', 1, 4);	---kijanje
 insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) values (5, 'GENERAL', 1, 5);	---kasalj
 
-insert into general_symptom_table(disease_id, symptom_id) values (1,1);
-insert into general_symptom_table(disease_id, symptom_id) values (1,2);
-insert into general_symptom_table(disease_id, symptom_id) values (1,3);
-insert into general_symptom_table(disease_id, symptom_id) values (1,4);
-insert into general_symptom_table(disease_id, symptom_id) values (1,5);
 
 --- dodavanje groznice i njenih simptoma
 insert into disease(id, name, type_of_disease) values (2, 'Groznica', 'FIRST_GROUP');
@@ -136,6 +132,7 @@ insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) val
 insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) values (10, 'GENERAL', 2, 1);	---curenje nosa
 insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) values (11, 'GENERAL', 2, 3);	---glavobolja
 insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) values (12, 'GENERAL', 2, 7);	---drhtavica
+
 
 --- dodavanje upala krajnika i njenih simptoma
 insert into disease(id, name, type_of_disease) values (3, 'Upala krajnika', 'FIRST_GROUP');
@@ -185,7 +182,7 @@ insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) val
 insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) values (39, 'GENERAL', 8, 18);	---otoci nogu i zglobova
 insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) values (40, 'GENERAL', 8, 21);	---dijareja
 
-insert into diagnostic_therapy(id, disease_id, medical_record_id) values (1, 1, 1); --- dodata pacijentu 1 prehlada(on je alergican na 1 4 7 lekove i sastojak 1)
+insert into diagnostic_therapy(id, date, disease_id, medical_record_id) values (1, '2017-06-18 01:03:58',1, 1); --- dodata pacijentu 1 prehlada(on je alergican na 1 4 7 lekove i sastojak 1)
 insert into therapy_symptoms(therapy_id, symptom_id) values (1, 1);					--- moraju biti 4 simptoma zadovoljena za 1.grupu bolesti
 insert into therapy_symptoms(therapy_id, symptom_id) values (1, 2);
 insert into therapy_symptoms(therapy_id, symptom_id) values (1, 3);

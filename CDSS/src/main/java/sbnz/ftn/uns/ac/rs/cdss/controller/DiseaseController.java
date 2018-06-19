@@ -89,4 +89,10 @@ public class DiseaseController {
 		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
 		return new ResponseEntity<>(this.diseaseService.getDiagnose(username, listOfSymptoms), HttpStatus.OK);
 	}
+	
+	@PostMapping(value = "/diagnoseList")
+	public ResponseEntity<?> diagnoseList(@RequestBody ListOfSymbolsDTO listOfSymptoms) {
+		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
+		return new ResponseEntity<>(this.diseaseService.getDiagnoseList(username, listOfSymptoms), HttpStatus.OK);
+	}
 }

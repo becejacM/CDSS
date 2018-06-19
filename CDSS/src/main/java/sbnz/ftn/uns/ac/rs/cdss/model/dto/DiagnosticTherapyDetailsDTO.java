@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
+import sbnz.ftn.uns.ac.rs.cdss.model.Disease;
 import sbnz.ftn.uns.ac.rs.cdss.model.Medicine;
 import sbnz.ftn.uns.ac.rs.cdss.model.Symptom;
 
@@ -16,6 +17,7 @@ public class DiagnosticTherapyDetailsDTO {
 	private String meds;
 	private String diseasename;
 	private String message;
+	private Collection<DiseaseDetailsDTO> posibleDiseases = new ArrayList<>();
 	
 	public DiagnosticTherapyDetailsDTO() {
 		
@@ -37,13 +39,18 @@ public class DiagnosticTherapyDetailsDTO {
 			this.meds+=m.getName();
 			
 		}
+		for(Disease dis : d.getPosibleDiseases()) {
+			this.posibleDiseases.add(new DiseaseDetailsDTO(dis));
+		}
 		if(this.syms.startsWith(",")) {
 			this.syms = this.syms.substring(1);
 		}
 		if(this.meds.startsWith(",")) {
 			this.meds = this.meds.substring(1);
 		}
-		this.diseasename = d.getDisease().getName();
+		if(d.getDisease()!=null) {
+			this.diseasename = d.getDisease().getName();
+		}
 		this.message = d.getMessage();
 	}
 
@@ -111,6 +118,14 @@ public class DiagnosticTherapyDetailsDTO {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public Collection<DiseaseDetailsDTO> getPosibleDiseases() {
+		return posibleDiseases;
+	}
+
+	public void setPosibleDiseases(Collection<DiseaseDetailsDTO> posibleDiseases) {
+		this.posibleDiseases = posibleDiseases;
 	}
 
 	
