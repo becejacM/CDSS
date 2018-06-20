@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import sbnz.ftn.uns.ac.rs.cdss.CdssApplication;
 import sbnz.ftn.uns.ac.rs.cdss.model.AppUser;
 import sbnz.ftn.uns.ac.rs.cdss.model.Disease;
+import sbnz.ftn.uns.ac.rs.cdss.model.Patient;
 import sbnz.ftn.uns.ac.rs.cdss.model.UserRole;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.AppUserDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.AppUserDetailsDTO;
@@ -37,6 +38,7 @@ import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.repository.AppUserRepository;
 import sbnz.ftn.uns.ac.rs.cdss.repository.DiseaseRepository;
+import sbnz.ftn.uns.ac.rs.cdss.repository.PatientRepository;
 import sbnz.ftn.uns.ac.rs.cdss.security.SecurityUser;
 import sbnz.ftn.uns.ac.rs.cdss.security.TokenUtils;
 import sbnz.ftn.uns.ac.rs.cdss.service.impl.UserExtendedService;
@@ -78,6 +80,9 @@ public class AppUserController {
     private AppUserRepository userRepository;
     
     @Autowired
+    private PatientRepository patientRepository;
+    
+    @Autowired
 	DiagnosticProccesService diagnosticProccessService;
     
     @PostMapping(value = "/login")
@@ -106,7 +111,10 @@ public class AppUserController {
         for(Disease d: diseases) {
         	kieSession.insert(d);
         }
-
+        Collection<Patient> patients = patientRepository.findAll();
+        for(Patient p: patients) {
+        	kieSession.insert(p);
+        }
         SecurityUser su = (SecurityUser) userDetails;
         String token = this.tokenUtils.generateToken(userDetails);
         // Return the token

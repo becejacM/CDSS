@@ -5,4 +5,6 @@ export class IPatient{
     email:String;
     address:String;
     medicalCardNumber:String;
+    diseasename:String;
+    numberOfTimes:any;
 }

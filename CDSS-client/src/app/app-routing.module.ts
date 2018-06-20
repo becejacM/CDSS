@@ -20,6 +20,9 @@ import { OrganizeDiseasesComponent } from './components/organize-diseases/organi
 import { OrganizeMedicinesComponent } from './components/organize-medicines/organize-medicines.component';
 import { PatientDetailsComponent } from './components/patient-details/patient-details.component';
 import { OrganizeIngredientsComponent } from './components/organize-ingredients/organize-ingredients.component';
+import { Report1Component } from './components/report1/report1.component';
+import { Report2Component } from './components/report2/report2.component';
+import { Report3Component } from './components/report3/report3.component';
 
 
 const appRoutes: Routes = [
@@ -44,7 +47,15 @@ const appRoutes: Routes = [
   ]},
   {
     path: 'rcard', component: RcardComponent, canActivate: [OnlyLoggedInGuard], children: [
-    {path: 'reporting', component: ReportingComponent,canActivate: [OnlyLoggedInGuard]},
+    {path: 'reporting', component: ReportingComponent,canActivate: [OnlyLoggedInGuard]
+    , children: [
+      {path: 'report1', component: Report1Component,canActivate: [OnlyLoggedInGuard]},
+      {path: 'report2', component: Report2Component,canActivate: [OnlyLoggedInGuard]},
+      {path: 'report3', component: Report3Component,canActivate: [OnlyLoggedInGuard]}, 
+    ]
+  
+  },
+    
   
   ]},
   {

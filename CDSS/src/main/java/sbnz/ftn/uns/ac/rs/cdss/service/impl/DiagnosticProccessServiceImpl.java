@@ -120,6 +120,7 @@ public class DiagnosticProccessServiceImpl implements DiagnosticProccesService {
 			}
 			DiagnosticTherapy newd = new DiagnosticTherapy();
 			newd.setDate(new Date());
+			newd.setDoctor(user);
 			newd.setMedicalRecord(mrRepository
 					.findById((patientRepository.getOne(d.getPatientId()).getMedicalRecord().getId())).get());
 			Disease disease = diseaseRepository.findByName(d.getDiseasename());

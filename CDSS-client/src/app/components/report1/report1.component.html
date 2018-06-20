@@ -1,0 +1,25 @@
+<table style="background: rgba(207, 219, 237, 0.95);" class="table">
+  <thead class="thead-light">
+    <tr>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Medical card number</th>
+        <th>Disease</th>
+        
+    </tr>
+
+
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let p of patients">
+
+        <td>{{p.patient.firstname}}</td>
+        <td>{{p.patient.lastname}}</td>
+        <td>{{p.patient.medicalCardNumber}}</td>
+        <td>{{p.diseasename}}</td>
+      
+      
+    </tr>
+  </tbody>
+</table>

@@ -2,9 +2,13 @@ package sbnz.ftn.uns.ac.rs.cdss.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.rule.QueryResults;
+import org.kie.api.runtime.rule.QueryResultsRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -13,16 +17,22 @@ import org.springframework.stereotype.Service;
 
 import sbnz.ftn.uns.ac.rs.cdss.exceptions.NotValidParamsException;
 import sbnz.ftn.uns.ac.rs.cdss.model.AppUser;
+import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
+import sbnz.ftn.uns.ac.rs.cdss.model.Disease;
 import sbnz.ftn.uns.ac.rs.cdss.model.MedicalRecord;
 import sbnz.ftn.uns.ac.rs.cdss.model.Medicine;
 import sbnz.ftn.uns.ac.rs.cdss.model.MedicineIngredient;
 import sbnz.ftn.uns.ac.rs.cdss.model.Patient;
+import sbnz.ftn.uns.ac.rs.cdss.model.Symptom;
 import sbnz.ftn.uns.ac.rs.cdss.model.UserRole;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.AlergiesDetailsDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiagnosticTherapyDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.IngredientDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.MedicineDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.PatientDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.PatientDetailsDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.ReportDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.SymptomDTO;
 import sbnz.ftn.uns.ac.rs.cdss.repository.AppUserRepository;
 import sbnz.ftn.uns.ac.rs.cdss.repository.MedicalRecordRepository;
 import sbnz.ftn.uns.ac.rs.cdss.repository.MedicineIngredientRepository;
@@ -48,6 +58,9 @@ public class PatientServiceImpl implements PatientService {
 	@Autowired
 	MedicineIngredientRepository ingredientRepository;
 
+	@Autowired
+	private KieSession kieSession;
+	
 	@Override
 	public Page<PatientDetailsDTO> getAllPatients(String username, Pageable pageable) {
 		try {
@@ -230,6 +243,53 @@ public class PatientServiceImpl implements PatientService {
 			ex.printStackTrace();
 			throw new NotValidParamsException("Invalid parameters while trying to add patient");
 		}
+	}
+
+	@Override
+	public Collection<ReportDTO> getReport1(String username) {
+		try {
+			AppUser user = this.appUserRepository.findByUsername(username);
+			if (user == null || !user.getRole().equals(UserRole.DOCTOR)) {
+				throw new NotValidParamsException("You must be logged in as doctor to get report");
+			}
+
+			//ReportDTO r = new ReportDTO();
+			//kieSession.insert(r);
+			//kieSession.getAgenda().getAgendaGroup("report1").setFocus();
+			//kieSession.fireAllRules();
+			//kieSession.delete(kieSession.getFactHandle(r));
+			
+			QueryResults results = kieSession.getQueryResults( "report 1 : Pacinet sa mogucim hronicnim oboljenjima" );
+			System.out.println( "we have " + results.size());
+
+			Collection<ReportDTO> reports1 = new ArrayList<>();
+			for ( QueryResultsRow row : results ) {
+			    Patient p = ( Patient ) row.get( "p" );
+			    Disease d = ( Disease ) row.get( "d" );
+			    ReportDTO r= new ReportDTO();
+			    r.setDiseasename(d.getName());
+			    r.setPatient(new PatientDTO(p));
+			    reports1.add(r);
+			}
+			return reports1;
+		} catch (NotValidParamsException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new NotValidParamsException("Invalid parameters while trying to update disease");
+		}
+	}
+
+	@Override
+	public Collection<ReportDTO> getReport2(String username) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<ReportDTO> getReport3(String username) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

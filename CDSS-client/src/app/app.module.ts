@@ -52,6 +52,9 @@ import { MedicineService } from './services/medicines/medicine.service';
 import { OrganizeIngredientsComponent } from './components/organize-ingredients/organize-ingredients.component';
 import { IngredientService } from './services/ingredients/ingredient.service';
 import { DiagnosticProccessService } from './services/diagnostic-proccess/diagnostic-proccess.service';
+import { Report1Component } from './components/report1/report1.component';
+import { Report2Component } from './components/report2/report2.component';
+import { Report3Component } from './components/report3/report3.component';
 
 
 @NgModule({
@@ -79,7 +82,10 @@ import { DiagnosticProccessService } from './services/diagnostic-proccess/diagno
     OrganizeSymptomsComponent,
     OrganizeDiseasesComponent,
     PatientDetailsComponent,
-    OrganizeIngredientsComponent
+    OrganizeIngredientsComponent,
+    Report1Component,
+    Report2Component,
+    Report3Component
   ],
   imports: [
     BrowserModule,

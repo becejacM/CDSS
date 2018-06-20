@@ -1,0 +1,23 @@
+package drools.spring.rules
+
+import sbnz.ftn.uns.ac.rs.cdss.model.Patient;
+import sbnz.ftn.uns.ac.rs.cdss.model.Symptom;
+import sbnz.ftn.uns.ac.rs.cdss.model.Disease;
+import sbnz.ftn.uns.ac.rs.cdss.model.SymptomForDisease;
+import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
+import sbnz.ftn.uns.ac.rs.cdss.model.TypeOfMedicine;
+import sbnz.ftn.uns.ac.rs.cdss.model.Medicine;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.ReportDTO;
+
+import sbnz.ftn.uns.ac.rs.cdss.services.DiagnosticProccesService;
+
+import java.util.List;
+
+query "report 1 : Pacinet sa mogucim hronicnim oboljenjima"
+		p : Patient($mr : medicalRecord)
+		d : Disease(name!="Prehlada", name!="Groznica", $n: name)
+		teraphies : List(size>5) from accumulate (
+				$dt : DiagnosticTherapy(disease.name==$n && checkDate(24, "month", "before")) from $mr.therapy,
+				collectList($dt)
+				)
+end

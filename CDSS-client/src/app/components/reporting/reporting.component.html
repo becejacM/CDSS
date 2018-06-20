@@ -1,3 +1,19 @@
-<p>
-  reporting works!
-</p>
+<div class="card text-center col-md-12">
+  <div class="card-header">
+    <ul class="nav nav-tabs card-header-tabs">
+      <li class="nav-item">
+        <a id="link-tab-all" class="nav-link" routerLinkActive="active current" routerLink="report1">Report 1</a>
+      </li>
+      <li class="nav-item">
+        <a id="link-tab-all" class="nav-link" routerLinkActive="active current" routerLink="report2">Report 2</a>
+      </li>
+      <li class="nav-item">
+        <a id="link-tab-all" class="nav-link" routerLinkActive="active current" routerLink="report3">Report 3</a>
+      </li>
+      
+    </ul>
+  </div>
+  <div class="card-block">
+    <router-outlet></router-outlet>
+  </div>
+</div>

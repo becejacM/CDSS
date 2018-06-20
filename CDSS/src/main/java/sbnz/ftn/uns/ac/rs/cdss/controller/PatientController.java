@@ -24,6 +24,7 @@ import sbnz.ftn.uns.ac.rs.cdss.model.dto.MedicineDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.MedicineDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.PatientDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.PatientDetailsDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.ReportDTO;
 import sbnz.ftn.uns.ac.rs.cdss.security.TokenUtils;
 import sbnz.ftn.uns.ac.rs.cdss.services.PatientService;
 
@@ -91,5 +92,22 @@ public class PatientController {
 		return new ResponseEntity<MedicineDetailsDTO>(this.patientService.addAlergie(username, id, nameAlergie),
 				HttpStatus.CREATED);
 	}
-	//Dijagnostikovanje procesa
+	//Izvestaji
+	
+	@GetMapping(value="/report1")
+	public ResponseEntity<Collection<ReportDTO>> getReport1() {
+		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
+		return new ResponseEntity<>(this.patientService.getReport1(username), HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/report2")
+	public ResponseEntity<Collection<ReportDTO>> getReport2() {
+		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
+		return new ResponseEntity<>(this.patientService.getReport2(username), HttpStatus.OK);
+	}
+	@GetMapping(value="/report3")
+	public ResponseEntity<Collection<ReportDTO>> getReport3() {
+		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
+		return new ResponseEntity<>(this.patientService.getReport3(username), HttpStatus.OK);
+	}
 }

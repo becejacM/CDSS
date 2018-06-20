@@ -5,10 +5,12 @@ import sbnz.ftn.uns.ac.rs.cdss.model.Symptom;
 import sbnz.ftn.uns.ac.rs.cdss.model.Disease;
 import sbnz.ftn.uns.ac.rs.cdss.model.SymptomForDisease;
 import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
+import sbnz.ftn.uns.ac.rs.cdss.model.TypeOfMedicine;
+import sbnz.ftn.uns.ac.rs.cdss.model.Medicine;
 import sbnz.ftn.uns.ac.rs.cdss.services.DiagnosticProccesService;
-
 import java.util.List;
 import java.util.Calendar;
+import java.util.ArrayList;
 
 global DiagnosticProccesService diagnosticProccessService
 
@@ -178,7 +180,36 @@ rule "diagnose for 1.group sinusna infekcija"
 		//kcontext.getKnowledgeRuntime().halt();
 end
 
-
+rule "diagnose for 2.group Hipertenzija"
+    agenda-group "diagnose"
+    lock-on-active true
+    salience 200
+	when
+		
+		$d : Disease(name == "Hipertenzija",$n: name, $sfd : symptomsForDisease, $y : symptomsForDisease.size())
+		$t : DiagnosticTherapy($syms : symptoms, $mr : medicalRecord, $da:date)
+				
+		$teraphies : List(size>0) from accumulate (
+				$dt : DiagnosticTherapy(checkDate(6, "month", "before")) from $mr.therapy,
+				collectList($dt)
+				)
+		$sds: List( size > 0 ) 
+    		from accumulate( $detail: DiagnosticTherapy() from $teraphies,
+                     init( List list = new ArrayList(); )
+                     action(list.addAll($detail.getSymptoms()); )
+                     result( list ) )
+		
+		$numOfSymbolsWithPResure : Number(intValue >= 1) from accumulate( 
+          $m2: Symptom(name=="Visok pritisak"
+          ) from $sds,
+          count($m2)
+        )
+        
+	then
+		System.out.println("Bolest: "+$d.getName());	
+		System.out.println("Syms: " + $numOfSymbolsWithPResure);
+		modify ($t) { setDisease($d); }
+end
 
 rule "diagnose for 2.group dijabetes"
     agenda-group "diagnose"
@@ -244,5 +275,82 @@ rule "diagnose for 3.group hronicna bubrezna bolest"
 	then
 		System.out.println("Bolest: "+$d.getName());	
 		
+		modify ($t) { setDisease($d); }
+end
+
+rule "diagnose for 3.group akutna bubrezna povreda"
+    agenda-group "diagnose"
+    lock-on-active true
+    salience 300
+	when
+		
+		$d : Disease(name == "Akutna bubrezna povreda",$n: name, $sfd : symptomsForDisease, $y : symptomsForDisease.size())
+		$t : DiagnosticTherapy($syms : symptoms, $mr : medicalRecord, $da:date)
+				
+		
+		$sds: List() 
+    		from accumulate( $detail: DiagnosticTherapy(checkDate(14, "day", "before")) from $mr.therapy,
+                     init( List list = new ArrayList(); )
+                     action(list.addAll($detail.getSymptoms()); )
+                     result( list ) )
+		
+		$numOfSymbolsWithPResure : Integer(intValue>=1) from accumulate( 
+          $m2: Symptom(name=="Temperatura veca od 38 stepeni" || name=="Temperatura veca od 40 do 41 stepeni"
+          ) from $sds,
+          init( int total = 0; ),
+          action( total += 1; ),
+          result((int)total)
+        )
+        
+        $sds2: List() 
+    		from accumulate( $detail: DiagnosticTherapy() from $mr.therapy,
+                     init( List list = new ArrayList(); )
+                     action(list.addAll($detail.getSymptoms()); )
+                     result( list ) )
+		
+		$numOfSymbolsWithOperation : Integer(intValue >= 0) from accumulate( 
+          $m2: Symptom(name=="Oporavlja se od operacije"
+          ) from $sds,
+          init( int total = 0; ),
+          action( total += 1; ),
+          result((int)total)
+        )
+        
+         $sds3: List() 
+    		from accumulate( $detail: DiagnosticTherapy(checkDate(21, "day", "before")) from $mr.therapy,
+                     init( List list = new ArrayList(); )
+                     action(list.addAll($detail.getMedicines()); )
+                     result( list ) )
+		
+		$numOfSymbolsWithAntibiotic : Integer() from accumulate( 
+          $m2: Medicine(typeOfMedicine==TypeOfMedicine.ANTIBIOTIC
+          ) from $sds,
+          init( int total = 0; ),
+          action( total += 1; ),
+          result((int)total)
+        )
+        
+        $symptoms : List() from accumulate (
+				SymptomForDisease($sym : symptom) from $sfd,
+				collectList($sym)
+				)
+				
+		$names : List() from accumulate (
+				Symptom($ns:name) from $symptoms,
+				collectList($ns)
+				)
+		
+		$x : Number(intValue >= 2) from accumulate( 
+          $m2: Symptom(name memberOf $names
+          ) from $syms,
+          count($m2)
+        )
+                
+        eval(Integer.valueOf($numOfSymbolsWithOperation)>=1 || Integer.valueOf($numOfSymbolsWithPResure)>=1 || Integer.valueOf($numOfSymbolsWithAntibiotic)>=1)
+	then
+		System.out.println("Bolest: "+$d.getName());	
+		System.out.println("Pritisak: "+Integer.valueOf($numOfSymbolsWithPResure));
+		System.out.println("Operacija: "+Integer.valueOf($numOfSymbolsWithOperation));
+		System.out.println("Antibiotik: "+Integer.valueOf($numOfSymbolsWithAntibiotic));
 		modify ($t) { setDisease($d); }
 end

@@ -34,6 +34,10 @@ public class DiagnosticTherapy {
     @JoinColumn(name = "disease_id") 
 	private Disease disease;
 	
+	@OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctor_id") 
+	private AppUser doctor;
+	
 	@ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.MERGE
@@ -141,6 +145,15 @@ public class DiagnosticTherapy {
 
 	public void setPosibleDiseases(Collection<Disease> posibleDiseases) {
 		this.posibleDiseases = posibleDiseases;
+	}
+
+	
+	public AppUser getDoctor() {
+		return doctor;
+	}
+
+	public void setDoctor(AppUser doctor) {
+		this.doctor = doctor;
 	}
 
 	@Override

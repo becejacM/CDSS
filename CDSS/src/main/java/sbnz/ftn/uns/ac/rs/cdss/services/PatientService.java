@@ -10,6 +10,7 @@ import sbnz.ftn.uns.ac.rs.cdss.model.dto.AlergiesDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.MedicineDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.PatientDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.PatientDetailsDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.ReportDTO;
 
 
 public interface PatientService {
@@ -21,4 +22,9 @@ public interface PatientService {
 	PatientDetailsDTO update(String username, PatientDTO patient, Long id);
 	void deletePatient(String username, Long id);
 	MedicineDetailsDTO addAlergie(String username, Long id, String name);
+	
+	Collection<ReportDTO> getReport1(String username);
+	Collection<ReportDTO> getReport2(String username);
+	Collection<ReportDTO> getReport3(String username);
+
 }

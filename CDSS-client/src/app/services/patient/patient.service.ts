@@ -5,6 +5,7 @@ import {IPageable} from '../../model/IPageable';
 import { IPatient } from '../../model/IPatient';
 import { IMedicine } from '../../model/IMedicine';
 import { IAlergie } from '../../model/IAlergie';
+import { IReport } from '../../model/IReport';
 
 @Injectable()
 export class PatientService {
@@ -26,6 +27,20 @@ export class PatientService {
     return this.http.put<IPatient>(urlPath, patient);
   }
 
+  getReport1(): Observable<IReport[]> {
+    const urlPath = '/api/patients/report1';
+    return this.http.get<IReport[]>(urlPath);
+  }
+
+  getReport2(): Observable<IReport[]> {
+    const urlPath = '/api/patients/report2';
+    return this.http.get<IReport[]>(urlPath);
+  }
+
+  getReport3(): Observable<IReport[]> {
+    const urlPath = '/api/patients/report3';
+    return this.http.get<IReport[]>(urlPath);
+  }
   getAll(page: number, limit: number): Observable<IPageable> {
     page = page - 1;
     const urlPath = '/api/patients?&page=' + page + '&size=' + limit;
