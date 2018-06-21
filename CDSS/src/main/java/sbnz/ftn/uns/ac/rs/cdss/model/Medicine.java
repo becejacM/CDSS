@@ -2,17 +2,20 @@ package sbnz.ftn.uns.ac.rs.cdss.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.id.insert.InsertGeneratedIdentifierDelegate;
@@ -38,6 +41,9 @@ public class Medicine {
 	@ManyToMany
     @JoinTable(name = "medicine_ingredient_table", joinColumns = @JoinColumn(name = "medicine_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "medicineIngredient_id", referencedColumnName = "id"))
     private Collection<MedicineIngredient> ingredients = new ArrayList<>();
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "medicine")
+	protected List<MedicineForTherapy> medicineForTherapy;
 	
 	@ManyToMany(mappedBy = "medicines")
     private Collection<MedicalRecord> medicalRecords;
@@ -103,6 +109,15 @@ public class Medicine {
 
 	public void setMedicalRecords(Collection<MedicalRecord> medicalRecords) {
 		this.medicalRecords = medicalRecords;
+	}
+
+	
+	public List<MedicineForTherapy> getMedicineForTherapy() {
+		return medicineForTherapy;
+	}
+
+	public void setMedicineForTherapy(List<MedicineForTherapy> medicineForTherapy) {
+		this.medicineForTherapy = medicineForTherapy;
 	}
 
 	@Override

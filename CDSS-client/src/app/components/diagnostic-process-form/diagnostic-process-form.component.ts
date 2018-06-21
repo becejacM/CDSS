@@ -166,7 +166,10 @@ export class DiagnosticProcessFormComponent implements OnInit {
         console.log(data);
         this.list=new ListOfSymptoms;
         this.createForm();
-        this.therapy = data;
+        this.therapy.diseasename = data.diseasename;    
+        this.therapy.medicines = data.medicines;                
+        this.therapy.symptoms = data.symptoms;
+        this.therapy.patientId = data.patientId;                
         this.therapy.message="";
         this.active = "diagnose";
         this.createNewDF();
@@ -193,6 +196,7 @@ export class DiagnosticProcessFormComponent implements OnInit {
           console.log(data);
           this.validateForm=false;
           this.active="";
+          this.therapy = new ITherapy;
           this.createForm();
           this.createDiagnoseForm();
         },
@@ -211,11 +215,11 @@ export class DiagnosticProcessFormComponent implements OnInit {
       this.therapy.diseasename = this.diagnoseForm.value['diseasename'];
       this.therapy.message = this.diagnoseForm.value['message'];      
       this.therapy.medicines=this.listOfMedicines;
-      this.listM.medicines.forEach(element => {
+      this.therapy.medicines.forEach(element => {
         console.log("evo meeee: "+element);
         
       });
-      this.therapy.symptoms=this.listOfSymptoms;
+      //this.therapy.symptoms=this.listOfSymptoms;
       this.therapy.patientId=this.id;
       this.dpService.validate(this.therapy)
       .subscribe(data => {

@@ -8,10 +8,13 @@ import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
 import sbnz.ftn.uns.ac.rs.cdss.model.TypeOfMedicine;
 import sbnz.ftn.uns.ac.rs.cdss.model.Medicine;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.ReportDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.MedicineForTherapy;
 
 import sbnz.ftn.uns.ac.rs.cdss.services.DiagnosticProccesService;
 
 import java.util.List;
+import java.util.Set;
+import java.util.ArrayList;
 
 query "report 1 : Pacinet sa mogucim hronicnim oboljenjima"
 		p : Patient($mr : medicalRecord)
@@ -20,4 +23,95 @@ query "report 1 : Pacinet sa mogucim hronicnim oboljenjima"
 				$dt : DiagnosticTherapy(disease.name==$n && checkDate(24, "month", "before")) from $mr.therapy,
 				collectList($dt)
 				)
+end
+
+query "report 2 : Zavisnici"
+		p : Patient($mr : medicalRecord)
+		medicines: List() 
+    		from accumulate( $detail: DiagnosticTherapy(checkDate(6, "month", "before")) from $mr.therapy,
+                     init( List list = new ArrayList(); )
+                     action(list.addAll($detail.getMedicines()); )
+                     result( list ) )
+				
+		
+		numOfPainkiller : Integer(intValue>=6) from accumulate( 
+          $m2: MedicineForTherapy(medicine.typeOfMedicine==TypeOfMedicine.PAINKILLER
+          ) from medicines,
+          init( int total = 0; ),
+          action( total += 1; ),
+          result((int)total)
+        )
+        
+        setDoctors : Set(size>=3) from accumulate( 
+          $m2: MedicineForTherapy(medicine.typeOfMedicine==TypeOfMedicine.PAINKILLER, $doc : doctor
+          ) from medicines,
+          collectSet($doc)
+        )
+end
+
+query "report 3 : Oslabljen imunitet vise od 10 puta u poslednjih 12 meseci bolovao od bar 2 razlicite bolesti za koju su mu prepisani antibiotici"
+		p : Patient($mr : medicalRecord)
+		
+		teraphies : List(size>1) from accumulate (
+				$dt : DiagnosticTherapy(checkDate(12, "month", "before")) from $mr.therapy,
+				collectList($dt)
+				)
+        
+		medicines: List() 
+    		from accumulate( $detail: DiagnosticTherapy(checkDate(12, "month", "before")) from $mr.therapy,
+                     init( List list = new ArrayList(); )
+                     action(list.addAll($detail.getMedicines()); )
+                     result( list ) )
+        
+        setDiseases : Set(size>=2) from accumulate( 
+          $m2: MedicineForTherapy($d : diagnostictherapys.disease, medicine.typeOfMedicine==TypeOfMedicine.ANTIBIOTIC
+          ) from medicines,
+          collectSet($d)
+        )
+        //u 12 meseci sve bolesti sa antibioticima
+        setDiseases2 : Set(size==teraphies.size()) from accumulate( 
+          $m2: MedicineForTherapy(medicine.typeOfMedicine==TypeOfMedicine.ANTIBIOTIC, $dis : diagnostictherapys.disease
+          ) from medicines,
+          collectSet($dis)
+        )
+end
+
+//query "report 3 : Oslabljen imunitet u 12 meseci sve bolesti sa antibioticima"
+//		p : Patient($mr : medicalRecord)
+//		
+//		teraphies : List() from accumulate (
+//				$dt : DiagnosticTherapy(checkDate(12, "month", "before")) from $mr.therapy,
+//				collectList($dt)
+//				)
+//				
+//		medicines: List() 
+//   		from accumulate( $detail: DiagnosticTherapy() from teraphies,
+//                     init( List list = new ArrayList(); )
+//                     action(list.addAll($detail.getMedicines()); )
+//                     result( list ) )
+//				
+//		
+//        setDiseases : Set(size==teraphies.size()) from accumulate( 
+//          $m2: MedicineForTherapy(medicine.typeOfMedicine==TypeOfMedicine.ANTIBIOTIC, $dis : disease
+//          ) from medicines,
+//          collectSet($dis)
+//        )
+//end
+
+query "resoner: sve bolesti povezane sa 1 ili vise simptoma"
+		d : Disease($sfd : symptomsForDisease)
+		$symptoms : List() from accumulate (
+				SymptomForDisease($sym : symptom) from $sfd,
+				collectList($sym)
+				)
+				
+		$names : List() from accumulate (
+				Symptom($ns:name) from $symptoms,
+				collectList($ns)
+				)
+		$x : Number(intValue>=1) from accumulate( 
+          $m2: Symptom(name memberOf $names
+          ) from $syms,
+          count($m2)
+        )
 end

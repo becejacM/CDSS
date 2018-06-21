@@ -18,6 +18,7 @@ import sbnz.ftn.uns.ac.rs.cdss.model.AppUser;
 import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
 import sbnz.ftn.uns.ac.rs.cdss.model.Disease;
 import sbnz.ftn.uns.ac.rs.cdss.model.Medicine;
+import sbnz.ftn.uns.ac.rs.cdss.model.MedicineForTherapy;
 import sbnz.ftn.uns.ac.rs.cdss.model.MedicineIngredient;
 import sbnz.ftn.uns.ac.rs.cdss.model.Patient;
 import sbnz.ftn.uns.ac.rs.cdss.model.Symptom;
@@ -33,6 +34,7 @@ import sbnz.ftn.uns.ac.rs.cdss.repository.AppUserRepository;
 import sbnz.ftn.uns.ac.rs.cdss.repository.DiagnosticProccessRepository;
 import sbnz.ftn.uns.ac.rs.cdss.repository.DiseaseRepository;
 import sbnz.ftn.uns.ac.rs.cdss.repository.MedicalRecordRepository;
+import sbnz.ftn.uns.ac.rs.cdss.repository.MedicineForTherapyRepository;
 import sbnz.ftn.uns.ac.rs.cdss.repository.MedicineIngredientRepository;
 import sbnz.ftn.uns.ac.rs.cdss.repository.MedicineRepository;
 import sbnz.ftn.uns.ac.rs.cdss.repository.PatientRepository;
@@ -67,6 +69,9 @@ public class DiagnosticProccessServiceImpl implements DiagnosticProccesService {
 	@Autowired
 	MedicalRecordRepository mrRepository;
 
+	@Autowired
+	MedicineForTherapyRepository medicineForTherapyRepository;
+	
 	@Autowired
 	AppUserRepository appUserRepository;
 
@@ -120,7 +125,7 @@ public class DiagnosticProccessServiceImpl implements DiagnosticProccesService {
 			}
 			DiagnosticTherapy newd = new DiagnosticTherapy();
 			newd.setDate(new Date());
-			newd.setDoctor(user);
+			//newd.setDoctor(user);
 			newd.setMedicalRecord(mrRepository
 					.findById((patientRepository.getOne(d.getPatientId()).getMedicalRecord().getId())).get());
 			Disease disease = diseaseRepository.findByName(d.getDiseasename());
@@ -131,15 +136,21 @@ public class DiagnosticProccessServiceImpl implements DiagnosticProccesService {
 			newd.setMessage(d.getMessage());
 			Collection<Symptom> syms = new ArrayList<>();
 			for (SymptomDTO s : d.getSymptoms()) {
+				System.out.println("ubacujem: "+s.getName());
 				syms.add(symptomRepository.findByName(s.getName()));
 			}
 			newd.setSymptoms(syms);
-			Collection<Medicine> meds = new ArrayList<>();
-			for (MedicineDTO m : d.getMedicines()) {
-				meds.add(medicineRepository.findByName(m.getName()));
-			}
-			newd.setMedicines(meds);
 			DiagnosticTherapy p = dpRepository.save(newd);
+
+			for (MedicineDTO m : d.getMedicines()) {
+				Medicine medicine = medicineRepository.findByName(m.getName());
+				MedicineForTherapy mft = new MedicineForTherapy();
+				mft.setDoctor(user);
+				mft.setMedicine(medicine);
+				mft.setDiagnostictherapys(newd);
+				mft.setDoctor(user);
+				medicineForTherapyRepository.save(mft);
+			}
 			return new DiagnosticTherapyDetailsDTO(p);
 		} catch (NotValidParamsException ex) {
 			throw ex;

@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -34,9 +36,7 @@ public class DiagnosticTherapy {
     @JoinColumn(name = "disease_id") 
 	private Disease disease;
 	
-	@OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_id") 
-	private AppUser doctor;
+	
 	
 	@ManyToMany(fetch = FetchType.LAZY,
             cascade = {
@@ -47,14 +47,16 @@ public class DiagnosticTherapy {
             inverseJoinColumns = { @JoinColumn(name = "symptom_id") })
 	private Collection<Symptom> symptoms = new ArrayList<>();
 	
-	@ManyToMany(fetch = FetchType.LAZY,
+	/*@ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.MERGE
             })
     @JoinTable(name = "therapy_medicines",
             joinColumns = { @JoinColumn(name = "therapy_id") },
             inverseJoinColumns = { @JoinColumn(name = "medicine_id") })
-	private Collection<Medicine> medicines = new ArrayList<>();
+	private Collection<Medicine> medicines = new ArrayList<>();*/
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "diagnostictherapys")
+	private Collection<MedicineForTherapy> medicines = new ArrayList<>();
 	
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "medicalRecord_id", nullable = false)
@@ -71,7 +73,7 @@ public class DiagnosticTherapy {
 		
 	}
 
-	public DiagnosticTherapy(Long id, Disease disease, Collection<Symptom> symptoms, Collection<Medicine> medicines, String message) {
+	public DiagnosticTherapy(Long id, Disease disease, Collection<Symptom> symptoms, Collection<MedicineForTherapy> medicines, String message) {
 		super();
 		this.id = id;
 		this.disease = disease;
@@ -104,11 +106,11 @@ public class DiagnosticTherapy {
 		this.symptoms = symptoms;
 	}
 
-	public Collection<Medicine> getMedicines() {
+	public Collection<MedicineForTherapy> getMedicines() {
 		return medicines;
 	}
 
-	public void setMedicines(Collection<Medicine> medicines) {
+	public void setMedicines(Collection<MedicineForTherapy> medicines) {
 		this.medicines = medicines;
 	}
 
@@ -147,14 +149,7 @@ public class DiagnosticTherapy {
 		this.posibleDiseases = posibleDiseases;
 	}
 
-	
-	public AppUser getDoctor() {
-		return doctor;
-	}
 
-	public void setDoctor(AppUser doctor) {
-		this.doctor = doctor;
-	}
 
 	@Override
 	public String toString() {

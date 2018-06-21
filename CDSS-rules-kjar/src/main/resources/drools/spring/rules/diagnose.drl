@@ -4,6 +4,7 @@ import sbnz.ftn.uns.ac.rs.cdss.model.Patient;
 import sbnz.ftn.uns.ac.rs.cdss.model.Symptom;
 import sbnz.ftn.uns.ac.rs.cdss.model.Disease;
 import sbnz.ftn.uns.ac.rs.cdss.model.SymptomForDisease;
+import sbnz.ftn.uns.ac.rs.cdss.model.MedicineForTherapy;
 import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
 import sbnz.ftn.uns.ac.rs.cdss.model.TypeOfMedicine;
 import sbnz.ftn.uns.ac.rs.cdss.model.Medicine;
@@ -322,9 +323,15 @@ rule "diagnose for 3.group akutna bubrezna povreda"
                      action(list.addAll($detail.getMedicines()); )
                      result( list ) )
 		
+		$medicines : List() from accumulate (
+				MedicineForTherapy($m : medicine) from $sds3,
+				collectList($m)
+				)
+				
+				
 		$numOfSymbolsWithAntibiotic : Integer() from accumulate( 
-          $m2: Medicine(typeOfMedicine==TypeOfMedicine.ANTIBIOTIC
-          ) from $sds,
+          $m2: MedicineForTherapy(medicine.typeOfMedicine==TypeOfMedicine.ANTIBIOTIC
+          ) from $medicines,
           init( int total = 0; ),
           action( total += 1; ),
           result((int)total)

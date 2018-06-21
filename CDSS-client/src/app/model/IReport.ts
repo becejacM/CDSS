@@ -4,4 +4,5 @@ export class IReport{
     patient:IPatient;
     diseasename:String;
     numberOfTimes:any;
+    doctor:String;
 }

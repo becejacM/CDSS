@@ -253,12 +253,6 @@ public class PatientServiceImpl implements PatientService {
 				throw new NotValidParamsException("You must be logged in as doctor to get report");
 			}
 
-			//ReportDTO r = new ReportDTO();
-			//kieSession.insert(r);
-			//kieSession.getAgenda().getAgendaGroup("report1").setFocus();
-			//kieSession.fireAllRules();
-			//kieSession.delete(kieSession.getFactHandle(r));
-			
 			QueryResults results = kieSession.getQueryResults( "report 1 : Pacinet sa mogucim hronicnim oboljenjima" );
 			System.out.println( "we have " + results.size());
 
@@ -282,14 +276,92 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	public Collection<ReportDTO> getReport2(String username) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			AppUser user = this.appUserRepository.findByUsername(username);
+			if (user == null || !user.getRole().equals(UserRole.DOCTOR)) {
+				throw new NotValidParamsException("You must be logged in as doctor to get report");
+			}
+
+			QueryResults results = kieSession.getQueryResults( "report 2 : Zavisnici" );
+			System.out.println( "we have " + results.size());
+
+			Collection<ReportDTO> reports2 = new ArrayList<>();
+			for ( QueryResultsRow row : results ) {
+			    Patient p = ( Patient ) row.get( "p" );
+			    Collection<AppUser> docs = ( Collection<AppUser> ) row.get( "setDoctors" );
+			    System.out.println(docs.size());
+			    ReportDTO r= new ReportDTO();
+			    String doctors = "";
+			    for(AppUser doc : docs) {
+			    	doctors+= doc.getFirstname();
+			    	doctors+= ", ";
+
+			    }
+			    r.setDoctor(doctors);
+			    r.setPatient(new PatientDTO(p));
+			    reports2.add(r);
+			}
+			return reports2;
+		} catch (NotValidParamsException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new NotValidParamsException("Invalid parameters while trying to update disease");
+		}
 	}
 
 	@Override
 	public Collection<ReportDTO> getReport3(String username) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			AppUser user = this.appUserRepository.findByUsername(username);
+			if (user == null || !user.getRole().equals(UserRole.DOCTOR)) {
+				throw new NotValidParamsException("You must be logged in as doctor to get report");
+			}
+
+			QueryResults results = kieSession.getQueryResults( "report 3 : Oslabljen imunitet vise od 10 puta u poslednjih 12 meseci bolovao od bar 2 razlicite bolesti za koju su mu prepisani antibiotici" );
+			System.out.println( "we have " + results.size());
+
+			Collection<ReportDTO> reports3 = new ArrayList<>();
+			for ( QueryResultsRow row : results ) {
+			    Patient p = ( Patient ) row.get( "p" );
+			    Collection<Disease> docs = ( Collection<Disease> ) row.get( "setDiseases" );
+			    System.out.println(docs.size());
+			    ReportDTO r= new ReportDTO();
+			    String deseases = "";
+			    for(Disease doc : docs) {
+			    	deseases+= doc.getName();
+			    	deseases+= ", ";
+			    }
+			    r.setDiseasename(deseases);
+			    r.setPatient(new PatientDTO(p));
+			    reports3.add(r);
+			}
+			
+			/*QueryResults results2 = kieSession.getQueryResults( "report 3 : Oslabljen imunitet u 12 meseci sve bolesti sa antibioticima" );
+			System.out.println( "we have " + results.size());
+
+			Collection<ReportDTO> reports33 = new ArrayList<>();
+			for ( QueryResultsRow row : results2 ) {
+			    Patient p = ( Patient ) row.get( "p" );
+			    Collection<AppUser> docs = ( Collection<AppUser> ) row.get( "setDiseases" );
+			    System.out.println(docs.size());
+			    ReportDTO r= new ReportDTO();
+			    String deseases = "";
+			    for(AppUser doc : docs) {
+			    	deseases+= doc.getFirstname();
+			    	deseases+= ", ";
+			    }
+			    r.setDiseasename(deseases);
+			    r.setPatient(new PatientDTO(p));
+			    reports3.add(r);
+			}*/
+			return reports3;
+		} catch (NotValidParamsException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new NotValidParamsException("Invalid parameters while trying to get report 3");
+		}
 	}
 
 }

@@ -9,6 +9,8 @@ public class ReportDTO {
 
 	private PatientDTO patient;
 	private String diseasename;
+	private String painkiller;
+	private String doctor;
 	private int numberOfTimes;
 	
 	public ReportDTO() {
@@ -37,12 +39,37 @@ public class ReportDTO {
 		this.diseasename = diseasename;
 	}
 
+	
+	public String getPainkiller() {
+		return painkiller;
+	}
+
+
+
+	public void setPainkiller(String painkiller) {
+		this.painkiller = painkiller;
+	}
+
+
+
 	public int getNumberOfTimes() {
 		return numberOfTimes;
 	}
 
 	public void setNumberOfTimes(int numberOfTimes) {
 		this.numberOfTimes = numberOfTimes;
+	}
+
+
+
+	public String getDoctor() {
+		return doctor;
+	}
+
+
+
+	public void setDoctor(String doctor) {
+		this.doctor = doctor;
 	}
 
 	

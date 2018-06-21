@@ -16,6 +16,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
@@ -61,9 +62,12 @@ public class AppUser {
 	@Enumerated(EnumType.STRING)
 	protected UserRole role;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Collection<Role> roles;
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "doctor")
+	private Collection<MedicineForTherapy> medicines = new ArrayList<>();
 	
 	public AppUser() {
 		

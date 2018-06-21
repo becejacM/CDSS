@@ -6,6 +6,7 @@ import java.util.Collection;
 import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
 import sbnz.ftn.uns.ac.rs.cdss.model.Disease;
 import sbnz.ftn.uns.ac.rs.cdss.model.Medicine;
+import sbnz.ftn.uns.ac.rs.cdss.model.MedicineForTherapy;
 import sbnz.ftn.uns.ac.rs.cdss.model.Symptom;
 
 public class DiagnosticTherapyDetailsDTO {
@@ -33,10 +34,10 @@ public class DiagnosticTherapyDetailsDTO {
 			this.syms+=",";
 			this.syms+=s.getName();
 		}
-		for(Medicine m : d.getMedicines()) {
-			this.medicines.add(new MedicineDetailsDTO(m));
+		for(MedicineForTherapy m : d.getMedicines()) {
+			this.medicines.add(new MedicineDetailsDTO(m.getMedicine()));
 			this.meds+=",";
-			this.meds+=m.getName();
+			this.meds+=m.getMedicine().getName();
 			
 		}
 		for(Disease dis : d.getPosibleDiseases()) {
