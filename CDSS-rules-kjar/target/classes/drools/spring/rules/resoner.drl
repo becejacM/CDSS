@@ -1,0 +1,90 @@
+package drools.spring.rules
+
+import sbnz.ftn.uns.ac.rs.cdss.model.Patient;
+import sbnz.ftn.uns.ac.rs.cdss.model.Symptom;
+import sbnz.ftn.uns.ac.rs.cdss.model.Disease;
+import sbnz.ftn.uns.ac.rs.cdss.model.SymptomForDisease;
+import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
+import sbnz.ftn.uns.ac.rs.cdss.model.TypeOfMedicine;
+import sbnz.ftn.uns.ac.rs.cdss.model.Medicine;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.ReportDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.ResonerDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.MedicineForTherapy;
+import sbnz.ftn.uns.ac.rs.cdss.model.TypeOfSymptoms;
+import sbnz.ftn.uns.ac.rs.cdss.services.DiagnosticProccesService;
+
+import java.util.List;
+import java.util.Set;
+import java.util.ArrayList;
+
+query "resoner: sve bolesti povezane sa 1 ili vise simptoma" (List syms)
+		d : Disease($sfd : symptomsForDisease)
+		$symptoms : List() from accumulate (
+				SymptomForDisease($sym : symptom) from $sfd,
+				collectList($sym)
+				)
+				
+		$names : List() from accumulate (
+				Symptom($ns:name) from $symptoms,
+				collectList($ns)
+				)
+		numOfSym : Number(intValue>=1) from accumulate( 
+          $m2: Symptom(name memberOf $names
+          ) from syms,
+          count($m2)
+        )
+end
+
+query "resoner: svi simptomi bolesti" (Disease $d)
+		generalSymptoms : List() from accumulate (
+				SymptomForDisease(typeOfSymptoms==TypeOfSymptoms.GENERAL, $sym : symptom) from $d.symptomsForDisease,
+				collectList($sym)
+				)
+				
+			
+		specificSymptoms : List() from accumulate (
+				SymptomForDisease(typeOfSymptoms==TypeOfSymptoms.SPECIFIC, $sym : symptom) from $d.symptomsForDisease,
+				collectList($sym)
+				)	
+		
+end
+query resoner (List syms, Disease $d, Long $numOfSym, List dis)
+		$d := Disease($sfd : symptomsForDisease)
+		$symptoms : List() from accumulate (
+				SymptomForDisease($sym : symptom) from $sfd,
+				collectList($sym)
+				)
+				
+		$names : List() from accumulate (
+				Symptom($ns:name) from $symptoms,
+				collectList($ns)
+				)
+		$numOfSym := Number(intValue>=1) from accumulate( 
+          $m2: Symptom(name memberOf $names
+          ) from syms,
+          count($m2)
+        )
+        
+    	//not Disease( this != $d, this not memberOf dis,
+          //             num < $numOfSym ||
+            //           num == $numOfSym)
+end
+
+declare ListOfA
+    listOfA: List
+end
+
+rule "resoner sve bolesti sa 1 ili vise simbolom"
+	agenda-group "resoner"
+	lock-on-active true
+	when
+		$r : ResonerDTO($syms: symptoms, $dis : disease)
+		resoner($syms, $d, $numOfSym, $dis;)
+	then		
+		System.out.println("sortiram: "+$d+" num: "+$numOfSym);
+		//modify ($d) { setNum($numOfSym); }
+		modify ($r) { getDisease().add($d); }
+		//modify ($r) { getMapa().put($d,$numOfSym); }
+		//modify ($r) { sort(); }
+		
+end

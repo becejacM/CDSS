@@ -15,8 +15,13 @@
 <app-patient-details></app-patient-details>
 
 <br/>
-
-<div class="card-block justify-content-around d-flex align-items-center">
+<button (click)="eSymptom()" class="btn btn-info btn-md ml-auto">
+  Enter symptoms >>
+</button>
+<button (click)="eDisease()" class="btn btn-info btn-md ml-auto">
+  Enter disease >>
+</button>
+<div class="card-block justify-content-around d-flex align-items-center" *ngIf="enterSymptom">
     
             <form [formGroup]="addForm" (ngSubmit)="submit()" novalidate style="width:100%">
               <div class="form-group row" class="justify-content-around d-flex align-items-center">
@@ -53,11 +58,78 @@
                 <i class="fa fa-plus" aria-hidden="true"></i>
               </button>
             </form>
+
+
+            
             <br/>
 
             
           </div>
-
+          <div  class="card-block justify-content-around d-flex align-items-center" *ngIf="enterDisease">
+            <form [formGroup]="addDForm" (ngSubmit)="submitDisease()" novalidate style="width:100%">
+              <div class="form-group row" class="justify-content-around d-flex align-items-center">
+    
+              </div>    
+              
+              <div class="form-group row" style="margin-left:15%; width:70%">
+                <label class="col-2 col-form-label" style="margin-top:5%;">Disease:</label>
+                <div class="col-10" style="margin-top:5%;">
+                  <input formControlName="disease" class="form-control">
+                </div>
+                
+              </div>
+    
+              <button id="submit-btn-tm-form" (click)=listsymptom() class="btn btn-info btn-md ml-auto" [disabled]="!addDForm.valid">
+                List od symptoms
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </button>
+              <button id="submit-btn-tm-form" (click)=diagnose() class="btn btn-info btn-md ml-auto">
+                Diagnose
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </button>
+            </form></div>
+            <div *ngIf="toggleListOfSymptoms">
+              <table style="background: rgba(207, 219, 237, 0.95);" class="table">
+                <thead class="thead-light">
+                  <tr>
+                    <th>Name of symptom</th>
+                  </tr>
+              
+              
+                </thead>
+              
+                <tbody>
+                  <tr *ngFor="let symptom of symptoms">
+              
+                    <td>{{symptom.name}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <div *ngIf="toggleListOfDisease">
+            <table style="background: rgba(207, 219, 237, 0.95);" class="table">
+              <thead class="thead-light">
+                <tr>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Symptoms</th>
+                </tr>
+            
+            
+              </thead>
+            
+              <tbody>
+                <tr *ngFor="let disease of diseases">
+            
+                  <td>{{disease.name}}</td>
+                  <td>{{disease.typeOfDisease}}</td>
+                  <td>{{disease.syms}}</td>
+            
+            
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
           <div *ngIf="active==='diagnose'">
             <div class="card-block justify-content-around d-flex align-items-center">

@@ -1,0 +1,19 @@
+package drools.spring.rules
+
+import sbnz.ftn.uns.ac.rs.cdss.model.Patient;
+import sbnz.ftn.uns.ac.rs.cdss.model.Symptom;
+import sbnz.ftn.uns.ac.rs.cdss.model.Disease;
+import sbnz.ftn.uns.ac.rs.cdss.model.SymptomForDisease;
+import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
+import sbnz.ftn.uns.ac.rs.cdss.model.TypeOfMedicine;
+import sbnz.ftn.uns.ac.rs.cdss.model.Medicine;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.ReportDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.ResonerDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.MedicineForTherapy;
+import sbnz.ftn.uns.ac.rs.cdss.model.TypeOfSymptoms;
+import sbnz.ftn.uns.ac.rs.cdss.services.DiagnosticProccesService;
+
+import java.util.List;
+import java.util.Set;
+import java.util.ArrayList;
+

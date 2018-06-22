@@ -1,5 +1,7 @@
 package sbnz.ftn.uns.ac.rs.cdss.services;
 
+import java.util.Collection;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -21,6 +23,8 @@ public interface DiseaseService {
 	
 	SymptomDetailsDTO checkSymptom(String username, String name);
 	DiagnosticTherapyDetailsDTO getDiagnose(String username, ListOfSymbolsDTO listOfSymbols);
-	DiagnosticTherapyDetailsDTO getDiagnoseList(String username, ListOfSymbolsDTO listOfSymbols);
+	Collection<DiseaseDetailsDTO> getDiagnoseList(String username, ListOfSymbolsDTO listOfSymbols);
+
+	Collection<SymptomDetailsDTO> getSymptomList(String username, String name);
 
 }

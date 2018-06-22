@@ -63,6 +63,9 @@ public class Disease {
 	}
 
 	@Transient
+	private Long num;
+	
+	@Transient
 	private Collection<Symptom> syms = new ArrayList<>();
 	public Disease() {
 		
@@ -106,6 +109,7 @@ public class Disease {
 		this.typeOfDisease = typeOfDisease;
 	}
 
+
 	public List<SymptomForDisease> getSymptomsForDisease() {
 		return symptomsForDisease;
 	}
@@ -133,4 +137,14 @@ public class Disease {
 			syms.add(s.getSymptom());
 		}
 	}
+
+	public Long getNum() {
+		return num;
+	}
+
+	public void setNum(Long num) {
+		this.num = num;
+	}
+	
+	
 }

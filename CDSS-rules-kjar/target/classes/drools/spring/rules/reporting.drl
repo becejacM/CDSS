@@ -8,13 +8,15 @@ import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
 import sbnz.ftn.uns.ac.rs.cdss.model.TypeOfMedicine;
 import sbnz.ftn.uns.ac.rs.cdss.model.Medicine;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.ReportDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.ResonerDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.MedicineForTherapy;
-
+import sbnz.ftn.uns.ac.rs.cdss.model.TypeOfSymptoms;
 import sbnz.ftn.uns.ac.rs.cdss.services.DiagnosticProccesService;
 
 import java.util.List;
 import java.util.Set;
 import java.util.ArrayList;
+
 
 query "report 1 : Pacinet sa mogucim hronicnim oboljenjima"
 		p : Patient($mr : medicalRecord)
@@ -98,20 +100,3 @@ end
 //        )
 //end
 
-query "resoner: sve bolesti povezane sa 1 ili vise simptoma"
-		d : Disease($sfd : symptomsForDisease)
-		$symptoms : List() from accumulate (
-				SymptomForDisease($sym : symptom) from $sfd,
-				collectList($sym)
-				)
-				
-		$names : List() from accumulate (
-				Symptom($ns:name) from $symptoms,
-				collectList($ns)
-				)
-		$x : Number(intValue>=1) from accumulate( 
-          $m2: Symptom(name memberOf $names
-          ) from $syms,
-          count($m2)
-        )
-end

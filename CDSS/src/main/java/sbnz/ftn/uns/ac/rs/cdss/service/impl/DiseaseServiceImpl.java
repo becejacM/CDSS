@@ -1,10 +1,18 @@
 package sbnz.ftn.uns.ac.rs.cdss.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.rule.QueryResults;
+import org.kie.api.runtime.rule.QueryResultsRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -28,6 +36,9 @@ import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiseaseDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.IngredientDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.IngredientDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.ListOfSymbolsDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.PatientDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.ReportDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.ResonerDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.SymptomDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.SymptomDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.repository.AppUserRepository;
@@ -241,29 +252,89 @@ public class DiseaseServiceImpl implements DiseaseService {
 	}
 
 	@Override
-	public DiagnosticTherapyDetailsDTO getDiagnoseList(String username, ListOfSymbolsDTO listOfSymbols) {
+	public Collection<DiseaseDetailsDTO> getDiagnoseList(String username, ListOfSymbolsDTO listOfSymbols) {
 		try {
 			AppUser user = this.appUserRepository.findByUsername(username);
 			if (user == null || !user.getRole().equals(UserRole.DOCTOR)) {
 				throw new NotValidParamsException("You must be logged in as doctor to get disease");
 			}
-			Patient p = patientRepository.findById(listOfSymbols.getPatientid()).get();
-			//kieSession.insert(p);
-			DiagnosticTherapy d = new DiagnosticTherapy();
-			d.setMedicalRecord(p.getMedicalRecord());
-			d.setDate(new Date());
+			List<Symptom> symptoms = new ArrayList<>();
+			ResonerDTO resoner = new ResonerDTO();
 			for(SymptomDTO s : listOfSymbols.getSymptoms()) {
-				Symptom symptom = symptomRepository.findByName(s.getName());
-				System.out.println("tu saaam: "+symptom.toString());
-				d.getSymptoms().add(symptom);
+				Symptom sym = symptomRepository.findByName(s.getName());
+				symptoms.add(sym);
 			}
-			kieSession.insert(d);
-			kieSession.getAgenda().getAgendaGroup("diagnoseList").setFocus();
-			kieSession.fireAllRules(1);
+			resoner.setSymptoms(symptoms);
+			kieSession.insert(resoner);
+			kieSession.getAgenda().getAgendaGroup("resoner").setFocus();
+			kieSession.fireAllRules();
+			QueryResults results = kieSession.getQueryResults( "resoner: sve bolesti povezane sa 1 ili vise simptoma", new Object[] { symptoms } );
+			System.out.println( "we have " + results.size());
+
+			Collection<DiseaseDetailsDTO> diseases = new ArrayList<>();
+			Map<Disease, Long> mapa = new HashMap<>();
+			for ( QueryResultsRow row : results ) {
+			    Disease disease = ( Disease ) row.get( "d" );
+			    Long num = (Long) row.get("numOfSym");
+			    mapa.put(disease, num);
+			}
 			
-			kieSession.delete(kieSession.getFactHandle(d));
-			System.out.println(d.toString());
-			return new DiagnosticTherapyDetailsDTO(d);
+			Map<Disease, Long> result = mapa.entrySet().stream()
+	                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+	                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+	                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+			for(Disease d: result.keySet()) {
+			    diseases.add(new DiseaseDetailsDTO(d));
+			}
+			/*Collection<DiseaseDetailsDTO> diseases = new ArrayList<>();
+			for(Disease d : resoner.getMapa().keySet()) {
+			    diseases.add(new DiseaseDetailsDTO(d));
+			}
+			kieSession.delete(kieSession.getFactHandle(resoner));*/
+			return diseases;
+		} catch (NotValidParamsException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new NotValidParamsException("Invalid parameters while trying to update disease");
+		}
+	}
+
+	@Override
+	public Collection<SymptomDetailsDTO> getSymptomList(String username, String name) {
+		try {
+			AppUser user = this.appUserRepository.findByUsername(username);
+			if (user == null || !user.getRole().equals(UserRole.DOCTOR)) {
+				throw new NotValidParamsException("You must be logged in as doctor to get disease");
+			}
+			Disease d = diseaseRepository.findByName(name);
+			if (d==null) {
+				throw new NotValidParamsException("Disease with that name doesn't exist");
+			}
+			QueryResults results = kieSession.getQueryResults( "resoner: svi simptomi bolesti", new Object[] { d } );
+			System.out.println( "we have " + results.size());
+
+			Collection<SymptomDetailsDTO> symptoms = new ArrayList<>();
+			Map<Symptom, Long> mapa = new HashMap<>();
+			for ( QueryResultsRow row : results ) {
+				Collection<Symptom> generalSymptoms = ( Collection<Symptom> ) row.get( "generalSymptoms" );
+				Collection<Symptom> specificSymptoms = ( Collection<Symptom> ) row.get( "specificSymptoms" );
+				for(Symptom s : generalSymptoms) {
+				    mapa.put(s, 1L);
+				}
+				for(Symptom s : specificSymptoms) {
+				    mapa.put(s, 2L);
+				}
+			}
+			
+			Map<Symptom, Long> result = mapa.entrySet().stream()
+	                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+	                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+	                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+			for(Symptom ss: result.keySet()) {
+			    symptoms.add(new SymptomDetailsDTO(ss));
+			}
+			return symptoms;
 		} catch (NotValidParamsException ex) {
 			throw ex;
 		} catch (Exception ex) {

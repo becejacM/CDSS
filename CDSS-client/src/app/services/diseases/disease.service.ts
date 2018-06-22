@@ -5,6 +5,7 @@ import {IPageable} from '../../model/IPageable';
 import { IDisease } from '../../model/IDisease';
 import { ListOfSymptoms } from '../../model/ListOfSymptoms';
 import { ITherapy } from '../../model/ITherapy';
+import { ISymptom } from '../../model/ISymptom';
 
 @Injectable()
 export class DiseaseService {
@@ -47,5 +48,15 @@ export class DiseaseService {
     getDiagnose(doc: ListOfSymptoms) : Observable<ITherapy>{
       const urlPath = '/api/diseases/diagnose';
       return this.http.post<ITherapy>(urlPath, doc);
+    }
+
+    getSortedDiseases(doc: ListOfSymptoms) : Observable<IDisease[]>{
+      const urlPath = '/api/diseases/diagnoseList';
+      return this.http.post<IDisease[]>(urlPath, doc);
+    }
+
+    getSortedSymptoms(name:String): Observable<ISymptom[]> {
+      const urlPath = '/api/diseases/symptomList/'+name;
+      return this.http.get<ISymptom[]>(urlPath);
     }
 }

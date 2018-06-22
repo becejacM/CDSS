@@ -27,15 +27,21 @@ export class DiagnosticProcessFormComponent implements OnInit {
   
   id:any;
   addForm: FormGroup;
+  addDForm: FormGroup;  
   chack: Boolean;
   active:String;
   diagnoseForm: FormGroup;
   validateForm:Boolean;
   message:Boolean;
-
+  toggleListOfDisease:Boolean;
+  toggleListOfSymptoms:Boolean;  
+  enterSymptom:Boolean;
+  enterDisease:Boolean;
+  
   listOfMedicines: IMedicine[] = new Array;
   Medicine: IMedicine = new IMedicine;
-
+  diseases: IDisease[];
+  symptoms:ISymptom[];
   Therapy: ITherapy = new ITherapy;
   constructor(private router: Router, private toastr: ToastrService,
     private patientService: PatientService,private diseaseService: DiseaseService,
@@ -49,6 +55,9 @@ export class DiagnosticProcessFormComponent implements OnInit {
     });
     console.log(this.id);
     this.chack = false;
+    this.toggleListOfDisease=false;
+    this.enterSymptom=false;
+    this.enterDisease=false;
     this.createForm();
     this.createDiagnoseForm();
     this.active="";
@@ -64,6 +73,12 @@ export class DiagnosticProcessFormComponent implements OnInit {
     });
   }
 
+  createFormForDisease() {
+    this.addDForm = this.fb.group({
+      disease: ['', Validators.compose([Validators.required])]
+
+    });
+  }
   createDiagnoseForm() {
     this.listOfMedicines = new Array;
     this.Medicine = new IMedicine;
@@ -182,9 +197,88 @@ export class DiagnosticProcessFormComponent implements OnInit {
         }
       });
   }
+
+  listdisease(){
+    this.toggleListOfDisease = !this.toggleListOfDisease;
+    if(this.toggleListOfDisease){
+      this.getDiseases();
+    }
+  }
+  eSymptom(){
+    this.enterSymptom = !this.enterSymptom;
+    if(this.enterSymptom){
+      this.createForm();
+    }
+    this.toggleListOfSymptoms=false;
+  }
+
+  eDisease(){
+    this.enterDisease = !this.enterDisease;
+    if(this.enterDisease){
+      this.createFormForDisease();
+    }
+    this.toggleListOfDisease=false;
+  }
+
+  listsymptom(){
+    this.diseaseService.getSortedDiseases(this.list)
+    .subscribe(data => {
+      this.list=new ListOfSymptoms;        
+      this.diseases = data;
+      this.createForm();
+      this.createNewDF();        
+    },
+    (err: HttpErrorResponse) => {
+      if (err.error instanceof Error) {
+        this.toastr.error(err.error.message + '\nError Status ' + err.status);
+      } else {
+        this.toastr.error(err.error.message + '\nError Status ' + err.status);
+      }
+    });
+  }
+  getDiseases() {
+    this.diseaseService.getSortedDiseases(this.list)
+      .subscribe(data => {
+        this.list=new ListOfSymptoms;        
+        this.diseases = data;
+        this.createForm();
+        this.createNewDF();        
+      },
+      (err: HttpErrorResponse) => {
+        if (err.error instanceof Error) {
+          this.toastr.error(err.error.message + '\nError Status ' + err.status);
+        } else {
+          this.toastr.error(err.error.message + '\nError Status ' + err.status);
+        }
+      });
+  }
+
+  submitDisease(){
+    console.log(this.addDForm.value['disease']);
+    this.diseaseService.getSortedSymptoms(this.addDForm.value['disease'])
+    .subscribe(data => {
+      this.list=new ListOfSymptoms;        
+      this.symptoms = data;
+      this.toggleListOfSymptoms=true;
+      this.createDiagnoseForm();
+    },
+    (err: HttpErrorResponse) => {
+      if (err.error instanceof Error) {
+        this.toastr.error(err.error.message + '\nError Status ' + err.status);
+      } else {
+        this.toastr.error(err.error.message + '\nError Status ' + err.status);
+      }
+    });
+  }
   diagnose(){
-    this.active="diagnose";
+    if(this.active==="diagnose"){
+      this.active="";
+    }
+    else{
+      this.active="diagnose";      
+    }
     console.log(this.list);
+    this.toggleListOfSymptoms=false;
   }
   therapy:ITherapy=new ITherapy;
   

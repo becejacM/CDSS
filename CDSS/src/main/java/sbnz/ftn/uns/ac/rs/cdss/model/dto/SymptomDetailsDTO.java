@@ -1,6 +1,7 @@
 package sbnz.ftn.uns.ac.rs.cdss.model.dto;
 
 import sbnz.ftn.uns.ac.rs.cdss.model.Symptom;
+import sbnz.ftn.uns.ac.rs.cdss.model.TypeOfSymptoms;
 
 public class SymptomDetailsDTO {
 

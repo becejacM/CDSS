@@ -1,5 +1,7 @@
 package sbnz.ftn.uns.ac.rs.cdss.controller;
 
+import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,5 +96,11 @@ public class DiseaseController {
 	public ResponseEntity<?> diagnoseList(@RequestBody ListOfSymbolsDTO listOfSymptoms) {
 		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
 		return new ResponseEntity<>(this.diseaseService.getDiagnoseList(username, listOfSymptoms), HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/symptomList/{name}")
+	public ResponseEntity<Collection<SymptomDetailsDTO>> symptomList(@PathVariable String name) {
+		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
+		return new ResponseEntity<>(this.diseaseService.getSymptomList(username, name), HttpStatus.OK);
 	}
 }

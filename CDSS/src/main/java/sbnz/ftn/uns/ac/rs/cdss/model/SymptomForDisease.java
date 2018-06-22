@@ -46,6 +46,8 @@ public class SymptomForDisease {
 		this.typeOfSymptoms = typeOfSymptoms;
 	}
 
+
+	
 	public Long getId() {
 		return id;
 	}
