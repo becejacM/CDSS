@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import sbnz.ftn.uns.ac.rs.cdss.CdssApplication;
 import sbnz.ftn.uns.ac.rs.cdss.exceptions.NotValidParamsException;
 import sbnz.ftn.uns.ac.rs.cdss.model.AppUser;
 import sbnz.ftn.uns.ac.rs.cdss.model.Disease;
@@ -134,6 +135,24 @@ public class AppUserServiceImpl implements AppUserService{
 			throw ex;
 		} catch (Exception ex) {
 			throw new NotValidParamsException("Invalid parameters while trying to delete doctor");
+		}
+	}
+
+	@Override
+	public void logout(String username) {
+		try {
+			AppUser user = this.appUserRepository.findByUsername(username);
+			if (user == null) {
+				throw new NotValidParamsException("You must be logged in to can logout");
+			}
+
+			KieSession kieSession = CdssApplication.kieSessions.get(username);
+			kieSession.dispose();
+		} catch (NotValidParamsException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new NotValidParamsException("Invalid parameters while trying to logout");
 		}
 	}
 

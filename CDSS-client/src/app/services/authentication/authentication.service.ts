@@ -20,4 +20,8 @@ export class AuthenticationService {
     return this.http.put('/api/users/change-password', changePasswordObject, {responseType: 'text'});
   }
 
+  logout() {
+    return this.http.put('/api/users/logout',null);
+  }
+
 }

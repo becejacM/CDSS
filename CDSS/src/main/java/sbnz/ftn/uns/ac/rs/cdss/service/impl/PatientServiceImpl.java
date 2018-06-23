@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import sbnz.ftn.uns.ac.rs.cdss.CdssApplication;
 import sbnz.ftn.uns.ac.rs.cdss.exceptions.NotValidParamsException;
 import sbnz.ftn.uns.ac.rs.cdss.model.AppUser;
 import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
@@ -58,8 +59,8 @@ public class PatientServiceImpl implements PatientService {
 	@Autowired
 	MedicineIngredientRepository ingredientRepository;
 
-	@Autowired
-	private KieSession kieSession;
+	//@Autowired
+	//private KieSession kieSession;
 	
 	@Override
 	public Page<PatientDetailsDTO> getAllPatients(String username, Pageable pageable) {
@@ -252,6 +253,7 @@ public class PatientServiceImpl implements PatientService {
 			if (user == null || !user.getRole().equals(UserRole.DOCTOR)) {
 				throw new NotValidParamsException("You must be logged in as doctor to get report");
 			}
+			KieSession kieSession = CdssApplication.kieSessions.get(user.getUsername());
 
 			QueryResults results = kieSession.getQueryResults( "report 1 : Pacinet sa mogucim hronicnim oboljenjima" );
 			System.out.println( "we have " + results.size());
@@ -281,6 +283,7 @@ public class PatientServiceImpl implements PatientService {
 			if (user == null || !user.getRole().equals(UserRole.DOCTOR)) {
 				throw new NotValidParamsException("You must be logged in as doctor to get report");
 			}
+			KieSession kieSession = CdssApplication.kieSessions.get(user.getUsername());
 
 			QueryResults results = kieSession.getQueryResults( "report 2 : Zavisnici" );
 			System.out.println( "we have " + results.size());
@@ -317,6 +320,7 @@ public class PatientServiceImpl implements PatientService {
 			if (user == null || !user.getRole().equals(UserRole.DOCTOR)) {
 				throw new NotValidParamsException("You must be logged in as doctor to get report");
 			}
+			KieSession kieSession = CdssApplication.kieSessions.get(user.getUsername());
 
 			QueryResults results = kieSession.getQueryResults( "report 3 : Oslabljen imunitet vise od 10 puta u poslednjih 12 meseci bolovao od bar 2 razlicite bolesti za koju su mu prepisani antibiotici" );
 			System.out.println( "we have " + results.size());

@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import sbnz.ftn.uns.ac.rs.cdss.CdssApplication;
 import sbnz.ftn.uns.ac.rs.cdss.exceptions.NotValidParamsException;
 import sbnz.ftn.uns.ac.rs.cdss.model.AppUser;
 import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
@@ -75,8 +76,8 @@ public class DiagnosticProccessServiceImpl implements DiagnosticProccesService {
 	@Autowired
 	AppUserRepository appUserRepository;
 
-	@Autowired
-	private KieSession kieSession;
+	//@Autowired
+	//private KieSession kieSession;
 
 	@Override
 	public Page<DiagnosticTherapyDetailsDTO> getAll(String username, Pageable pageable) {
@@ -168,7 +169,8 @@ public class DiagnosticProccessServiceImpl implements DiagnosticProccesService {
 				throw new NotValidParamsException("You must be logged in as doctor to validate distherapyease");
 			}
 			Patient p = patientRepository.findById(d.getPatientId()).get();
-			kieSession.insert(p);
+			KieSession kieSession = CdssApplication.kieSessions.get(user.getUsername());
+			//kieSession.insert(p.getMedicalRecord());
 			kieSession.insert(p.getMedicalRecord());
 			for (MedicineDTO m : d.getMedicines()) {
 				Medicine newmed = medicineRepository.findByName(m.getName());
@@ -190,7 +192,7 @@ public class DiagnosticProccessServiceImpl implements DiagnosticProccesService {
 					}
 				}
 			}
-			kieSession.delete(kieSession.getFactHandle(p));
+			//kieSession.delete(kieSession.getFactHandle(p));
 			kieSession.delete(kieSession.getFactHandle(p.getMedicalRecord()));
 
 			/*

@@ -14,8 +14,8 @@ global DiagnosticProccesService diagnosticProccessService
 rule "alergie on medicine exists"
     agenda-group "alergies"
 	when
-		$p : Patient($id:id)
-		$mr : MedicalRecord(id==$id, $lines : medicines)
+		//$p : Patient($id:id)
+		$mr : MedicalRecord($lines : medicines)
 		$m : Medicine($n : name)
 		Number(intValue >= 1) from accumulate(
             $m2 : Medicine(
@@ -31,8 +31,8 @@ end
 rule "alergie on medicine ingredient exists"
 	agenda-group "alergies"
 	when
-		$p : Patient($id:id)
-		$mr : MedicalRecord(id==$id, $lines : ingredients)
+		//$p : Patient($id:id)
+		$mr : MedicalRecord($lines : ingredients)
 		$mm : Medicine($mi:ingredients, $nameOfMedicine : name)
 		$med : MedicineIngredient($name : name)
 		Number(intValue >= 1) from accumulate(

@@ -1,0 +1,89 @@
+package drools.spring.rules
+
+import sbnz.ftn.uns.ac.rs.cdss.model.Patient;
+import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
+import sbnz.ftn.uns.ac.rs.cdss.events.HeartBeatEvent;
+import sbnz.ftn.uns.ac.rs.cdss.events.FastHeartRhythmEvent;
+
+import sbnz.ftn.uns.ac.rs.cdss.events.OxygenLevelEvent;
+import sbnz.ftn.uns.ac.rs.cdss.events.ProblemWithOxygenEvent;
+
+import sbnz.ftn.uns.ac.rs.cdss.events.UrgentDialysis;
+import sbnz.ftn.uns.ac.rs.cdss.events.UrinationEvent;
+
+import java.util.List;
+import java.util.Set;
+import java.util.ArrayList;
+
+rule "U poslednjih 10 sekundi zabelezeno vise od 25 otkucaja srca"
+	agenda-group "heart beat"
+	lock-on-active true
+    when
+        $hb1: HeartBeatEvent($pId : patientId, $d : executionTime)
+        $x : Number(intValue >= 25) from accumulate(
+            $hb2: HeartBeatEvent(
+                this != $hb1, 
+                patientId == $pId,
+                executionTime>$d
+                //this meets[10s] $hb1
+            )
+            over window:time(10s)
+            ,count($hb2)
+        )
+        //not (SuspiciousCustomerEvent(customerId == $cId, reason == "Many transactions"))
+    then
+    	System.out.println("Alarm: U poslednjih 10 sekundi zabelezeno vise od 25 otkucaja srca: "+$x);
+        insert(new FastHeartRhythmEvent($pId, "U poslednjih 10 sekundi zabelezeno vise od 25 otkucaja srca"));
+        drools.halt();
+end
+
+rule " U poslednjih 15 minuta nije zabelezen rast nivoa kiseonika, a nivo je manji od 70mmHg"
+	agenda-group "oxygen level problem"
+	lock-on-active true
+    when
+        $ol1: OxygenLevelEvent($pId : patientId, $d : executionTime, $ol : oxygenLevel, oxygenLevel<70)
+        not(
+            OxygenLevelEvent(this != $ol1, 
+                patientId == $pId,
+                executionTime>$d,
+                oxygenLevel>$ol
+                ) 
+            over window:time(15m)
+        )
+    then
+    	System.out.println("Alarm: U poslednjih 15 minuta nije zabelezen rast nivoa kiseonika, a nivo je manji od 70mmHg "+$ol);
+        insert(new ProblemWithOxygenEvent($pId, "U poslednjih 15 minuta nije zabelezen rast nivoa kiseonika, a nivo je manji od 70mmHg"));
+        drools.halt();
+end
+
+rule "Pacijent boluje od hronicne bubrezne bolesti, u posl.10 sek.vise od 10 odkucaja srca, suma mokrenja u posl.12h manja od 100ml"
+	agenda-group "disysis"
+	lock-on-active true
+    when
+        $p : Patient($mr : medicalRecord, $pId : id)
+		$teraphies : List(size>0) from accumulate (
+				$dt : DiagnosticTherapy(disease.name=="Hronicna bubrezna bolest") from $mr.therapy,
+				collectList($dt)
+				)
+		$hb1: HeartBeatEvent($d : executionTime)
+        $x : Number(intValue > 10) from accumulate(
+            $hb2: HeartBeatEvent(
+                this != $hb1, 
+                patientId == $pId,
+                executionTime>$d
+                //this meets[10s] $hb1
+            )
+            over window:time(10s)
+            ,count($hb2)
+        )
+        //UrinationEvent($us:urinationSum)
+        $sum : Number(intValue < 100) from accumulate( 
+          $m2: UrinationEvent($us:urinationSum)
+          	over window:time(12h)
+            ,sum($us)
+        )
+    then
+    	System.out.println("Alarm:  Pacijent boluje od hronicne bubrezne bolesti, u posl.10 sek.vise od 10 odkucaja srca, suma mokrenja u posl.12h manja od 100ml "+$sum);
+        insert(new UrgentDialysis($pId, " Pacijent boluje od hronicne bubrezne bolesti, u posl.10 sek.vise od 10 odkucaja srca, suma mokrenja u posl.12h manja od 100ml"));
+        drools.halt();
+end

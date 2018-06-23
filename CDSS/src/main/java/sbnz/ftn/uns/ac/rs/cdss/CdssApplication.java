@@ -1,6 +1,8 @@
 package sbnz.ftn.uns.ac.rs.cdss;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieScanner;
@@ -21,7 +23,9 @@ public class CdssApplication {
 	@Autowired
 	private DiagnosticProccesService diagnosticProccessService;
 	
-	@Bean
+	public static Map<String, KieSession> kieSessions = new HashMap<>();
+	
+	/*@Bean
     public KieSession kieSession() throws IOException {
         KieServices ks = KieServices.Factory.get();
         KieContainer kContainer = ks.newKieContainer(ks.newReleaseId("CDSS-rules", "CDSS-rules-kjar", "0.0.1-SNAPSHOT"));
@@ -34,9 +38,9 @@ public class CdssApplication {
         //kieSession.setGlobal("diagnosticProccessService", diagnosticProccessService);
         //System.out.println("ubacujem servis: " +kieSession.getGlobal("diagnosticProccessService"));
         return kieSession;
-    }
+    }*/
 	
-	/*@Bean
+	@Bean
 	public KieContainer kieContainer() {
 		System.out.println("tu sam");
 		KieServices ks = KieServices.Factory.get();
@@ -44,7 +48,7 @@ public class CdssApplication {
 		KieScanner kScanner = ks.newKieScanner(kContainer);
 		kScanner.start(5000);
 		return kContainer;
-	}*/
+	}
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CdssApplication.class, args);

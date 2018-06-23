@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import sbnz.ftn.uns.ac.rs.cdss.CdssApplication;
 import sbnz.ftn.uns.ac.rs.cdss.exceptions.NotValidParamsException;
 import sbnz.ftn.uns.ac.rs.cdss.model.AppUser;
 import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
@@ -64,8 +65,8 @@ public class DiseaseServiceImpl implements DiseaseService {
 	@Autowired
 	AppUserRepository appUserRepository;
 
-	@Autowired
-	private KieSession kieSession;
+	//@Autowired
+	//private KieSession kieSession;
 	
 	@Autowired
 	DiagnosticProccesService diagnosticProccessService;
@@ -230,6 +231,8 @@ public class DiseaseServiceImpl implements DiseaseService {
 				d.getSymptoms().add(symptom);
 				//kieSession.insert(symptom);
 			}
+			KieSession kieSession = CdssApplication.kieSessions.get(user.getUsername());
+
 			kieSession.insert(d);
 			kieSession.getAgenda().getAgendaGroup("diagnose").setFocus();
 			kieSession.fireAllRules();
@@ -264,6 +267,8 @@ public class DiseaseServiceImpl implements DiseaseService {
 				Symptom sym = symptomRepository.findByName(s.getName());
 				symptoms.add(sym);
 			}
+			KieSession kieSession = CdssApplication.kieSessions.get(user.getUsername());
+
 			resoner.setSymptoms(symptoms);
 			kieSession.insert(resoner);
 			kieSession.getAgenda().getAgendaGroup("resoner").setFocus();
@@ -311,6 +316,8 @@ public class DiseaseServiceImpl implements DiseaseService {
 			if (d==null) {
 				throw new NotValidParamsException("Disease with that name doesn't exist");
 			}
+			KieSession kieSession = CdssApplication.kieSessions.get(user.getUsername());
+
 			QueryResults results = kieSession.getQueryResults( "resoner: svi simptomi bolesti", new Object[] { d } );
 			System.out.println( "we have " + results.size());
 

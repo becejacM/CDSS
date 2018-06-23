@@ -16,4 +16,5 @@ public interface AppUserService {
 	AppUserDetailsDTO getById(String username, Long id);
 	Page<AppUserDetailsDTO> getAllByRole(String username, UserRole role, Pageable pageable);
 	void delete(String username, Long id);
+	void logout(String username);
 }
