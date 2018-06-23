@@ -25,12 +25,10 @@ rule "U poslednjih 10 sekundi zabelezeno vise od 25 otkucaja srca"
                 this != $hb1, 
                 patientId == $pId,
                 executionTime>$d
-                //this meets[10s] $hb1
             )
             over window:time(10s)
             ,count($hb2)
         )
-        //not (SuspiciousCustomerEvent(customerId == $cId, reason == "Many transactions"))
     then
     	System.out.println("Alarm: U poslednjih 10 sekundi zabelezeno vise od 25 otkucaja srca: "+$x);
         insert(new FastHeartRhythmEvent($pId, "U poslednjih 10 sekundi zabelezeno vise od 25 otkucaja srca"));
@@ -66,7 +64,7 @@ rule "Pacijent boluje od hronicne bubrezne bolesti, u posl.10 sek.vise od 10 odk
 				collectList($dt)
 				)
 		$hb1: HeartBeatEvent($d : executionTime)
-        $x : Number(intValue > 10) from accumulate(
+        $x : Number(intValue >= 10) from accumulate(
             $hb2: HeartBeatEvent(
                 this != $hb1, 
                 patientId == $pId,

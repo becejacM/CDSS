@@ -27,4 +27,8 @@ public interface PatientService {
 	Collection<ReportDTO> getReport2(String username);
 	Collection<ReportDTO> getReport3(String username);
 
+	Page<PatientDetailsDTO> getByFN(String username,String firstname, Pageable pageable);
+	Page<PatientDetailsDTO> getByLN(String username,String lastname, Pageable pageable);
+	Page<PatientDetailsDTO> getByFNLN(String username,String firstname,String lastname, Pageable pageable);
+
 }

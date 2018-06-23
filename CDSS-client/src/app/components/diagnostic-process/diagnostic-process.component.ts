@@ -75,9 +75,7 @@ export class DiagnosticProcessComponent implements OnInit {
   createForm() {
     this.addForm = this.fb.group({
       firstname: [''],
-      lastname: [''],
-      address: [''],
-      medicalCardNumber: ['']
+      lastname: ['']
     });
   }
 
@@ -111,172 +109,21 @@ export class DiagnosticProcessComponent implements OnInit {
   getPatients() {
     console.log("krecem");
     
-    if (this.addForm.controls['firstname'].value !== '' && this.addForm.controls['lastname'].value !== '' &&
-      this.addForm.controls['medicalCardNumber'].value !== '' && this.addForm.controls['address'].value !== '') {
-      this.getByFNLNMCNA(this.addForm.controls['firstname'].value,
-        this.addForm.controls['lastname'].value, this.addForm.controls['medicalCardNumber'].value,
-        this.addForm.controls['address'].value, this.criteria);
-    } else if (this.addForm.controls['firstname'].value !== '' && this.addForm.controls['lastname'].value !== '' && this.addForm.controls['medicalCardNumber'].value !== '') {
-      this.getByFNLNMCN(this.addForm.controls['firstname'].value, this.addForm.controls['lastname'].value,this.addForm.controls['medicalCardNumber'].value, this.criteria);
-    } else if (this.addForm.controls['firstname'].value !== '' && this.addForm.controls['lastname'].value !== '' &&  this.addForm.controls['address'].value !== '') {
-      this.getByFNLNA(this.addForm.controls['firstname'].value, this.addForm.controls['lastname'].value, this.addForm.controls['address'].value, this.criteria);
-    } else if (this.addForm.controls['firstname'].value !== '' && this.addForm.controls['medicalCardNumber'].value !== '' &&
-      this.addForm.controls['address'].value !== '') {
-      this.getByFNMCNA(this.addForm.controls['firstname'].value, this.addForm.controls['medicalCardNumber'].value,
-        this.addForm.controls['address'].value, this.criteria);
-    } else if (this.addForm.controls['lastname'].value !== '' && this.addForm.controls['medicalCardNumber'].value !== '' && this.addForm.controls['address'].value !== '') {
-      this.getByLNMCNA(this.addForm.controls['lastname'].value, this.addForm.controls['medicalCardNumber'].value,this.addForm.controls['address'].value, this.criteria);
-    } else if (this.addForm.controls['address'].value !== '' && this.addForm.controls['medicalCardNumber'].value !== '') {
-      this.getByAMCN(this.addForm.controls['address'].value,this.addForm.controls['medicalCardNumber'].value, this.criteria);
-    } else if (this.addForm.controls['lastname'].value !== '' && this.addForm.controls['medicalCardNumber'].value!== '') {
-      this.getByLNMCN(this.addForm.controls['lastnamemac'].value,this.addForm.controls['medicalCardNumber'].value, this.criteria);
-    } else if (this.addForm.controls['firstname'].value !== '' && this.addForm.controls['lastname'].value !== '') {
+    if (this.addForm.controls['firstname'].value !== '' && this.addForm.controls['lastname'].value !== '') {
       this.getByFNLN(this.addForm.controls['firstname'].value,this.addForm.controls['lastname'].value, this.criteria);
-    } else if (this.addForm.controls['firstname'].value !== '' && this.addForm.controls['medicalCardNumber'].value !== '') {
-      this.getByFNMCN(this.addForm.controls['firstname'].value, this.addForm.controls['medicalCardNumber'].value, this.criteria);
-    } else if (this.addForm.controls['firstname'].value !== '' && this.addForm.controls['address'].value !== '') {
-      this.getByFNA(this.addForm.controls['firstname'].value, this.addForm.controls['address'].value, this.criteria);
-    } else if (this.addForm.controls['lastname'].value !== '' && this.addForm.controls['address'].value !== '') {
-      this.getByLNA(this.addForm.controls['lastname'].value, this.addForm.controls['address'].value, this.criteria);
-    } else if (this.addForm.controls['address'].value !== '') {
-      this.getByA(this.addForm.controls['address'].value, this.criteria);
     } else if (this.addForm.controls['lastname'].value !== '') {
       this.getByLN(this.addForm.controls['lastname'].value, this.criteria);
     } else if (this.addForm.controls['firstname'].value !== '') {
       this.getByFN(this.addForm.controls['firstname'].value, this.criteria);
-    } else if (this.addForm.controls['medicalCardNumber'].value !== '') {
-      this.getByMCN(this.addForm.controls['medicalCardNumber'].value, this.criteria);
     } else {
       console.log('sviii');
       this.getAllPatients();
     }
   }
 
-  getByFNLNMCNA(firstname: String, lastname: String, medicalCardNumber: String, address:String, criteria: SearchCriteria) {
-    this.patientService.getByFNLNMCNA(firstname, lastname, medicalCardNumber,address, this.page, this.limit)
-      .subscribe(data => {
-          alert(data['content']);
-          this.patients = data['content'];
-          this.total = data['totalElements'];
-          this.loading = false;
-          this.patients = this.sortPatients(criteria);
-        },
-        (err: HttpErrorResponse) => {
-          if (err.error instanceof Error) {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          } else {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          }
-        });
-  }
+ 
 
-  getByFNLNMCN(firstname: String, lastname: String,medicalCardNumber:String, criteria: SearchCriteria) {
-    this.patientService.getByFNLNMCN(firstname,lastname,medicalCardNumber, this.page, this.limit)
-      .subscribe(data => {
-          alert(data['content']);
-          this.patients = data['content'];
-          this.total = data['totalElements'];
-          this.loading = false;
-          this.patients = this.sortPatients(criteria);
-        },
-        (err: HttpErrorResponse) => {
-          if (err.error instanceof Error) {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          } else {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          }
-        });
-  }
 
-  getByFNLNA(firstname: String, lastname: String,address:String, criteria: SearchCriteria) {
-    this.patientService.getByFNLNA(firstname, lastname, address, this.page, this.limit)
-      .subscribe(data => {
-          alert(data['content']);
-          this.patients = data['content'];
-          this.total = data['totalElements'];
-          this.loading = false;
-          this.patients = this.sortPatients(criteria);
-        },
-        (err: HttpErrorResponse) => {
-          if (err.error instanceof Error) {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          } else {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          }
-        });
-  }
-
-  getByFNMCNA(firstname: String, medicalCardNumber: String, address: String, criteria: SearchCriteria) {
-    this.patientService.getByFNMCNA(firstname, medicalCardNumber, address, this.page, this.limit)
-      .subscribe(data => {
-          alert(data['content']);
-          this.patients = data['content'];
-          this.total = data['totalElements'];
-          this.loading = false;
-          this.patients = this.sortPatients(criteria);
-        },
-        (err: HttpErrorResponse) => {
-          if (err.error instanceof Error) {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          } else {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          }
-        });
-  }
-
-  getByLNMCNA(lastname: String,medicalCardNumber: String, address: String, criteria: SearchCriteria) {
-    this.patientService.getByLNMCNA(lastname, medicalCardNumber, address, this.page, this.limit)
-      .subscribe(data => {
-          alert(data['content']);
-          this.patients = data['content'];
-          this.total = data['totalElements'];
-          this.loading = false;
-          this.patients = this.sortPatients(criteria);
-        },
-        (err: HttpErrorResponse) => {
-          if (err.error instanceof Error) {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          } else {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          }
-        });
-  }
-
-  getByAMCN(a: String,mcn: String, criteria: SearchCriteria) {
-    this.patientService.getByAMCN(a, mcn, this.page, this.limit)
-      .subscribe(data => {
-          alert(data['content']);
-          this.patients = data['content'];
-          this.total = data['totalElements'];
-          this.loading = false;
-          this.patients = this.sortPatients(criteria);
-        },
-        (err: HttpErrorResponse) => {
-          if (err.error instanceof Error) {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          } else {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          }
-        });
-  }
-
-  getByLNMCN(ln: String, mcn: String, criteria: SearchCriteria) {
-    this.patientService.getByLNMCN(ln, mcn, this.page, this.limit)
-      .subscribe(data => {
-          alert(data['content']);
-          this.patients = data['content'];
-          this.total = data['totalElements'];
-          this.loading = false;
-          this.patients = this.sortPatients(criteria);
-        },
-        (err: HttpErrorResponse) => {
-          if (err.error instanceof Error) {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          } else {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          }
-        });
-  }
 
   getByFNLN(fn: String, ln: String, criteria: SearchCriteria) {
     this.patientService.getByFNLN(fn, ln,this.page, this.limit)
@@ -296,95 +143,6 @@ export class DiagnosticProcessComponent implements OnInit {
         });
   }
 
-  getByFNMCN(fn: String, mcn:String, criteria: SearchCriteria) {
-    this.patientService.getByFNMCN(fn, mcn,this.page, this.limit)
-      .subscribe(data => {
-          this.patients = data['content'];
-          this.total = data['totalElements'];
-          this.loading = false;
-          this.patients = this.sortPatients(criteria);
-
-        },
-        (err: HttpErrorResponse) => {
-          if (err.error instanceof Error) {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          } else {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          }
-        });
-  }
-
-  getByFNA(fn: String,a:String, criteria: SearchCriteria) {
-    this.patientService.getByFNA(fn, a, this.page, this.limit)
-      .subscribe(data => {
-          this.patients = data['content'];
-          this.total = data['totalElements'];
-          this.loading = false;
-          this.patients = this.sortPatients(criteria);
-
-        },
-        (err: HttpErrorResponse) => {
-          if (err.error instanceof Error) {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          } else {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          }
-        });
-  }
-
-  getByLNA(ln: String, a: String, criteria: SearchCriteria) {
-    this.patientService.getByLNA(ln, a, this.page, this.limit)
-      .subscribe(data => {
-          this.patients = data['content'];
-          this.total = data['totalElements'];
-          this.loading = false;
-          this.patients = this.sortPatients(criteria);
-
-        },
-        (err: HttpErrorResponse) => {
-          if (err.error instanceof Error) {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          } else {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          }
-        });
-  }
-
-  getByMCN(medicalCardNumber:String, criteria: SearchCriteria) {
-    this.patientService.getByMCN(medicalCardNumber, this.page, this.limit)
-      .subscribe(data => {
-          this.patients = data['content'];
-          this.total = data['totalElements'];
-          this.loading = false;
-          this.patients = this.sortPatients(criteria);
-
-        },
-        (err: HttpErrorResponse) => {
-          if (err.error instanceof Error) {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          } else {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          }
-        });
-  }
-
-  getByA(address: string, criteria: SearchCriteria) {
-    this.patientService.getByA(address, this.page, this.limit)
-      .subscribe(data => {
-          this.patients = data['content'];
-          this.total = data['totalElements'];
-          this.loading = false;
-          this.patients = this.sortPatients(criteria);
-
-        },
-        (err: HttpErrorResponse) => {
-          if (err.error instanceof Error) {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          } else {
-            this.toastr.error(err.error.message + '\nError Status ' + err.status);
-          }
-        });
-  }
 
   getByLN(lastname: string, criteria: SearchCriteria) {
     this.patientService.getByLN(lastname, this.page, this.limit)

@@ -34,5 +34,12 @@ public class SocketController {
 		return name;
     }
     
+    @SendTo("/secured/monitoring")
+   	public String processMessageFromMonitoring(@Payload String message) throws Exception {
+       	System.out.println("evo meeeeeeeeeeee");
+       	String name = new Gson().fromJson(message, Map.class).get("name").toString();
+   		return name;
+       }
+    
 
 }

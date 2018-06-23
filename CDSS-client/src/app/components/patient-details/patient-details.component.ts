@@ -21,6 +21,8 @@ export class PatientDetailsComponent implements OnInit {
   id:any;
   showAlergies:Boolean;
   toggleAlergie:Boolean;
+  toggleMR:Boolean;
+  
   addForm: FormGroup;
   constructor(private router: Router, private toastr: ToastrService,
     private patientService: PatientService, private route: ActivatedRoute, private fb: FormBuilder) { }
@@ -35,6 +37,7 @@ export class PatientDetailsComponent implements OnInit {
     this.getAlergies();
     this.showAlergies = false;
     this.toggleAlergie = false;
+    this.toggleMR = false;
     this.createForm();
   }
 
@@ -74,6 +77,11 @@ export class PatientDetailsComponent implements OnInit {
     if(this.showAlergies === false){
       this.toggleAlergie = false;
     }
+  }
+  medicalRecord(){
+    this.toggleMR = !this.toggleMR;
+    this.showAlergies = false;
+    this.toggleAlergie = false;
   }
 
   addAlergie(){

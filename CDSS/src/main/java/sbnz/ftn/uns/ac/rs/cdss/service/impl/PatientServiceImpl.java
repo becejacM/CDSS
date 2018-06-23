@@ -59,8 +59,8 @@ public class PatientServiceImpl implements PatientService {
 	@Autowired
 	MedicineIngredientRepository ingredientRepository;
 
-	//@Autowired
-	//private KieSession kieSession;
+	@Autowired
+    private KieSessionService kieSessionService;
 	
 	@Override
 	public Page<PatientDetailsDTO> getAllPatients(String username, Pageable pageable) {
@@ -109,6 +109,7 @@ public class PatientServiceImpl implements PatientService {
 			Patient pat = patientRepository.save(new Patient(patient));
 			MedicalRecord newm = new MedicalRecord();
 			newm.setPatient(pat);
+			
 			MedicalRecord m = recordRepository.save(newm);
 			return new PatientDetailsDTO(pat);
 		} catch (NotValidParamsException ex) {
@@ -136,6 +137,7 @@ public class PatientServiceImpl implements PatientService {
 			pat.setMedicalCardNumber(patient.getMedicalCardNumber());
 			pat.setEmail(patient.getEmail());
 			Patient p = patientRepository.save(pat);
+			kieSessionService.updatePatient(p.getId(), p);
 			return new PatientDetailsDTO(p);
 		} catch (NotValidParamsException ex) {
 			throw ex;
@@ -169,7 +171,7 @@ public class PatientServiceImpl implements PatientService {
 		try {
 			AppUser user = this.appUserRepository.findByUsername(username);
 			if (user == null) {
-				throw new NotValidParamsException("You must be logged in as admin or doctor to get patients");
+				throw new NotValidParamsException("You must be logged in as admin or doctor to get alergies");
 			}
 			Patient p = patientRepository.findById(id).get();
 			MedicalRecord m = recordRepository.findById(p.getMedicalRecord().getId()).get();
@@ -199,7 +201,7 @@ public class PatientServiceImpl implements PatientService {
 		try {
 			AppUser user = this.appUserRepository.findByUsername(username);
 			if (user == null) {
-				throw new NotValidParamsException("You must be logged in as admin or doctor to add patients");
+				throw new NotValidParamsException("You must be logged in as admin or doctor to add alergies");
 			}
 
 			Patient pat = patientRepository.findById(id).get();
@@ -236,13 +238,14 @@ public class PatientServiceImpl implements PatientService {
 				
 				newm.getIngredients().add(mi);
 				MedicalRecord mr = recordRepository.save(newm);
+				kieSessionService.updatePatient(pat.getId(), pat);
 				return null;
 			}
 		} catch (NotValidParamsException ex) {
 			throw ex;
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new NotValidParamsException("Invalid parameters while trying to add patient");
+			throw new NotValidParamsException("Invalid parameters while trying to add alergie");
 		}
 	}
 
@@ -253,7 +256,7 @@ public class PatientServiceImpl implements PatientService {
 			if (user == null || !user.getRole().equals(UserRole.DOCTOR)) {
 				throw new NotValidParamsException("You must be logged in as doctor to get report");
 			}
-			KieSession kieSession = CdssApplication.kieSessions.get(user.getUsername());
+			KieSession kieSession = kieSessionService.getKieSession(username);
 
 			QueryResults results = kieSession.getQueryResults( "report 1 : Pacinet sa mogucim hronicnim oboljenjima" );
 			System.out.println( "we have " + results.size());
@@ -272,7 +275,7 @@ public class PatientServiceImpl implements PatientService {
 			throw ex;
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new NotValidParamsException("Invalid parameters while trying to update disease");
+			throw new NotValidParamsException("Invalid parameters while trying to get report 2");
 		}
 	}
 
@@ -283,7 +286,7 @@ public class PatientServiceImpl implements PatientService {
 			if (user == null || !user.getRole().equals(UserRole.DOCTOR)) {
 				throw new NotValidParamsException("You must be logged in as doctor to get report");
 			}
-			KieSession kieSession = CdssApplication.kieSessions.get(user.getUsername());
+			KieSession kieSession = kieSessionService.getKieSession(username);
 
 			QueryResults results = kieSession.getQueryResults( "report 2 : Zavisnici" );
 			System.out.println( "we have " + results.size());
@@ -309,7 +312,7 @@ public class PatientServiceImpl implements PatientService {
 			throw ex;
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new NotValidParamsException("Invalid parameters while trying to update disease");
+			throw new NotValidParamsException("Invalid parameters while trying to get report 2");
 		}
 	}
 
@@ -320,7 +323,7 @@ public class PatientServiceImpl implements PatientService {
 			if (user == null || !user.getRole().equals(UserRole.DOCTOR)) {
 				throw new NotValidParamsException("You must be logged in as doctor to get report");
 			}
-			KieSession kieSession = CdssApplication.kieSessions.get(user.getUsername());
+			KieSession kieSession = kieSessionService.getKieSession(username);
 
 			QueryResults results = kieSession.getQueryResults( "report 3 : Oslabljen imunitet vise od 10 puta u poslednjih 12 meseci bolovao od bar 2 razlicite bolesti za koju su mu prepisani antibiotici" );
 			System.out.println( "we have " + results.size());
@@ -365,6 +368,67 @@ public class PatientServiceImpl implements PatientService {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new NotValidParamsException("Invalid parameters while trying to get report 3");
+		}
+	}
+
+	@Override
+	public Page<PatientDetailsDTO> getByFN(String username, String firstname, Pageable pageable) {
+		try {
+			AppUser user = this.appUserRepository.findByUsername(username);
+			if (user == null) {
+				throw new NotValidParamsException("You must be logged in as admin or doctor to get patients");
+			}
+			List<PatientDetailsDTO> patients = new ArrayList<>();
+			Page<Patient> page = patientRepository.findByFirstnameStartsWith(firstname, pageable);
+			for (Patient p : page.getContent()) {
+				patients.add(new PatientDetailsDTO(p));
+			}
+			return new PageImpl<>(patients, pageable, page.getTotalElements());
+		} catch (NotValidParamsException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new NotValidParamsException("Invalid parameters while trying to get patients");
+		}
+	}
+
+	@Override
+	public Page<PatientDetailsDTO> getByLN(String username, String lastname, Pageable pageable) {
+		try {
+			AppUser user = this.appUserRepository.findByUsername(username);
+			if (user == null) {
+				throw new NotValidParamsException("You must be logged in as admin or doctor to get patients");
+			}
+			List<PatientDetailsDTO> patients = new ArrayList<>();
+			Page<Patient> page = patientRepository.findByLastnameStartsWith(lastname, pageable);
+			for (Patient p : page.getContent()) {
+				patients.add(new PatientDetailsDTO(p));
+			}
+			return new PageImpl<>(patients, pageable, page.getTotalElements());
+		} catch (NotValidParamsException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			throw new NotValidParamsException("Invalid parameters while trying to get patients");
+		}
+	}
+
+	@Override
+	public Page<PatientDetailsDTO> getByFNLN(String username, String firstname, String lastname, Pageable pageable) {
+		try {
+			AppUser user = this.appUserRepository.findByUsername(username);
+			if (user == null) {
+				throw new NotValidParamsException("You must be logged in as admin or doctor to get patients");
+			}
+			List<PatientDetailsDTO> patients = new ArrayList<>();
+			Page<Patient> page = patientRepository.findByFirstnameStartsWithOrLastnameStartsWith(firstname, lastname, pageable);
+			for (Patient p : page.getContent()) {
+				patients.add(new PatientDetailsDTO(p));
+			}
+			return new PageImpl<>(patients, pageable, page.getTotalElements());
+		} catch (NotValidParamsException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			throw new NotValidParamsException("Invalid parameters while trying to get patients");
 		}
 	}
 

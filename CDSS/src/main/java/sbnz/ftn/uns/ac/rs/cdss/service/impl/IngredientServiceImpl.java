@@ -30,6 +30,9 @@ public class IngredientServiceImpl implements IngredientService{
 	@Autowired
 	MedicineIngredientRepository miRepository;
 	
+	@Autowired
+    private KieSessionService kieSessionService;
+	
 	@Override
 	public Page<IngredientDetailsDTO> getAll(String username, Pageable pageable) {
 		try {
@@ -97,6 +100,7 @@ public class IngredientServiceImpl implements IngredientService{
 			}
 			pat.setName(i.getName());
 			MedicineIngredient p = miRepository.save(pat);
+			kieSessionService.updateIngredient(p.getId(), p);
 			return new IngredientDetailsDTO(p);
 		} catch (NotValidParamsException ex) {
 			throw ex;

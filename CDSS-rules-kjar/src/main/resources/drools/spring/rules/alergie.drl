@@ -5,6 +5,8 @@ import sbnz.ftn.uns.ac.rs.cdss.model.Symptom;
 import sbnz.ftn.uns.ac.rs.cdss.model.Medicine;
 import sbnz.ftn.uns.ac.rs.cdss.model.MedicineIngredient;
 import sbnz.ftn.uns.ac.rs.cdss.model.MedicalRecord;
+import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
+import sbnz.ftn.uns.ac.rs.cdss.model.MedicineForTherapy;
 import sbnz.ftn.uns.ac.rs.cdss.services.DiagnosticProccesService;
 
 import java.util.List;
@@ -14,32 +16,61 @@ global DiagnosticProccesService diagnosticProccessService
 rule "alergie on medicine exists"
     agenda-group "alergies"
 	when
-		//$p : Patient($id:id)
-		$mr : MedicalRecord($lines : medicines)
-		$m : Medicine($n : name)
-		Number(intValue >= 1) from accumulate(
-            $m2 : Medicine(
-                name==$n
-            ) from $lines,
-            count($m2)
+		$dt : DiagnosticTherapy($lines : medicalRecord.medicines, $meds : medicines)
+		$names : List(size > 0) from accumulate (
+				MedicineForTherapy($med : medicine.name) from $meds,
+				collectList($med)
+				)
+		$x : Number(intValue >= 1) from accumulate( 
+          $m2: Medicine(name memberOf $names
+          ) from $lines,
+          count($m2)
         )
+		//$m : Medicine($n : name)
+		//Number(intValue >= 1) from accumulate(
+          //  $m2 : Medicine(
+            //    name==$n
+            //) from $lines,
+            //count($m2)
+        //)
 	then
-		diagnosticProccessService.sendMessage("Patient is alergic to medicine with name: "+$n);
+		diagnosticProccessService.sendMessage("Patient is alergic to some medicines");
 		System.out.println("duzina liste "+$lines.size());	
 end
 
 rule "alergie on medicine ingredient exists"
 	agenda-group "alergies"
 	when
-		//$p : Patient($id:id)
-		$mr : MedicalRecord($lines : ingredients)
-		$mm : Medicine($mi:ingredients, $nameOfMedicine : name)
-		$med : MedicineIngredient($name : name)
-		Number(intValue >= 1) from accumulate(
-            $m2 : MedicineIngredient($mi.contains(this),name==$name) from $lines,
-            count($m2)
+		$dt : DiagnosticTherapy($lines : medicalRecord.ingredients, $meds : medicines)
+		
+		$sentMedicines : List(size > 0) from accumulate (
+				$m : MedicineForTherapy($med : medicine) from $meds,
+				collectList($med)
+				)
+				
+		$ingredients: List() 
+    		from accumulate( $detail: Medicine() from $sentMedicines,
+                     init( List list = new ArrayList(); )
+                     action(list.addAll($detail.getIngredients()); )
+                     result( list ) )
+                     
+        $names : List() from accumulate (
+				MedicineIngredient($n : name) from $ingredients,
+				collectList($n)
+				)
+		$x : Number(intValue >= 1) from accumulate( 
+          $m2: MedicineIngredient(name memberOf $names
+          ) from $lines,
+          count($m2)
         )
+		//$mr : MedicalRecord($lines : ingredients)
+		//$mm : Medicine($mi:ingredients, $nameOfMedicine : name)
+		//$med : MedicineIngredient($name : name)
+		//Number(intValue >= 1) from accumulate(
+          //  $m2 : MedicineIngredient($mi.contains(this),name==$name) from $lines,
+          //  count($m2)
+        //)
 	then
-		diagnosticProccessService.sendMessage("Patient is alergic to medicine ingredient with name: "+ $name +" witch is in medicine with name: "+$nameOfMedicine);
+		diagnosticProccessService.sendMessage("Patient is alergic to some of the medicine ingredients");
 		System.out.println("duzina liste "+$lines.size());	
 end

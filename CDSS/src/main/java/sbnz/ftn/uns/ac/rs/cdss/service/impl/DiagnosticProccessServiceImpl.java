@@ -76,8 +76,8 @@ public class DiagnosticProccessServiceImpl implements DiagnosticProccesService {
 	@Autowired
 	AppUserRepository appUserRepository;
 
-	//@Autowired
-	//private KieSession kieSession;
+	@Autowired
+    private KieSessionService kieSessionService;
 
 	@Override
 	public Page<DiagnosticTherapyDetailsDTO> getAll(String username, Pageable pageable) {
@@ -168,22 +168,26 @@ public class DiagnosticProccessServiceImpl implements DiagnosticProccesService {
 			if (user == null || !user.getRole().equals(UserRole.DOCTOR)) {
 				throw new NotValidParamsException("You must be logged in as doctor to validate distherapyease");
 			}
+			//KieSession kieSession = CdssApplication.kieSessions.get(user.getUsername());
+
 			Patient p = patientRepository.findById(d.getPatientId()).get();
-			KieSession kieSession = CdssApplication.kieSessions.get(user.getUsername());
-			//kieSession.insert(p.getMedicalRecord());
-			kieSession.insert(p.getMedicalRecord());
+			DiagnosticTherapy dt = new DiagnosticTherapy();
+			dt.setMedicalRecord(p.getMedicalRecord());
 			for (MedicineDTO m : d.getMedicines()) {
 				Medicine newmed = medicineRepository.findByName(m.getName());
-				kieSession.insert(newmed);
-				System.out.println(newmed.toString());
-				for(MedicineIngredient mi : newmed.getIngredients()) {
-					kieSession.insert(mi);
-				}
+				MedicineForTherapy mft = new MedicineForTherapy();
+				mft.setMedicine(newmed);
+				dt.getMedicines().add(mft);
 			}
-	        kieSession.setGlobal("diagnosticProccessService", this);
-			kieSession.getAgenda().getAgendaGroup("alergies").setFocus();
-			kieSession.fireAllRules();
-			for (MedicineDTO m : d.getMedicines()) {
+			kieSessionService.addDiagnosticTherapy(user.getUsername(), dt);
+			kieSessionService.setAgendaAndFireAllRules(username, "alergies");
+			kieSessionService.deleteDiagnosticTherapy(user.getUsername(), dt);
+
+			//kieSession.insert(dt);
+	        //kieSession.setGlobal("diagnosticProccessService", this);
+			//kieSession.getAgenda().getAgendaGroup("alergies").setFocus();
+			//kieSession.fireAllRules();
+			/*for (MedicineDTO m : d.getMedicines()) {
 				Medicine newmed = medicineRepository.findByName(m.getName());
 				if(kieSession.getFactHandle(newmed)!=null) {
 					kieSession.delete(kieSession.getFactHandle(newmed));
@@ -191,9 +195,9 @@ public class DiagnosticProccessServiceImpl implements DiagnosticProccesService {
 						kieSession.delete(kieSession.getFactHandle(mi));
 					}
 				}
-			}
+			}*/
 			//kieSession.delete(kieSession.getFactHandle(p));
-			kieSession.delete(kieSession.getFactHandle(p.getMedicalRecord()));
+			//kieSession.delete(kieSession.getFactHandle(dt));
 
 			/*
 			 * Collection<Symptom> syms = new ArrayList<>(); for (SymptomDTO s :

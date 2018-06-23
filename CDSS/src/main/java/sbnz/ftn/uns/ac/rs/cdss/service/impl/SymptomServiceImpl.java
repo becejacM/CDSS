@@ -30,6 +30,9 @@ public class SymptomServiceImpl implements SymptomService {
 	@Autowired
 	SymptomRepository symptomRepository;
 	
+	@Autowired
+    private KieSessionService kieSessionService;
+	
 	@Override
 	public Page<SymptomDetailsDTO> getAll(String username, Pageable pageable) {
 		try {
@@ -75,6 +78,7 @@ public class SymptomServiceImpl implements SymptomService {
 			}
 
 			Symptom p = symptomRepository.save(new Symptom(symptom));
+			
 			return new SymptomDetailsDTO(p);
 		} catch (NotValidParamsException ex) {
 			throw ex;
@@ -97,6 +101,7 @@ public class SymptomServiceImpl implements SymptomService {
 			}
 			pat.setName(symptom.getName());
 			Symptom p = symptomRepository.save(pat);
+			kieSessionService.updateSymptoms(p.getId(), p);
 			return new SymptomDetailsDTO(p);
 		} catch (NotValidParamsException ex) {
 			throw ex;

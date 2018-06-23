@@ -65,8 +65,8 @@ public class DiseaseServiceImpl implements DiseaseService {
 	@Autowired
 	AppUserRepository appUserRepository;
 
-	//@Autowired
-	//private KieSession kieSession;
+	@Autowired
+    private KieSessionService kieSessionService;
 	
 	@Autowired
 	DiagnosticProccesService diagnosticProccessService;
@@ -137,6 +137,7 @@ public class DiseaseServiceImpl implements DiseaseService {
 				sfd.setTypeOfSymptoms(TypeOfSymptoms.GENERAL);
 				sfdRepository.save(sfd);
 			}
+			kieSessionService.addDisease(newdisease);
 			return new DiseaseDetailsDTO(p);
 		} catch (NotValidParamsException ex) {
 			throw ex;
@@ -161,6 +162,7 @@ public class DiseaseServiceImpl implements DiseaseService {
 			pat.setName(disease.getName());
 			pat.setTypeOfDisease(disease.getTypeOfDisease());
 			Disease p = diseaseRepository.save(pat);
+			kieSessionService.updateDisease(p.getId(), p);
 			return new DiseaseDetailsDTO(p);
 		} catch (NotValidParamsException ex) {
 			throw ex;
@@ -220,10 +222,10 @@ public class DiseaseServiceImpl implements DiseaseService {
 			//kieSession.insert(p);
 			DiagnosticTherapy d = new DiagnosticTherapy();
 			d.setMedicalRecord(p.getMedicalRecord());
-			Date date = new Date();
-			long ltime=date.getTime()-60*24*60*60*1000; //oduzimanje 60 dana
-			Date todayminus60=new Date(ltime);
-			d.setDate(todayminus60);
+			//Date date = new Date();
+			//long ltime=date.getTime()-60*24*60*60*1000; //oduzimanje 60 dana
+			//Date todayminus60=new Date(ltime);
+			//d.setDate(todayminus60);
 
 			for(SymptomDTO s : listOfSymbols.getSymptoms()) {
 				Symptom symptom = symptomRepository.findByName(s.getName());
@@ -231,11 +233,14 @@ public class DiseaseServiceImpl implements DiseaseService {
 				d.getSymptoms().add(symptom);
 				//kieSession.insert(symptom);
 			}
-			KieSession kieSession = CdssApplication.kieSessions.get(user.getUsername());
+			kieSessionService.addDiagnosticTherapy(user.getUsername(), d);
+			kieSessionService.setAgendaAndFireAllRules(username, "diagnose");
+			kieSessionService.deleteDiagnosticTherapy(user.getUsername(), d);
+			//KieSession kieSession = CdssApplication.kieSessions.get(user.getUsername());
 
-			kieSession.insert(d);
-			kieSession.getAgenda().getAgendaGroup("diagnose").setFocus();
-			kieSession.fireAllRules();
+			//kieSession.insert(d);
+			//kieSession.getAgenda().getAgendaGroup("diagnose").setFocus();
+			//kieSession.fireAllRules();
 			/*for(SymptomDTO s : listOfSymbols.getSymptoms()) {
 				Symptom symptom = symptomRepository.findByName(s.getName());
 				if(kieSession.getFactHandle(symptom)!=null) {
@@ -243,7 +248,7 @@ public class DiseaseServiceImpl implements DiseaseService {
 					kieSession.delete(kieSession.getFactHandle(symptom));
 				}
 			}*/
-			kieSession.delete(kieSession.getFactHandle(d));
+			//kieSession.delete(kieSession.getFactHandle(d));
 			System.out.println(d.toString());
 			return new DiagnosticTherapyDetailsDTO(d);
 		} catch (NotValidParamsException ex) {
@@ -262,17 +267,19 @@ public class DiseaseServiceImpl implements DiseaseService {
 				throw new NotValidParamsException("You must be logged in as doctor to get disease");
 			}
 			List<Symptom> symptoms = new ArrayList<>();
-			ResonerDTO resoner = new ResonerDTO();
+			//ResonerDTO resoner = new ResonerDTO();
 			for(SymptomDTO s : listOfSymbols.getSymptoms()) {
 				Symptom sym = symptomRepository.findByName(s.getName());
 				symptoms.add(sym);
 			}
-			KieSession kieSession = CdssApplication.kieSessions.get(user.getUsername());
+			//KieSession kieSession = CdssApplication.kieSessions.get(user.getUsername());
 
-			resoner.setSymptoms(symptoms);
-			kieSession.insert(resoner);
-			kieSession.getAgenda().getAgendaGroup("resoner").setFocus();
-			kieSession.fireAllRules();
+			//resoner.setSymptoms(symptoms);
+			//kieSession.insert(resoner);
+			//kieSession.getAgenda().getAgendaGroup("resoner").setFocus();
+			//kieSession.fireAllRules();
+			
+			KieSession kieSession = kieSessionService.getKieSession(username);
 			QueryResults results = kieSession.getQueryResults( "resoner: sve bolesti povezane sa 1 ili vise simptoma", new Object[] { symptoms } );
 			System.out.println( "we have " + results.size());
 
@@ -316,8 +323,8 @@ public class DiseaseServiceImpl implements DiseaseService {
 			if (d==null) {
 				throw new NotValidParamsException("Disease with that name doesn't exist");
 			}
-			KieSession kieSession = CdssApplication.kieSessions.get(user.getUsername());
-
+			//KieSession kieSession = CdssApplication.kieSessions.get(user.getUsername());
+			KieSession kieSession = kieSessionService.getKieSession(username);
 			QueryResults results = kieSession.getQueryResults( "resoner: svi simptomi bolesti", new Object[] { d } );
 			System.out.println( "we have " + results.size());
 

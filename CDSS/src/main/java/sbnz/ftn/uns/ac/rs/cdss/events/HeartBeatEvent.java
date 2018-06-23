@@ -9,7 +9,7 @@ import org.kie.api.definition.type.Timestamp;
 
 @Role(Role.Type.EVENT)
 @Timestamp("executionTime")
-@Expires("10m")
+@Expires("20000ms")
 public class HeartBeatEvent implements Serializable{
 
     private Date executionTime;

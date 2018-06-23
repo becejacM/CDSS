@@ -1,6 +1,8 @@
 package sbnz.ftn.uns.ac.rs.cdss.controller;
 
+import java.text.ParseException;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.AlergiesDetailsDTO;
@@ -49,6 +52,26 @@ public class PatientController {
 		return new ResponseEntity<>(this.patientService.getAllPatients(username, newPageable), HttpStatus.OK);
 	}
 
+	@GetMapping(value = "/filter")
+    public ResponseEntity<Page<PatientDetailsDTO>> filter(Pageable pageable,
+    		@RequestParam(value = "firstname", required = false) String firstname,
+			@RequestParam(value = "lastname", required = false) String lastname)throws ParseException {
+		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
+		int limit = pageable.getPageSize() <= 25 ? pageable.getPageSize() : 25;
+		Pageable newPageable = new PageRequest(pageable.getPageNumber(), limit);
+		if (firstname != null && lastname!= null) {
+			System.out.println("oba");
+			return new ResponseEntity<>(this.patientService.getByFNLN(username, firstname, lastname,pageable),HttpStatus.OK);
+		} else if (firstname != null) {
+			System.out.println("fn");
+			return new ResponseEntity<>(this.patientService.getByFN(username, firstname, newPageable),HttpStatus.OK);
+		} else if (lastname != null) {
+			System.out.println("ln");
+			return new ResponseEntity<>(this.patientService.getByLN(username, lastname, newPageable),HttpStatus.OK);
+		}
+    	
+        return ResponseEntity.ok(null);
+    }
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<PatientDetailsDTO> getPatient(@PathVariable Long id) {
 		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));

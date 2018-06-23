@@ -160,17 +160,6 @@ export class DiagnosticProcessFormComponent implements OnInit {
     }
   }
   submit() {
-    /*this.diseaseService.getDiagnose(this.list)
-    .subscribe(data => {
-        console.log(data);
-      },
-      (err: HttpErrorResponse) => {
-        if (err.error instanceof Error) {
-          this.toastr.error(err.error.message + '\nError Status ' + err.status);
-        } else {
-          this.toastr.error(err.error.message + '\nError Status ' + err.status);
-        }
-      });*/
   }
 
   disease(){
@@ -209,7 +198,9 @@ export class DiagnosticProcessFormComponent implements OnInit {
     if(this.enterSymptom){
       this.createForm();
     }
+    this.active="";
     this.toggleListOfSymptoms=false;
+    this.enterDisease=false;
   }
 
   eDisease(){
@@ -217,16 +208,20 @@ export class DiagnosticProcessFormComponent implements OnInit {
     if(this.enterDisease){
       this.createFormForDisease();
     }
+    this.active="";
     this.toggleListOfDisease=false;
+    this.enterSymptom=false;
+    
   }
 
   listsymptom(){
-    this.diseaseService.getSortedDiseases(this.list)
+    console.log(this.addDForm.value['disease']);
+    this.diseaseService.getSortedSymptoms(this.addDForm.value['disease'])
     .subscribe(data => {
       this.list=new ListOfSymptoms;        
-      this.diseases = data;
-      this.createForm();
-      this.createNewDF();        
+      this.symptoms = data;
+      this.toggleListOfSymptoms=true;
+      this.createDiagnoseForm();
     },
     (err: HttpErrorResponse) => {
       if (err.error instanceof Error) {
@@ -254,21 +249,7 @@ export class DiagnosticProcessFormComponent implements OnInit {
   }
 
   submitDisease(){
-    console.log(this.addDForm.value['disease']);
-    this.diseaseService.getSortedSymptoms(this.addDForm.value['disease'])
-    .subscribe(data => {
-      this.list=new ListOfSymptoms;        
-      this.symptoms = data;
-      this.toggleListOfSymptoms=true;
-      this.createDiagnoseForm();
-    },
-    (err: HttpErrorResponse) => {
-      if (err.error instanceof Error) {
-        this.toastr.error(err.error.message + '\nError Status ' + err.status);
-      } else {
-        this.toastr.error(err.error.message + '\nError Status ' + err.status);
-      }
-    });
+    
   }
   diagnose(){
     if(this.active==="diagnose"){
@@ -303,6 +284,8 @@ export class DiagnosticProcessFormComponent implements OnInit {
         });
     }
   }
+  message1:string;
+  message2:string;
   validate(){
     this.chack=true;
     console.log(this.id);
@@ -313,6 +296,8 @@ export class DiagnosticProcessFormComponent implements OnInit {
         console.log("evo meeee: "+element);
         
       });
+      this.message1="";
+      this.message2="";
       //this.therapy.symptoms=this.listOfSymptoms;
       this.therapy.patientId=this.id;
       this.dpService.validate(this.therapy)
@@ -357,11 +342,23 @@ export class DiagnosticProcessFormComponent implements OnInit {
     this.ws.connect({}, function(frame) {
       
       that.ws.subscribe("/secured/alergies", function(message) {
-        console.log(message);        
-        that.validateForm=false;
-        that.message = true;
-        that.toastr.warning(message['body']);
-        that.createNewDF();
+        console.log(message); 
+        if(that.message1===""){
+          that.message1=message['body'];
+        }    
+        else if(that.message2==="" && that.message2!==message['body']){
+          that.message2=message['body'];
+        }
+        if(that.message1!="" && that.message2!="")    {
+          that.validateForm=false;
+          that.message = true;
+          that.toastr.warning(that.message1);
+          that.toastr.warning(that.message2);          
+          that.createNewDF();
+          that.message1="";
+          that.message2="";
+        }
+        
       });
     }, function(error) {
       console.log("STOMP error " + error);

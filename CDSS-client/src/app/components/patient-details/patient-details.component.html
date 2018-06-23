@@ -9,7 +9,8 @@
         </b>{{patient.email}}, &nbsp;<b>Medical card number:</b>
         {{patient.medicalCardNumber}}</p> &nbsp; 
         <button class="btn btn-info btn-md ml-auto" (click)="alergies()">Alergies</button>
-
+        <button class="btn btn-info btn-md ml-auto" (click)="medicalRecord()">Medical record</button>
+        
         <div *ngIf="showAlergies===true">
           <br/>
           &nbsp;&nbsp;<button id="link-tab-filter" class="btn btn-info btn-md ml-auto" (click)="addAlergie()">Add new &nbsp;

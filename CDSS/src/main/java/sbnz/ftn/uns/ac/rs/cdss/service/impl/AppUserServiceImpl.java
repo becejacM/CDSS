@@ -34,9 +34,12 @@ public class AppUserServiceImpl implements AppUserService{
 	@Autowired
 	RoleRepository roleRepository;
 
+	@Autowired
+    private KieSessionService kieSessionService;
 	
 	@Override
 	public AppUserDetailsDTO save(String username, AppUserDTO addeduser) {
+		//ne treba menjati sesiju, ako je dodat novi doktor
 		try {
 			AppUser user = this.appUserRepository.findByUsername(username);
 			if (user == null || !user.getRole().equals(UserRole.ADMIN)) {
@@ -58,6 +61,7 @@ public class AppUserServiceImpl implements AppUserService{
 
 	@Override
 	public AppUserDetailsDTO update(String username, AppUserDTO updateduser, Long id) {
+		//treba menjati u sesiji ako je on ulogovan
 		try {
 			AppUser user = this.appUserRepository.findByUsername(username);
 			AppUser p = appUserRepository.findById(id).get();
@@ -71,6 +75,7 @@ public class AppUserServiceImpl implements AppUserService{
 			p.setLastname(updateduser.getLastname());
 			p.setEmail(updateduser.getEmail());
 			AppUser pp = appUserRepository.save(p);
+			kieSessionService.updateDoctor(username, pp);
 			return new AppUserDetailsDTO(pp);
 		} catch (NotValidParamsException ex) {
 			throw ex;
@@ -143,11 +148,10 @@ public class AppUserServiceImpl implements AppUserService{
 		try {
 			AppUser user = this.appUserRepository.findByUsername(username);
 			if (user == null) {
-				throw new NotValidParamsException("You must be logged in to can logout");
+				throw new NotValidParamsException("You must be logged in to try logging out");
 			}
 
-			KieSession kieSession = CdssApplication.kieSessions.get(username);
-			kieSession.dispose();
+			kieSessionService.deleteKieSession(username);
 		} catch (NotValidParamsException ex) {
 			throw ex;
 		} catch (Exception ex) {

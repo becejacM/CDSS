@@ -7,7 +7,8 @@ import {ToastrService} from 'ngx-toastr';
 import {LoggedUtils} from '../../utils/logged-utils';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 import { HttpErrorResponse } from '@angular/common/http/src/response';
-
+import * as Stomp from 'stompjs';
+import SockJS from 'sockjs-client';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -31,6 +32,7 @@ export class NavbarComponent implements OnInit {
     this.permissionsService.permissions$.subscribe((permisios) => {
     });
     
+    this.initializeWebSocketConnection();
   }
 
   logoutf() {
@@ -55,5 +57,34 @@ export class NavbarComponent implements OnInit {
     return LoggedUtils.getId();
   }
 
-
+  private stompClient;
+  ws:any;
+  disabled: boolean;
+  
+  initializeWebSocketConnection(){
+    if (this.ws != null) {
+      console.log("disconnect");
+      this.ws.ws.close();
+    }
+    //let ws = new SockJS(http://localhost:8080/greeting);
+    //var socket = new SockJS('wss://localhost:8443/socket');
+    //this.ws = Stomp.over(socket);
+    console.log("connect");
+    console.log(Stomp);
+    let socket = new WebSocket("ws://localhost:8080/secured/sbnz");
+    this.ws = Stomp.over(socket);
+    let that = this;
+    //this.sendName();
+    this.ws.connect({}, function(frame) {
+      
+      that.ws.subscribe("/secured/monitoring", function(message) {
+        console.log(message); 
+        if(LoggedUtils.getUser()!==null){
+          that.toastr.warning(message['body']);          
+        }
+      });
+    }, function(error) {
+      console.log("STOMP error " + error);
+    });
+  }
 }

@@ -43,6 +43,7 @@ import sbnz.ftn.uns.ac.rs.cdss.repository.PatientRepository;
 import sbnz.ftn.uns.ac.rs.cdss.security.SecurityUser;
 import sbnz.ftn.uns.ac.rs.cdss.security.TokenUtils;
 import sbnz.ftn.uns.ac.rs.cdss.service.impl.DebugAgendaEventListener;
+import sbnz.ftn.uns.ac.rs.cdss.service.impl.KieSessionService;
 import sbnz.ftn.uns.ac.rs.cdss.service.impl.UserExtendedService;
 import sbnz.ftn.uns.ac.rs.cdss.services.AppUserService;
 import sbnz.ftn.uns.ac.rs.cdss.services.DiagnosticProccesService;
@@ -72,9 +73,7 @@ public class AppUserController {
     private AppUserService userService;
 
     @Autowired
-    @Lazy
-    private KieContainer kieContainer;
-    //private KieSession kieSession;
+    private KieSessionService kieSessionService;
     
     @Autowired
     private DiseaseRepository diseaseRepository;
@@ -107,24 +106,8 @@ public class AppUserController {
         // Reload password post-authentication so we can generate token
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
-        KieSession kieSession = kieContainer.newKieSession("ksession-rules");
-        kieSession.addEventListener(new DebugAgendaEventListener());
-        kieSession.setGlobal("diagnosticProccessService", diagnosticProccessService);
+        kieSessionService.createSession(userDetails.getUsername());
         
-        
-        System.out.println("ovde sam");
-        AppUser user = userRepository.findByUsername(userDetails.getUsername());
-        kieSession.insert(user);
-        Collection<Disease> diseases = diseaseRepository.findAll();
-        for(Disease d: diseases) {
-        	kieSession.insert(d);
-        }
-        Collection<Patient> patients = patientRepository.findAll();
-        for(Patient p: patients) {
-        	kieSession.insert(p);
-        }
-        
-        CdssApplication.kieSessions.put(user.getUsername(), kieSession);
         SecurityUser su = (SecurityUser) userDetails;
         String token = this.tokenUtils.generateToken(userDetails);
         // Return the token
@@ -136,7 +119,6 @@ public class AppUserController {
     @PutMapping(value = "/logout")
     public ResponseEntity<?> logout() {
 		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
-    	System.out.println("odjeeeeeeeeeeeeeeeeeeeeeeeee"+username);
 
 		this.userService.logout(username);
 		return new ResponseEntity<>( HttpStatus.OK);
