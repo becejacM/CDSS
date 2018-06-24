@@ -22,6 +22,7 @@ export class OrganizeDiseasesComponent implements OnInit {
   chack: Boolean;
   DiseaseType: typeof DiseaseType = DiseaseType;
   options:any;
+  active:IDisease;
   // Pagable
   loading = false;
   total = 0;
@@ -34,6 +35,8 @@ export class OrganizeDiseasesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.active = null;    
+    
     this.chack = false;
     this.createForm();
     this.criteria.sortColumn = 'name';
@@ -69,9 +72,17 @@ export class OrganizeDiseasesComponent implements OnInit {
   }
 
   createForm() {
+
     const x = DiseaseType;
     const options = Object.keys(DiseaseType);
     this.options = options.slice(options.length / 2);
+
+    if(this.active!==null){
+      this.addForm = this.fb.group({
+        name: [this.active.name, Validators.compose([Validators.required])]
+      });
+    }
+    else{
     this.addForm = this.fb.group({
       name: ['', Validators.compose([Validators.required])],
       typeOfDisease: ['', Validators.compose([Validators.required])],
@@ -79,7 +90,7 @@ export class OrganizeDiseasesComponent implements OnInit {
       symptoms: ['', Validators.compose([Validators.required])]
 
     });
-
+  }
 
 
   }
@@ -132,6 +143,7 @@ export class OrganizeDiseasesComponent implements OnInit {
       .subscribe(data => {
         console.log(data);
         this.toggleAdd = true;
+        this.active=data;        
         this.createForm();
       },
       (err: HttpErrorResponse) => {
@@ -165,12 +177,37 @@ export class OrganizeDiseasesComponent implements OnInit {
     }
   }
 
-
-  submit() {
-    this.addD();
+  updateD(){
+    console.log(this.addForm.value);
+    this.diseaseService.update(this.addForm.value,this.active.id)
+    .subscribe(data => {
+        console.log(data);
+        this.getAllDiseases();
+        this.toggleAdd = false;
+        this.active = null;
+        this.createForm();
+      },
+      (err: HttpErrorResponse) => {
+        if (err.error instanceof Error) {
+          this.toastr.error(err.error.message + '\nError Status ' + err.status);
+        } else {
+          this.toastr.error(err.error.message + '\nError Status ' + err.status);
+        }
+      });
   }
 
-  update(id: any) {
+
+  submit() {
+    if(this.active===null){
+      this.addD();  
+    }
+    else{
+      console.log("update");
+      this.updateD();      
+    }
+  }
+
+  update(id:any){
     console.log(id);
     this.getById(id);
   }

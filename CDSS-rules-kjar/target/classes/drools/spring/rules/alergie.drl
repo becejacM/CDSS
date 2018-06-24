@@ -34,7 +34,8 @@ rule "alergie on medicine exists"
             //count($m2)
         //)
 	then
-		diagnosticProccessService.sendMessage("Patient is alergic to some medicines");
+		modify ($dt) { setMedicines(null); }
+		//diagnosticProccessService.sendMessage("Patient is alergic to some medicines");
 		System.out.println("duzina liste "+$lines.size());	
 end
 
@@ -71,6 +72,7 @@ rule "alergie on medicine ingredient exists"
           //  count($m2)
         //)
 	then
-		diagnosticProccessService.sendMessage("Patient is alergic to some of the medicine ingredients");
+		modify ($dt) { setMedicines(null); }
+		//diagnosticProccessService.sendMessage("Patient is alergic to some of the medicine ingredients");
 		System.out.println("duzina liste "+$lines.size());	
 end

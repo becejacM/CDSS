@@ -18,6 +18,7 @@ import sbnz.ftn.uns.ac.rs.cdss.CdssApplication;
 import sbnz.ftn.uns.ac.rs.cdss.model.AppUser;
 import sbnz.ftn.uns.ac.rs.cdss.model.DiagnosticTherapy;
 import sbnz.ftn.uns.ac.rs.cdss.model.Disease;
+import sbnz.ftn.uns.ac.rs.cdss.model.Medicine;
 import sbnz.ftn.uns.ac.rs.cdss.model.MedicineForTherapy;
 import sbnz.ftn.uns.ac.rs.cdss.model.MedicineIngredient;
 import sbnz.ftn.uns.ac.rs.cdss.model.Patient;
@@ -61,7 +62,7 @@ public class KieSessionService {
         this.addAllDiseases(kieSession);
         this.addAllPatients(kieSession);
         CdssApplication.kieSessions.put(username, kieSession);
-        printObjects();
+        //printObjects();
 	}
 	
 	public KieSession getKieSession(String username) {
@@ -110,7 +111,7 @@ public class KieSessionService {
 		System.out.println("Brisem dt");
 		KieSession kieSession = CdssApplication.kieSessions.get(username);
 		kieSession.delete(kieSession.getFactHandle(dt));
-		printObjects();
+		//printObjects();
 	}
 	
 	public void printObjects() {
@@ -167,6 +168,21 @@ public class KieSessionService {
 		}
 	}
 	
+	public void updateDT(Long id, DiagnosticTherapy dt) {
+		for(KieSession ks : CdssApplication.kieSessions.values()) {
+			for(Object a : ks.getObjects()) {
+				if(a instanceof Patient){
+					Patient aa = (Patient)a;
+					if(aa.getId()==id) {
+						aa.getMedicalRecord().getTherapy().add(dt);
+						ks.update(ks.getFactHandle(aa), aa);
+					}
+					
+					System.out.println(aa.getId());
+				}
+			}
+		}
+	}
 	public void addPatient(Patient patient) {
 		for(KieSession ks : CdssApplication.kieSessions.values()) {
 			ks.insert(patient);
@@ -248,6 +264,28 @@ public class KieSessionService {
 							}
 							mft.getMedicine().setIngredients(meds);
 							ks.update(ks.getFactHandle(aa), aa);
+						}
+					}
+					
+				}
+			}
+		}
+	}
+	
+	public void updateMedicine(Long id, Medicine newmi) {
+		for(KieSession ks : CdssApplication.kieSessions.values()) {
+			for(Object a : ks.getObjects()) {
+				
+				if(a instanceof Patient){
+					Patient aa = (Patient)a;
+					for(DiagnosticTherapy dt : aa.getMedicalRecord().getTherapy()) {
+						for(MedicineForTherapy mft : dt.getMedicines()) {
+								if(mft.getMedicine().getId().equals(id)) {
+									mft.setMedicine(newmi);
+									ks.update(ks.getFactHandle(aa), aa);
+								}
+							
+							
 						}
 					}
 					

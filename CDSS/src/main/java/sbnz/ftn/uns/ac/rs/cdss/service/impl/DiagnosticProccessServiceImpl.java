@@ -152,6 +152,7 @@ public class DiagnosticProccessServiceImpl implements DiagnosticProccesService {
 				mft.setDoctor(user);
 				medicineForTherapyRepository.save(mft);
 			}
+			kieSessionService.updateDT(d.getPatientId(), p);
 			return new DiagnosticTherapyDetailsDTO(p);
 		} catch (NotValidParamsException ex) {
 			throw ex;
@@ -181,6 +182,7 @@ public class DiagnosticProccessServiceImpl implements DiagnosticProccesService {
 			}
 			kieSessionService.addDiagnosticTherapy(user.getUsername(), dt);
 			kieSessionService.setAgendaAndFireAllRules(username, "alergies");
+			DiagnosticTherapyDetailsDTO dtd = new DiagnosticTherapyDetailsDTO(dt);
 			kieSessionService.deleteDiagnosticTherapy(user.getUsername(), dt);
 
 			//kieSession.insert(dt);
@@ -205,7 +207,7 @@ public class DiagnosticProccessServiceImpl implements DiagnosticProccesService {
 			 * System.out.println("stavljam: " + s.getName()); }
 			 */
 			// sendMessage("poruka");
-			return null;
+			return dtd;
 		} catch (NotValidParamsException ex) {
 			throw ex;
 		} catch (Exception ex) {

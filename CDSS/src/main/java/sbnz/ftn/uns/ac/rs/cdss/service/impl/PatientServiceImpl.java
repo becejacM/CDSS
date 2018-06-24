@@ -112,6 +112,7 @@ public class PatientServiceImpl implements PatientService {
 			newm.setPatient(pat);
 			
 			MedicalRecord m = recordRepository.save(newm);
+			kieSessionService.addPatient(pat);
 			return new PatientDetailsDTO(pat);
 		} catch (NotValidParamsException ex) {
 			throw ex;
@@ -295,15 +296,15 @@ public class PatientServiceImpl implements PatientService {
 			Collection<ReportDTO> reports2 = new ArrayList<>();
 			for ( QueryResultsRow row : results ) {
 			    Patient p = ( Patient ) row.get( "p" );
-			    //Collection<AppUser> docs = ( Collection<AppUser> ) row.get( "setDoctors" );
-			    //System.out.println(docs.size());
+			    Collection<AppUser> docs = ( Collection<AppUser> ) row.get( "setDoctors" );
+			    System.out.println(docs.size());
 			    ReportDTO r= new ReportDTO();
 			    String doctors = "";
-			    /*for(AppUser doc : docs) {
+			    for(AppUser doc : docs) {
 			    	doctors+= doc.getFirstname();
 			    	doctors+= ", ";
 
-			    }*/
+			    }
 			    r.setDoctor(doctors);
 			    r.setPatient(new PatientDTO(p));
 			    reports2.add(r);

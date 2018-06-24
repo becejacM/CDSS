@@ -63,7 +63,7 @@ export class DiagnosticProcessFormComponent implements OnInit {
     this.active="";
     this.validateForm = false;
     this.message = false;
-    this.initializeWebSocketConnection();
+    //this.initializeWebSocketConnection();
     this.message1="";
     this.message2="";
   }
@@ -110,7 +110,14 @@ export class DiagnosticProcessFormComponent implements OnInit {
   listM : ListOfMedicines = new ListOfMedicines;
   checkSymptom() {
     this.chack = true;
-    if (this.addForm.value['sym'] != "") {
+    let flag = true;
+    this.list.symptoms.forEach(element => {
+      if(element=== this.addForm.value['sym']){
+        flag=false;
+      }
+    });
+
+    if (this.addForm.value['sym'] != "" && flag==true) {
       console.log(this.addForm.value['sym']);
       this.Symptom = new ISymptom;
       this.Symptom.name = this.addForm.value['sym'];
@@ -136,7 +143,13 @@ export class DiagnosticProcessFormComponent implements OnInit {
   
   checkMedicine(){
     this.chack = true;
-    if (this.diagnoseForm.value['med'] != "") {
+    let flag = true;
+    this.listM.medicines.forEach(element => {
+      if(element=== this.addForm.value['med']){
+        flag=false;
+      }
+    });
+    if (this.diagnoseForm.value['med'] != "" && flag==true) {
       console.log(this.diagnoseForm.value['med']);
       this.Medicine = new IMedicine;
       this.Medicine.name = this.diagnoseForm.value['med'];
@@ -306,13 +319,24 @@ export class DiagnosticProcessFormComponent implements OnInit {
       this.dpService.validate(this.therapy)
       .subscribe(data => {
           console.log(data);
+          if(data.medicines.length===0){
+              this.toastr.warning("Patient is alergic to some medicines");
+              this.message = false; 
+              this.validateForm=false;
+              //this.message = true;
+              this.createNewDF();             
+          }
+          else{
+            this.validateForm=true;
+            
+          }
           this.chack=false;
-          if(!this.message){
+          /*if(!this.message){
             this.validateForm=true;
           }
           else{
             this.message = false;
-          }
+          }*/
           //this.validateForm=true;
         },
         (err: HttpErrorResponse) => {
@@ -363,6 +387,8 @@ export class DiagnosticProcessFormComponent implements OnInit {
         if(that.message1!="" && that.message2!="")    {
           that.validateForm=false;
           that.message = true;
+          that.createNewDF();
+          
           that.toastr.warning(that.message1);
           that.toastr.warning(that.message2);          
           that.createNewDF();

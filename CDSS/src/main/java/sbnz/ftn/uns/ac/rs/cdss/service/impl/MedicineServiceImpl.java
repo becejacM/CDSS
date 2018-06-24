@@ -43,6 +43,9 @@ public class MedicineServiceImpl implements MedicineService{
 	@Autowired
 	PatientRepository pRepository;
 	
+	@Autowired
+    private KieSessionService kieSessionService;
+	
 	@Override
 	public Page<MedicineDetailsDTO> getAll(String username, Pageable pageable) {
 		try {
@@ -124,8 +127,9 @@ public class MedicineServiceImpl implements MedicineService{
 				throw new NotValidParamsException("Medicine with that id doesn't exists!");
 			}
 			pat.setName(m.getName());
-			pat.setTypeOfMedicine(m.getTypeOfMedicine());
+			//pat.setTypeOfMedicine(m.getTypeOfMedicine());
 			Medicine p = medicineRepository.save(pat);
+			kieSessionService.updateMedicine(id, p);
 			return new MedicineDetailsDTO(p);
 		} catch (NotValidParamsException ex) {
 			throw ex;

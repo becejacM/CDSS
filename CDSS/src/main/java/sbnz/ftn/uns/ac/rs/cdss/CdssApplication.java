@@ -35,28 +35,7 @@ public class CdssApplication {
 	
 	public static Map<String, KieSession> kieSessions = new HashMap<>();
 	
-	
-	/*@Bean
-    public KieSession kieSession() throws IOException {
-        KieServices ks = KieServices.Factory.get();
-        KieContainer kContainer = ks.newKieContainer(ks.newReleaseId("CDSS-rules", "CDSS-rules-kjar", "0.0.1-SNAPSHOT"));
 
-        KieBaseConfiguration kbconf = ks.newKieBaseConfiguration();
-		kbconf.setOption(EventProcessingOption.STREAM);
-		KieBase kbase = kContainer.newKieBase(kbconf);
-		
-        KieSessionConfiguration ksconf1 = ks.newKieSessionConfiguration();
-        ksconf1.setOption(ClockTypeOption.get(ClockType.REALTIME_CLOCK.getId()));
-        KieSession ksession1 = kbase.newKieSession(ksconf1, null);
-        //KieScanner kScanner = ks.newKieScanner(kContainer);
-        //kScanner.start(10000);
-        //KieSession kieSession = kContainer.newKieSession("ksession-rules");
-        //kieSession.addEventListener(new DebugAgendaEventListener());
-        //kieSession.setGlobal("diagnosticProccessService", diagnosticProccessService);
-        //kieSession.setGlobal("diagnosticProccessService", diagnosticProccessService);
-        //System.out.println("ubacujem servis: " +kieSession.getGlobal("diagnosticProccessService"));
-        return ksession1;
-    }*/
 	
 	@Bean
 	public KieContainer kieContainer() {

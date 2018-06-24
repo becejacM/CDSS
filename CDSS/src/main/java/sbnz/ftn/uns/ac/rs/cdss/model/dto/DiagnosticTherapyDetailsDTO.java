@@ -34,12 +34,18 @@ public class DiagnosticTherapyDetailsDTO {
 			this.syms+=",";
 			this.syms+=s.getName();
 		}
-		for(MedicineForTherapy m : d.getMedicines()) {
-			this.medicines.add(new MedicineDetailsDTO(m.getMedicine()));
-			this.meds+=",";
-			this.meds+=m.getMedicine().getName();
-			
+		if(d.getMedicines()!=null) {
+			for(MedicineForTherapy m : d.getMedicines()) {
+				this.medicines.add(new MedicineDetailsDTO(m.getMedicine()));
+				this.meds+=",";
+				this.meds+=m.getMedicine().getName();
+				
+			}
 		}
+		else {
+			this.medicines=new ArrayList<>();
+		}
+		
 		for(Disease dis : d.getPosibleDiseases()) {
 			this.posibleDiseases.add(new DiseaseDetailsDTO(dis));
 		}

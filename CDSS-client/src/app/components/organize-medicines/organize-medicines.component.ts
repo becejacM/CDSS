@@ -25,6 +25,7 @@ export class OrganizeMedicinesComponent implements OnInit {
   damageType: MedicineType;
   MedicineType: typeof MedicineType = MedicineType;
   options:any;
+  active:IMedicine;
   // Pagable
   loading = false;
   total = 0;
@@ -38,10 +39,11 @@ export class OrganizeMedicinesComponent implements OnInit {
 
   ngOnInit() {
     this.chack = false;
+    this.active=null;
+    
     this.createForm();
     this.criteria.sortColumn = 'name';
     this.criteria.sortDirection = 'asc';
-
     this.getAllMedicines();
     this.toggleAdd = false;
   }
@@ -75,6 +77,13 @@ export class OrganizeMedicinesComponent implements OnInit {
     const x = MedicineType;
     const options = Object.keys(MedicineType);
     this.options = options.slice(options.length / 2);
+    
+    if(this.active!==null){
+      this.addForm = this.fb.group({
+        name: [this.active.name, Validators.compose([Validators.required])]
+      });
+    }
+    else{
     this.addForm = this.fb.group({
       name: ['', Validators.compose([Validators.required])],
       typeOfMedicine: ['', Validators.compose([Validators.required])],
@@ -82,7 +91,7 @@ export class OrganizeMedicinesComponent implements OnInit {
       ingredient: ['', Validators.compose([Validators.required])]
 
     });
-
+  }
 
 
   }
@@ -136,6 +145,8 @@ export class OrganizeMedicinesComponent implements OnInit {
       .subscribe(data => {
         console.log(data);
         this.toggleAdd = true;
+        this.active=data;        
+        
         this.createForm();
       },
       (err: HttpErrorResponse) => {
@@ -170,8 +181,34 @@ export class OrganizeMedicinesComponent implements OnInit {
   }
 
 
+  updateD(){
+    console.log(this.addForm.value);
+    this.medicineService.update(this.addForm.value,this.active.id)
+    .subscribe(data => {
+        console.log(data);
+        this.getAllMedicines();
+        this.toggleAdd = false;
+        this.active = null;
+        this.createForm();
+      },
+      (err: HttpErrorResponse) => {
+        if (err.error instanceof Error) {
+          this.toastr.error(err.error.message + '\nError Status ' + err.status);
+        } else {
+          this.toastr.error(err.error.message + '\nError Status ' + err.status);
+        }
+      });
+  }
+
+
   submit() {
-    this.addD();
+    if(this.active===null){
+      this.addD();  
+    }
+    else{
+      console.log("update");
+      this.updateD();      
+    }
   }
 
   update(id: any) {

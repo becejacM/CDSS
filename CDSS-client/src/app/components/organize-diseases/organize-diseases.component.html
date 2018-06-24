@@ -25,15 +25,15 @@
               <div class="col-4">
                 <input formControlName="name" class="form-control">
               </div>
-              <label class="col-2 col-form-label">Type:</label>
-              <div class="col-4">
+              <label class="col-2 col-form-label" *ngIf="active===null">Type:</label>
+              <div class="col-4" *ngIf="active===null">
                   <select class="form-control" formControlName="typeOfDisease">
                       <option *ngFor="let name of options" [value]="name">{{name}}</option>
                     </select>
               </div>
   
             </div>
-            <div class="form-group row" style="margin-left:15%; width:70%">
+            <div class="form-group row" style="margin-left:15%; width:70%" *ngIf="active===null">
               <label class="col-2 col-form-label">Symptom:</label>
               <div class="col-4">
                 <input formControlName="sym" class="form-control">
@@ -45,7 +45,7 @@
               </div>
             </div>
   
-            <div class="form-group row" style="margin-left:15%; width:70%">
+            <div class="form-group row" style="margin-left:15%; width:70%" *ngIf="active===null">
               <label class="col-2 col-form-label">Symptoms:</label>
               <div class="col-10">
                 <input formControlName="symptoms" class="form-control">
@@ -70,6 +70,7 @@
         <th sortable-column="name">Name</th>
         <th sortable-column="typeOfDisease">Type</th>
         <th sortable-column="syms">Symptoms</th>
+        <th></th>
       </tr>
   
   
@@ -81,7 +82,10 @@
         <td>{{disease.name}}</td>
         <td>{{disease.typeOfDisease}}</td>
         <td>{{disease.syms}}</td>
-  
+        <td><button class="btn btn-info btn-md ml-auto" (click)="update(disease.id)">
+          <i class="fa fa-pencil" aria-hidden="true"></i>                  
+      </button>        
+          </td>  
   
       </tr>
     </tbody>
