@@ -5,13 +5,16 @@ insert into app_user(id, username, password,email, firstname, lastname, verified
   (1, 'admin', '$2a$10$H0bjPW8lFs9VSaBrySMp4e/ht1MhrtfLWenraISxFBp2.Iofd6yuC', 'admin@mailinator.com', 'admin', 'admin', 1, 'ADMIN');
 -- CDSS421054-sbnz => password
 insert into app_user(id, username, password,email, firstname, lastname, verified, role) values
-  (2, 'doctor1', '$2a$10$rRpzJm1LFO73jGfdqE4cJeW5wcpUzN1XItUvoHJlx6WyR9D0zjMuW', 'doctor1@mailinator.com', 'Milana', 'Becejac', 1, 'DOCTOR');
+  (2, 'doctor1', '$2a$10$rRpzJm1LFO73jGfdqE4cJeW5wcpUzN1XItUvoHJlx6WyR9D0zjMuW', 'doctor1@mailinator.com', 'Gabrielle', 'Solis', 1, 'DOCTOR');
 -- Operator-2-bsep => password
 insert into app_user(id, username, password,email, firstname, lastname, verified, role) values
-  (3, 'doctor2', '$2a$10$rRpzJm1LFO73jGfdqE4cJeW5wcpUzN1XItUvoHJlx6WyR9D0zjMuW', 'doctor2@mailinator.com', 'Nada', 'Macura', 1, 'DOCTOR');
+  (3, 'doctor2', '$2a$10$rRpzJm1LFO73jGfdqE4cJeW5wcpUzN1XItUvoHJlx6WyR9D0zjMuW', 'doctor2@mailinator.com', 'Susan', 'Mayer', 1, 'DOCTOR');
 -- Operator-2-bsep => password
 insert into app_user(id, username, password,email, firstname, lastname, verified, role) values
-  (4, 'doctor3', '$2a$10$rRpzJm1LFO73jGfdqE4cJeW5wcpUzN1XItUvoHJlx6WyR9D0zjMuW', 'doctor3@mailinator.com', 'DR', 'House', 1, 'DOCTOR'); 
+  (4, 'doctor3', '$2a$10$rRpzJm1LFO73jGfdqE4cJeW5wcpUzN1XItUvoHJlx6WyR9D0zjMuW', 'doctor3@mailinator.com', 'Lynet', 'Scavo', 1, 'DOCTOR'); 
+  
+insert into app_user(id, username, password,email, firstname, lastname, verified, role) values
+  (5, 'doctor4', '$2a$10$rRpzJm1LFO73jGfdqE4cJeW5wcpUzN1XItUvoHJlx6WyR9D0zjMuW', 'doctor3@mailinator.com', 'Bree', 'Van de camp', 1, 'DOCTOR');
 
 insert into privilege(id, name) value (1, 'READ_PRIVILEGE');
 insert into privilege(id, name) value (2, 'WRITE_PRIVILEGE');
@@ -30,17 +33,23 @@ insert into users_roles(user_id, role_id) value (1, 1);
 insert into users_roles(user_id, role_id) value (2, 2);
 insert into users_roles(user_id, role_id) value (3, 2);
 insert into users_roles(user_id, role_id) value (4, 2);
-
+insert into users_roles(user_id, role_id) value (5, 2);
 
 --- dodavanje pacijenata
 insert into patient(id, email, firstname, lastname, address, medical_card_number) values (1, 'pacijent1@mailinator.com', 'pacijent1', 'pacijentic1', 'adresa 1', '111111');
 insert into patient(id, email, firstname, lastname, address, medical_card_number) values (2, 'pacijent2@mailinator.com', 'pacijent2', 'pacijentic2', 'adresa 2', '222222');
 insert into patient(id, email, firstname, lastname, address, medical_card_number) values (3, 'pacijent3@mailinator.com', 'pacijent3', 'pacijentic3', 'adresa 3', '333333');
+insert into patient(id, email, firstname, lastname, address, medical_card_number) values (4, 'mike@mailinator.com', 'Mike', 'Delfino', 'adresa 4', '444444');
+insert into patient(id, email, firstname, lastname, address, medical_card_number) values (5, 'carlos@mailinator.com', 'Carlos', 'Solis', 'adresa 5', '555555');
+insert into patient(id, email, firstname, lastname, address, medical_card_number) values (6, 'tom@mailinator.com', 'Tom', 'Scavo', 'adresa 6', '666666');
 
 --- dodavanje medicinskog dokumenta pacijentu
 insert into medical_record(id, patient_id) values (1,1);
 insert into medical_record(id, patient_id) values (2,2);
 insert into medical_record(id, patient_id) values (3,3);
+insert into medical_record(id, patient_id) values (4,4);
+insert into medical_record(id, patient_id) values (5,5);
+insert into medical_record(id, patient_id) values (6,6);
 --- dodavanje lekova
 insert into medicine(id, name, type_of_medicine) values (1, 'antibiotik1', 'ANTIBIOTIC');
 insert into medicine(id, name, type_of_medicine) values (2, 'antibiotik2', 'ANTIBIOTIC');
@@ -199,14 +208,147 @@ insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) val
 insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) values (46, 'SPECIFIC', 8, 28);---specificni zahtev
 insert into symptom_for_disease(id, type_of_symptom, disease_id, symptom_id) values (47, 'SPECIFIC', 8, 29);---specificni zahtev
 
-insert into diagnostic_therapy(id, date, disease_id, medical_record_id) values (1, '2017-06-18 01:03:58',1, 1); --- dodata pacijentu 1 prehlada(on je alergican na 1 4 7 lekove i sastojak 1)
-insert into therapy_symptoms(therapy_id, symptom_id) values (1, 1);					--- moraju biti 4 simptoma zadovoljena za 1.grupu bolesti
+insert into diagnostic_therapy(id, date, disease_id, medical_record_id) values (1, '2018-06-18 01:03:58',3, 1); --- dodata pacijentu 1 upala krajnika(on je alergican na 1 4 7 lekove i sastojak 1)
+insert into therapy_symptoms(therapy_id, symptom_id) values (1, 8);					--- moraju biti 4 simptoma zadovoljena za 1.grupu bolesti
 insert into therapy_symptoms(therapy_id, symptom_id) values (1, 2);
 insert into therapy_symptoms(therapy_id, symptom_id) values (1, 3);
-insert into therapy_symptoms(therapy_id, symptom_id) values (1, 4);
---insert into therapy_medicines(therapy_id, medicine_id) values (1, 2);
---insert into therapy_medicines(therapy_id, medicine_id) values (1, 5);
---insert into therapy_medicines(therapy_id, medicine_id) values (1, 8);
+insert into therapy_symptoms(therapy_id, symptom_id) values (1, 9);
 insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (1, 1, 2, 2);
 insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (2, 1, 5, 2);
 insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (3, 1, 8, 2);
+
+insert into diagnostic_therapy(id, date, disease_id, medical_record_id) values (2, '2018-06-18 01:04:58',3, 1); --- dodata pacijentu 1 upala krajnika(on je alergican na 1 4 7 lekove i sastojak 1)
+insert into therapy_symptoms(therapy_id, symptom_id) values (2, 8);					--- moraju biti 4 simptoma zadovoljena za 1.grupu bolesti
+insert into therapy_symptoms(therapy_id, symptom_id) values (2, 2);
+insert into therapy_symptoms(therapy_id, symptom_id) values (2, 3);
+insert into therapy_symptoms(therapy_id, symptom_id) values (2, 9);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (4, 2, 2, 2);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (5, 2, 5, 2);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (6, 2, 8, 2);
+
+insert into diagnostic_therapy(id, date, disease_id, medical_record_id) values (3, '2018-06-19 01:04:58',3, 1); --- dodata pacijentu 1 upala krajnika(on je alergican na 1 4 7 lekove i sastojak 1)
+insert into therapy_symptoms(therapy_id, symptom_id) values (3, 8);					--- moraju biti 4 simptoma zadovoljena za 1.grupu bolesti
+insert into therapy_symptoms(therapy_id, symptom_id) values (3, 2);
+insert into therapy_symptoms(therapy_id, symptom_id) values (3, 3);
+insert into therapy_symptoms(therapy_id, symptom_id) values (3, 9);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (7, 3, 2, 2);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (8, 3, 5, 2);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (9, 3, 8, 2);
+
+insert into diagnostic_therapy(id, date, disease_id, medical_record_id) values (4, '2018-06-20 01:04:58',3, 1); --- dodata pacijentu 1 upala krajnika(on je alergican na 1 4 7 lekove i sastojak 1)
+insert into therapy_symptoms(therapy_id, symptom_id) values (4, 8);					--- moraju biti 4 simptoma zadovoljena za 1.grupu bolesti
+insert into therapy_symptoms(therapy_id, symptom_id) values (4, 2);
+insert into therapy_symptoms(therapy_id, symptom_id) values (4, 3);
+insert into therapy_symptoms(therapy_id, symptom_id) values (4, 9);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (10, 4, 2, 3);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (11, 4, 5, 3);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (12, 4, 8, 3);
+
+insert into diagnostic_therapy(id, date, disease_id, medical_record_id) values (5, '2018-06-20 01:04:58',3, 1); --- dodata pacijentu 1 upala krajnika(on je alergican na 1 4 7 lekove i sastojak 1)
+insert into therapy_symptoms(therapy_id, symptom_id) values (5, 2);					--- moraju biti 4 simptoma zadovoljena za 1.grupu bolesti
+insert into therapy_symptoms(therapy_id, symptom_id) values (5, 2);
+insert into therapy_symptoms(therapy_id, symptom_id) values (5, 3);
+insert into therapy_symptoms(therapy_id, symptom_id) values (5, 9);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (13, 5, 2, 4);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (14, 5, 5, 4);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (15, 5, 8, 4);
+
+insert into diagnostic_therapy(id, date, disease_id, medical_record_id) values (6, '2018-06-21 01:04:58',3, 1); --- dodata pacijentu 1 upala krajnika(on je alergican na 1 4 7 lekove i sastojak 1)
+insert into therapy_symptoms(therapy_id, symptom_id) values (6, 8);					--- moraju biti 4 simptoma zadovoljena za 1.grupu bolesti
+insert into therapy_symptoms(therapy_id, symptom_id) values (6, 2);
+insert into therapy_symptoms(therapy_id, symptom_id) values (6, 3);
+insert into therapy_symptoms(therapy_id, symptom_id) values (6, 9);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (16, 6, 2, 4);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (17, 6, 5, 4);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (18, 6, 8, 4);
+
+
+insert into diagnostic_therapy(id, date, disease_id, medical_record_id) values (7, '2018-06-18 01:03:58',3, 3); --- dodata pacijentu 1 upala krajnika(on je alergican na 1 4 7 lekove i sastojak 1)
+insert into therapy_symptoms(therapy_id, symptom_id) values (7, 8);					--- moraju biti 4 simptoma zadovoljena za 1.grupu bolesti
+insert into therapy_symptoms(therapy_id, symptom_id) values (7, 2);
+insert into therapy_symptoms(therapy_id, symptom_id) values (7, 3);
+insert into therapy_symptoms(therapy_id, symptom_id) values (7, 9);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (19, 7, 2, 2);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (20, 7, 5, 2);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (21, 7, 8, 2);
+
+insert into diagnostic_therapy(id, date, disease_id, medical_record_id) values (8, '2018-06-18 01:04:58',3, 3); --- dodata pacijentu 1 upala krajnika(on je alergican na 1 4 7 lekove i sastojak 1)
+insert into therapy_symptoms(therapy_id, symptom_id) values (8, 8);					--- moraju biti 4 simptoma zadovoljena za 1.grupu bolesti
+insert into therapy_symptoms(therapy_id, symptom_id) values (8, 2);
+insert into therapy_symptoms(therapy_id, symptom_id) values (8, 3);
+insert into therapy_symptoms(therapy_id, symptom_id) values (8, 9);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (22, 8, 2, 2);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (23, 8, 5, 2);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (24, 8, 8, 2);
+
+insert into diagnostic_therapy(id, date, disease_id, medical_record_id) values (9, '2018-06-19 01:04:58',3, 3); --- dodata pacijentu 1 upala krajnika(on je alergican na 1 4 7 lekove i sastojak 1)
+insert into therapy_symptoms(therapy_id, symptom_id) values (9, 8);					--- moraju biti 4 simptoma zadovoljena za 1.grupu bolesti
+insert into therapy_symptoms(therapy_id, symptom_id) values (9, 2);
+insert into therapy_symptoms(therapy_id, symptom_id) values (9, 3);
+insert into therapy_symptoms(therapy_id, symptom_id) values (9, 4);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (25, 9, 2, 2);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (26, 9, 5, 2);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (27, 9, 8, 2);
+
+insert into diagnostic_therapy(id, date, disease_id, medical_record_id) values (10, '2018-06-20 01:04:58',3, 3); --- dodata pacijentu 1 upala krajnika(on je alergican na 1 4 7 lekove i sastojak 1)
+insert into therapy_symptoms(therapy_id, symptom_id) values (10, 8);					--- moraju biti 4 simptoma zadovoljena za 1.grupu bolesti
+insert into therapy_symptoms(therapy_id, symptom_id) values (10, 2);
+insert into therapy_symptoms(therapy_id, symptom_id) values (10, 3);
+insert into therapy_symptoms(therapy_id, symptom_id) values (10, 9);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (28, 10, 2, 3);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (29, 10, 5, 3);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (30, 10, 8, 3);
+
+insert into diagnostic_therapy(id, date, disease_id, medical_record_id) values (11, '2018-06-20 01:04:58',3, 3); --- dodata pacijentu 1 upala krajnika(on je alergican na 1 4 7 lekove i sastojak 1)
+insert into therapy_symptoms(therapy_id, symptom_id) values (11, 8);					--- moraju biti 4 simptoma zadovoljena za 1.grupu bolesti
+insert into therapy_symptoms(therapy_id, symptom_id) values (11, 2);
+insert into therapy_symptoms(therapy_id, symptom_id) values (11, 3);
+insert into therapy_symptoms(therapy_id, symptom_id) values (11, 9);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (31, 11, 2, 4);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (32, 11, 5, 4);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (33, 11, 8, 4);
+
+insert into diagnostic_therapy(id, date, disease_id, medical_record_id) values (12, '2018-06-21 01:04:58',3, 3); --- dodata pacijentu 1 upala krajnika(on je alergican na 1 4 7 lekove i sastojak 1)
+insert into therapy_symptoms(therapy_id, symptom_id) values (12, 8);					--- moraju biti 4 simptoma zadovoljena za 1.grupu bolesti
+insert into therapy_symptoms(therapy_id, symptom_id) values (12, 2);
+insert into therapy_symptoms(therapy_id, symptom_id) values (12, 3);
+insert into therapy_symptoms(therapy_id, symptom_id) values (12, 9);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (34, 12, 2, 4);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (35, 12, 5, 4);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (36, 12, 8, 4);
+
+insert into diagnostic_therapy(id, date, disease_id, medical_record_id) values (13, '2018-06-19 01:04:58',3, 3); --- dodata pacijentu 1 upala krajnika(on je alergican na 1 4 7 lekove i sastojak 1)
+insert into therapy_symptoms(therapy_id, symptom_id) values (13, 8);					--- moraju biti 4 simptoma zadovoljena za 1.grupu bolesti
+insert into therapy_symptoms(therapy_id, symptom_id) values (13, 2);
+insert into therapy_symptoms(therapy_id, symptom_id) values (13, 3);
+insert into therapy_symptoms(therapy_id, symptom_id) values (13, 4);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (37, 13, 2, 2);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (38, 13, 5, 2);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (39, 13, 8, 2);
+
+insert into diagnostic_therapy(id, date, disease_id, medical_record_id) values (14, '2018-06-20 01:04:58',3, 3); --- dodata pacijentu 1 upala krajnika(on je alergican na 1 4 7 lekove i sastojak 1)
+insert into therapy_symptoms(therapy_id, symptom_id) values (14, 8);					--- moraju biti 4 simptoma zadovoljena za 1.grupu bolesti
+insert into therapy_symptoms(therapy_id, symptom_id) values (14, 2);
+insert into therapy_symptoms(therapy_id, symptom_id) values (14, 3);
+insert into therapy_symptoms(therapy_id, symptom_id) values (14, 9);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (40, 14, 2, 3);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (41, 14, 5, 3);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (42, 14, 8, 3);
+
+insert into diagnostic_therapy(id, date, disease_id, medical_record_id) values (15, '2018-06-20 01:04:58',1, 3); --- dodata pacijentu 1 upala krajnika(on je alergican na 1 4 7 lekove i sastojak 1)
+insert into therapy_symptoms(therapy_id, symptom_id) values (15, 1);					--- moraju biti 4 simptoma zadovoljena za 1.grupu bolesti
+insert into therapy_symptoms(therapy_id, symptom_id) values (15, 2);
+insert into therapy_symptoms(therapy_id, symptom_id) values (15, 3);
+insert into therapy_symptoms(therapy_id, symptom_id) values (15, 4);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (43, 15, 2, 4);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (44, 15, 5, 4);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (45, 15, 8, 4);
+
+insert into diagnostic_therapy(id, date, disease_id, medical_record_id) values (16, '2018-06-21 01:04:58',1, 3); --- dodata pacijentu 1 upala krajnika(on je alergican na 1 4 7 lekove i sastojak 1)
+insert into therapy_symptoms(therapy_id, symptom_id) values (16, 1);					--- moraju biti 4 simptoma zadovoljena za 1.grupu bolesti
+insert into therapy_symptoms(therapy_id, symptom_id) values (16, 2);
+insert into therapy_symptoms(therapy_id, symptom_id) values (16, 3);
+insert into therapy_symptoms(therapy_id, symptom_id) values (16, 4);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (46, 16, 2, 4);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (47, 16, 5, 4);
+insert into medicine_for_therapy(id,therapy_id, medicine_id, doctor_id) values (48, 16, 8, 4);

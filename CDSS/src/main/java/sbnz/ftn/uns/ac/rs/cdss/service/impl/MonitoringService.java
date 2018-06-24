@@ -52,7 +52,9 @@ public class MonitoringService implements CommandLineRunner {
         KieSessionConfiguration ksconf1 = ks.newKieSessionConfiguration();
         ksconf1.setOption(ClockTypeOption.get(ClockType.REALTIME_CLOCK.getId()));
         KieSession ksession1 = kbase.newKieSession(ksconf1, null);
-        testHeartBeat(ksession1);
+        //testHeartBeat(ksession1);
+        //testOxygenLevel(ksession1);
+        //testDialysis(ksession1);
 	}
 	
 	public void testHeartBeat(KieSession kieSession) {

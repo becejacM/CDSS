@@ -121,9 +121,9 @@
               <tbody>
                 <tr *ngFor="let disease of diseases">
             
-                  <td>{{disease.name}}</td>
-                  <td>{{disease.typeOfDisease}}</td>
-                  <td>{{disease.syms}}</td>
+                  <td class="clickable" (click)="clickOnDisease(disease.name)">{{disease.name}}</td>
+                  <td class="clickable" (click)="clickOnDisease(disease.name)">{{disease.typeOfDisease}}</td>
+                  <td class="clickable" (click)="clickOnDisease(disease.name)">{{disease.syms}}</td>
             
             
                 </tr>

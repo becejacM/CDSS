@@ -7,6 +7,7 @@ import {HttpErrorResponse} from '@angular/common/http/src/response';
 import { IPatient } from '../../model/IPatient';
 import { IMedicine } from '../../model/IMedicine';
 import { IIngredient } from '../../model/IIngredient';
+import { IMedicalRecord } from '../../model/IMedicalRecord';
 
 @Component({
   selector: 'app-patient-details',
@@ -17,6 +18,7 @@ export class PatientDetailsComponent implements OnInit {
 
   medicineAlergies:IMedicine[];
   ingredientsAlergies:IIngredient[];
+  mrecords:IMedicalRecord[];
   patient:IPatient;
   id:any;
   showAlergies:Boolean;
@@ -55,7 +57,20 @@ export class PatientDetailsComponent implements OnInit {
         }
       });
   }
-
+  getMR(){
+    this.patientService.getMR(this.id)
+    .subscribe(data => {
+      console.log(data);
+        this.mrecords = data;
+      },
+      (err: HttpErrorResponse) => {
+        if (err.error instanceof Error) {
+          this.toastr.error(err.error.message + '\nError Status ' + err.status);
+        } else {
+          this.toastr.error(err.error.message + '\nError Status ' + err.status);
+        }
+      });
+  }
   getAlergies(){
     this.patientService.getAlergies(this.id)
     .subscribe(data => {
@@ -82,6 +97,7 @@ export class PatientDetailsComponent implements OnInit {
     this.toggleMR = !this.toggleMR;
     this.showAlergies = false;
     this.toggleAlergie = false;
+    this.getMR();
   }
 
   addAlergie(){

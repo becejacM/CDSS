@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.AlergiesDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.MedicineDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.MedicineDetailsDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.MedicineRecordDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.PatientDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.PatientDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.ReportDTO;
@@ -108,6 +109,11 @@ public class PatientController {
 		return new ResponseEntity<>(this.patientService.getAlergies(username, id), HttpStatus.OK);
 	}
 	
+	@GetMapping(value = "mrecords/{id}")
+	public ResponseEntity<Collection<MedicineRecordDTO>> getPatientMR(@PathVariable Long id) {
+		String username = this.tokenUtils.getUsernameFromToken(this.httpServletRequest.getHeader("X-Auth-Token"));
+		return new ResponseEntity<>(this.patientService.getMR(username, id), HttpStatus.OK);
+	}
 	@PutMapping(value="/alergies/{id}/{nameAlergie}")
 	public ResponseEntity<MedicineDetailsDTO> addAlergie(@PathVariable Long id,@PathVariable String nameAlergie) {
 		System.out.println(nameAlergie);

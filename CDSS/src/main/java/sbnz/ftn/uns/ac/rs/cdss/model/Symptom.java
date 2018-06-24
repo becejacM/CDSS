@@ -34,8 +34,8 @@ public class Symptom {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "symptom")
 	protected List<SymptomForDisease> symptomsForDisease;
 
-	@ManyToMany(mappedBy = "generalSymptoms")
-    private Collection<Disease> generalDisease = new ArrayList<>();
+	//@ManyToMany(mappedBy = "generalSymptoms")
+    //private Collection<Disease> generalDisease = new ArrayList<>();
 	
 	public Symptom() {
 
@@ -82,13 +82,13 @@ public class Symptom {
 		return "Symptom [id=" + id + ", name=" + name +"]";
 	}
 
-	public Collection<Disease> getGeneralDisease() {
+	/*public Collection<Disease> getGeneralDisease() {
 		return generalDisease;
 	}
 
 	public void setGeneralDisease(Collection<Disease> generalDisease) {
 		this.generalDisease = generalDisease;
-	}
+	}*/
 	
 	
 

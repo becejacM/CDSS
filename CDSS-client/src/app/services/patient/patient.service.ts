@@ -6,6 +6,7 @@ import { IPatient } from '../../model/IPatient';
 import { IMedicine } from '../../model/IMedicine';
 import { IAlergie } from '../../model/IAlergie';
 import { IReport } from '../../model/IReport';
+import { IMedicalRecord } from '../../model/IMedicalRecord';
 
 @Injectable()
 export class PatientService {
@@ -55,6 +56,11 @@ export class PatientService {
   getAlergies(id:any): Observable<IAlergie> {
     const urlPath = '/api/patients/alergies/'+id;
     return this.http.get<IAlergie>(urlPath);
+  }
+
+  getMR(id:any): Observable<IMedicalRecord[]> {
+    const urlPath = '/api/patients/mrecords/'+id;
+    return this.http.get<IMedicalRecord[]>(urlPath);
   }
 
   getByFN(fn:String, page: number, limit: number): Observable<IPageable> {

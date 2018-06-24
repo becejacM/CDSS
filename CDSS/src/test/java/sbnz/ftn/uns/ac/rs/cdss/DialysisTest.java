@@ -84,6 +84,7 @@ public class DialysisTest {
 			clock.advanceTime(100, TimeUnit.MILLISECONDS);
 			// 20 otkucaja jedan za drugim,
 		}
+
 		ksession.getAgenda().getAgendaGroup("disysis").setFocus();
 		ksession.fireAllRules();
 		//System.out.println("Okinuto pravila:" +num);

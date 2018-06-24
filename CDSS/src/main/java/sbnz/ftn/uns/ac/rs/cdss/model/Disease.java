@@ -50,23 +50,8 @@ public class Disease {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "disease")
 	private List<SymptomForDisease> symptomsForDisease = new ArrayList<>();
 	
-	@ManyToMany
-    @JoinTable(name = "general_symptom_table", joinColumns = @JoinColumn(name = "disease_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "symptom_id", referencedColumnName = "id"))
-    private Collection<Symptom> generalSymptoms = new ArrayList<>();
 	
-	public Collection<Symptom> getGeneralSymptoms() {
-		return generalSymptoms;
-	}
-
-	public void setGeneralSymptoms(Collection<Symptom> generalSymptoms) {
-		this.generalSymptoms = generalSymptoms;
-	}
-
-	@Transient
-	private Long num;
 	
-	@Transient
-	private Collection<Symptom> syms = new ArrayList<>();
 	public Disease() {
 		
 	}
@@ -138,13 +123,5 @@ public class Disease {
 		}
 	}
 
-	public Long getNum() {
-		return num;
-	}
 
-	public void setNum(Long num) {
-		this.num = num;
-	}
-	
-	
 }

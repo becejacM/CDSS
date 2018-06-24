@@ -30,6 +30,7 @@ import sbnz.ftn.uns.ac.rs.cdss.model.dto.AlergiesDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.DiagnosticTherapyDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.IngredientDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.MedicineDetailsDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.MedicineRecordDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.PatientDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.PatientDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.ReportDTO;
@@ -294,15 +295,15 @@ public class PatientServiceImpl implements PatientService {
 			Collection<ReportDTO> reports2 = new ArrayList<>();
 			for ( QueryResultsRow row : results ) {
 			    Patient p = ( Patient ) row.get( "p" );
-			    Collection<AppUser> docs = ( Collection<AppUser> ) row.get( "setDoctors" );
-			    System.out.println(docs.size());
+			    //Collection<AppUser> docs = ( Collection<AppUser> ) row.get( "setDoctors" );
+			    //System.out.println(docs.size());
 			    ReportDTO r= new ReportDTO();
 			    String doctors = "";
-			    for(AppUser doc : docs) {
+			    /*for(AppUser doc : docs) {
 			    	doctors+= doc.getFirstname();
 			    	doctors+= ", ";
 
-			    }
+			    }*/
 			    r.setDoctor(doctors);
 			    r.setPatient(new PatientDTO(p));
 			    reports2.add(r);
@@ -429,6 +430,28 @@ public class PatientServiceImpl implements PatientService {
 			throw ex;
 		} catch (Exception ex) {
 			throw new NotValidParamsException("Invalid parameters while trying to get patients");
+		}
+	}
+
+	@Override
+	public Collection<MedicineRecordDTO> getMR(String username, Long id) {
+		try {
+			AppUser user = this.appUserRepository.findByUsername(username);
+			if (user == null) {
+				throw new NotValidParamsException("You must be logged in as admin or doctor to get medical records");
+			}
+			Patient p = patientRepository.findById(id).get();
+			MedicalRecord m = recordRepository.findById(p.getMedicalRecord().getId()).get();
+			Collection<MedicineRecordDTO> mr = new ArrayList<>();
+			for(DiagnosticTherapy d : m.getTherapy()) {
+				mr.add(new MedicineRecordDTO(d));
+			}
+			return mr;
+		} catch (NotValidParamsException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new NotValidParamsException("Invalid parameters while trying to get medical records");
 		}
 	}
 

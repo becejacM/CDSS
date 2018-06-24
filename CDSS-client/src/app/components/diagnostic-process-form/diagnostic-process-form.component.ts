@@ -64,6 +64,8 @@ export class DiagnosticProcessFormComponent implements OnInit {
     this.validateForm = false;
     this.message = false;
     this.initializeWebSocketConnection();
+    this.message1="";
+    this.message2="";
   }
   createForm() {
     this.addForm = this.fb.group({
@@ -260,6 +262,7 @@ export class DiagnosticProcessFormComponent implements OnInit {
     }
     console.log(this.list);
     this.toggleListOfSymptoms=false;
+    this.therapy.symptoms=this.listOfSymptoms;
   }
   therapy:ITherapy=new ITherapy;
   
@@ -321,6 +324,14 @@ export class DiagnosticProcessFormComponent implements OnInit {
         });
   }
 
+  clickOnDisease(name:String){
+    console.log(name);
+    this.active="diagnose";
+    this.therapy.diseasename=name;
+    this.therapy.message="";
+    this.therapy.symptoms=this.listOfSymptoms;
+    this.createNewDF();
+  }
   private stompClient;
   ws:any;
   disabled: boolean;

@@ -11,6 +11,34 @@
         <button class="btn btn-info btn-md ml-auto" (click)="alergies()">Alergies</button>
         <button class="btn btn-info btn-md ml-auto" (click)="medicalRecord()">Medical record</button>
         
+          <div *ngIf="toggleMR===true">
+            <table style="background: rgba(207, 219, 237, 0.95);" class="table">
+              <thead class="thead-light">
+                <tr>
+                    <th>Disease</th>
+                    <th>Symtoms</th>
+                    <th>Medicines</th>
+                    <th>Date</th>
+                    <th>Doctor</th>
+                </tr>
+            
+            
+              </thead>
+            
+              <tbody>
+                <tr *ngFor="let mr of mrecords">
+            
+                    <td>{{mr.diseasename}}</td>
+                    <td>{{mr.syms}}</td>
+                    <td>{{mr.meds}}</td>
+                    <td>{{mr.date}}</td>
+                    <td>{{mr.doctor}}</td>
+                  
+                  
+                </tr>
+              </tbody>
+            </table>
+          </div>
         <div *ngIf="showAlergies===true">
           <br/>
           &nbsp;&nbsp;<button id="link-tab-filter" class="btn btn-info btn-md ml-auto" (click)="addAlergie()">Add new &nbsp;

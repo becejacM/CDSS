@@ -129,8 +129,9 @@ public class KieSessionService {
 				}
 			}
 			for(Object a : ks.getObjects()) {
-				if(a instanceof DiagnosticTherapy){
-					System.out.println("terapijaaaa");
+				if(a instanceof Disease){
+					Disease aa = (Disease)a;
+					System.out.println("disease   "+aa.getName());
 				}
 			}
 		}

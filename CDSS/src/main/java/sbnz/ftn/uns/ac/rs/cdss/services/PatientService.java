@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import sbnz.ftn.uns.ac.rs.cdss.model.Patient;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.AlergiesDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.MedicineDetailsDTO;
+import sbnz.ftn.uns.ac.rs.cdss.model.dto.MedicineRecordDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.PatientDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.PatientDetailsDTO;
 import sbnz.ftn.uns.ac.rs.cdss.model.dto.ReportDTO;
@@ -31,4 +32,5 @@ public interface PatientService {
 	Page<PatientDetailsDTO> getByLN(String username,String lastname, Pageable pageable);
 	Page<PatientDetailsDTO> getByFNLN(String username,String firstname,String lastname, Pageable pageable);
 
+	Collection<MedicineRecordDTO> getMR(String username, Long id);
 }
